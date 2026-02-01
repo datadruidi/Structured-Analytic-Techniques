@@ -22,16 +22,18 @@ A lightweight, browser-based timeline tool for **Structured Analytic Techniques 
 
 ## Quick start
 
-### Run locally
-This is a static web app.
+### Run locally (Option 1: simplest)
+1. Clone or download the repo  
+2. Open `index.html` in your web browser
 
-1. Clone the repo
-2. Open `index.html` in a browser  
-   *(recommended: run a local server for best results)*
+### Run locally (Option 2: local server)
+Some browsers restrict certain features when opening files directly. If you run into issues, start a simple local server:
 
-Example local server:
-- VS Code: “Live Server” extension  
-- Or any simple HTTP server (e.g. Python, Node)
+- **Python**
+  ```bash
+  python -m http.server 8000
+
+Then open http://localhost:8000 in your browser.
 
 ### Use on GitHub Pages
 Enable GitHub Pages from the repo settings and point it to `/ (root)` or `/docs` depending on your setup.
