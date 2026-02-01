@@ -72,8 +72,3 @@ After generation, open your vault and explore:
 ## PCAP Sample
 
 The screenshots and example output were generated and tested using PCAPs from the Western Regional Collegiate Cyber Defense Competition (WRCCDC) archive: https://archive.wrccdc.org/pcaps/2026/invitationals2/
-
-PCAP sample source used for testing:
-
-WRCCDC PCAP archive (over 1TB):
-https://archive.wrccdc.org/pcaps/2026/invitationals2/
