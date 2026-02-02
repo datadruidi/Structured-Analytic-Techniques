@@ -7,7 +7,7 @@ Runs offline, stores data in the browser during the session, and allows import/e
 
 ---
 
-## 🧭 Features at a glance
+## 📸 Features at a glance
 
 - Interactive SVG causal map  
 - Add, edit, and delete nodes  
@@ -18,8 +18,6 @@ Runs offline, stores data in the browser during the session, and allows import/e
 - Session-based autosave  
 - JSON import/export  
 
-
-## 📸 Screenshots
 
 ### Full map view  
 ![App screenshot](assets/img/screenshot_1.png)
