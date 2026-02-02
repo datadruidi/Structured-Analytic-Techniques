@@ -764,13 +764,13 @@
 
   function saveView() {
     try {
-      sessionStorage.setItem(VIEW_STORAGE_KEY, JSON.stringify({ x: transform.x, y: transform.y, k: transform.k }));
+      localStorage.setItem(VIEW_STORAGE_KEY, JSON.stringify({ x: transform.x, y: transform.y, k: transform.k }));
     } catch (_) {}
   }
 
   function restoreView() {
     try {
-      const s = sessionStorage.getItem(VIEW_STORAGE_KEY);
+      const s = localStorage.getItem(VIEW_STORAGE_KEY);
       if (!s) return false;
       const t = JSON.parse(s);
       if (typeof t.x !== 'number' || typeof t.y !== 'number' || typeof t.k !== 'number') return false;
@@ -1616,13 +1616,13 @@
 
   function saveTree() {
     try {
-      sessionStorage.setItem(TREE_STORAGE_KEY, JSON.stringify(tree, treeReplacer));
+      localStorage.setItem(TREE_STORAGE_KEY, JSON.stringify(tree, treeReplacer));
     } catch (_) {}
   }
 
   function restoreTree() {
     try {
-      const s = sessionStorage.getItem(TREE_STORAGE_KEY);
+      const s = localStorage.getItem(TREE_STORAGE_KEY);
       if (!s) return false;
       const data = JSON.parse(s);
       if (!data || !data.id || !Array.isArray(data.children)) return false;
