@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Causal Map for SAT</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #1a1d23;
+      color: #e4e6eb;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    #toolbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background: #252830;
+      border-bottom: 1px solid #3a3f4b;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      z-index: 100;
+    }
+    #toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    #toolbar button, .toolbar-menu-btn {
+      padding: 8px 14px;
+      border: 1px solid #4a5060;
+      background: #353a46;
+      color: #e4e6eb;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    #toolbar button:hover, .toolbar-menu-btn:hover {
+      background: #404654;
+      border-color: #5a6070;
+    }
+    .toolbar-menu-btn.primary {
+      background: #2563eb;
+      border-color: #3b82f6;
+    }
+    .toolbar-menu-btn.primary:hover {
+      background: #3b82f6;
+    }
+    .toolbar-dropdown {
+      position: relative;
+    }
+    .toolbar-dropdown .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      margin-top: 4px;
+      min-width: 160px;
+      background: #252830;
+      border: 1px solid #3a3f4b;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      padding: 6px 0;
+      z-index: 110;
+    }
+    .toolbar-dropdown.open .dropdown-menu {
+      display: block;
+    }
+    .toolbar-dropdown .dropdown-menu button {
+      display: block;
+      width: 100%;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      color: #e4e6eb;
+      text-align: left;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .toolbar-dropdown .dropdown-menu button:hover {
+      background: #353a46;
+    }
+    .toolbar-dropdown .dropdown-menu button.primary {
+      background: #2563eb;
+      color: #fff;
+    }
+    .toolbar-dropdown .dropdown-menu button.primary:hover {
+      background: #3b82f6;
+    }
+    .toolbar-dropdown .dropdown-menu button.danger {
+      color: #f87171;
+    }
+    .toolbar-dropdown .dropdown-menu button.danger:hover {
+      background: #4a2525;
+    }
+    #toolbar-title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 15px;
+      font-weight: 600;
+      color: #e4e6eb;
+      pointer-events: none;
+    }
+    #toolbar-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+    }
+    #toolbar input[type="file"] {
+      display: none;
+    }
+    #canvas-wrap {
+      position: fixed;
+      top: 48px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+      cursor: grab;
+    }
+    #canvas-wrap.dragging { cursor: grabbing; }
+    #canvas-wrap:not(.dragging) .node { cursor: pointer; }
+    svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .link {
+      fill: none;
+      stroke: #5a6070;
+      stroke-width: 2;
+      marker-end: url(#arrowhead);
+      transition: stroke 0.15s;
+    }
+    .link:hover { stroke: #7a8090; }
+    .node-group {
+      cursor: grab;
+    }
+    .node-group:active {
+      cursor: grabbing;
+    }
+    .node-box {
+      stroke: #4a5060;
+      stroke-width: 2;
+      rx: 20;
+      ry: 12;
+      transition: fill 0.15s, stroke 0.15s;
+    }
+    .node-group:hover .node-box {
+      filter: brightness(1.08);
+      stroke: #5a6070;
+    }
+    .node-group.selected .node-box {
+      stroke: #2563eb;
+      stroke-width: 2.5;
+    }
+    .node-label {
+      fill: #e4e6eb;
+      font-size: 14px;
+      font-weight: 500;
+      text-anchor: middle;
+      dominant-baseline: central;
+      pointer-events: none;
+      user-select: none;
+    }
+    .node-add {
+      fill: #2563eb;
+      stroke: #1d4ed8;
+      stroke-width: 1.5;
+      cursor: pointer;
+      transition: fill 0.15s;
+    }
+    .node-add:hover {
+      fill: #3b82f6;
+    }
+    .node-add-icon {
+      fill: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      text-anchor: middle;
+      dominant-baseline: central;
+      pointer-events: none;
+    }
+    .node-edit {
+      fill: #dc2626;
+      stroke: #b91c1c;
+      stroke-width: 1.5;
+      cursor: pointer;
+      transition: fill 0.15s;
+    }
+    .node-edit:hover {
+      fill: #ef4444;
+    }
+    .node-edit-icon {
+      fill: #fff;
+      font-size: 12px;
+      text-anchor: middle;
+      dominant-baseline: central;
+      pointer-events: none;
+    }
+    .node-comment {
+      fill: #16a34a;
+      stroke: #15803d;
+      stroke-width: 1.5;
+      cursor: pointer;
+      transition: fill 0.15s;
+    }
+    .node-comment:hover {
+      fill: #22c55e;
+    }
+    .node-comment-icon {
+      fill: #fff;
+      font-size: 11px;
+      text-anchor: middle;
+      dominant-baseline: central;
+      pointer-events: none;
+    }
+    #prompt-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    #prompt-overlay.visible {
+      display: flex;
+    }
+    #prompt-box {
+      background: #252830;
+      border: 1px solid #3a3f4b;
+      border-radius: 12px;
+      padding: 24px;
+      min-width: 320px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    #prompt-box label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: #b0b4bc;
+    }
+    #prompt-box input {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 14px;
+      border: 1px solid #4a5060;
+      border-radius: 6px;
+      background: #1a1d23;
+      color: #e4e6eb;
+      margin-bottom: 8px;
+    }
+    #prompt-box input:focus {
+      outline: none;
+      border-color: #2563eb;
+    }
+    #prompt-colors {
+      display: none;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    #prompt-colors.visible {
+      display: flex;
+    }
+    #prompt-colors .color-swatch {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    #prompt-colors .color-swatch:hover { transform: scale(1.1); }
+    #prompt-colors .color-swatch.selected { border-color: #e4e6eb; }
+    #prompt-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    #prompt-actions button {
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    #prompt-change-color {
+      margin-right: auto;
+      background: #353a46;
+      color: #e4e6eb;
+      border: 1px solid #4a5060;
+    }
+    #prompt-change-color:hover { background: #404654; }
+    #prompt-cancel {
+      background: #353a46;
+      color: #e4e6eb;
+      border: 1px solid #4a5060;
+    }
+    #prompt-ok {
+      background: #2563eb;
+      color: #fff;
+    }
+    #prompt-ok:hover { background: #3b82f6; }
+    #prompt-cancel:hover { background: #404654; }
+    #side-picker-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    #side-picker-overlay.visible { display: flex; }
+    #side-picker-box {
+      background: #252830;
+      border: 1px solid #3a3f4b;
+      border-radius: 12px;
+      padding: 24px;
+      min-width: 280px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    #side-picker-box p { margin: 0 0 16px; color: #b0b4bc; font-size: 13px; }
+    .side-buttons { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    #side-picker-box .side-btn {
+      padding: 12px 20px;
+      border-radius: 8px;
+      border: 1px solid #4a5060;
+      background: #353a46;
+      color: #e4e6eb;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    #side-picker-box .side-btn:hover { background: #404654; border-color: #5a6070; }
+    #side-picker-box .side-btn.left { border-color: #3d5a80; }
+    #side-picker-box .side-btn.right { border-color: #5c7e9e; }
+    #side-picker-box .side-btn.down { border-color: #2d6a4f; }
+    #comment-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    #comment-overlay.visible { display: flex; }
+    #comment-box {
+      background: #252830;
+      border: 1px solid #3a3f4b;
+      border-radius: 12px;
+      padding: 24px;
+      min-width: 360px;
+      max-width: 90vw;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      position: relative;
+    }
+    #comment-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    #comment-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: #e4e6eb;
+    }
+    #comment-close {
+      background: transparent;
+      border: none;
+      color: #b0b4bc;
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0 4px;
+      border-radius: 4px;
+    }
+    #comment-close:hover {
+      color: #e4e6eb;
+      background: #353a46;
+    }
+    #comment-box label {
+      display: block;
+      margin: 12px 0 6px;
+      font-size: 13px;
+      color: #b0b4bc;
+    }
+    #comment-box label:first-of-type { margin-top: 0; }
+    #comment-description, #comment-source {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 14px;
+      border: 1px solid #4a5060;
+      border-radius: 6px;
+      background: #1a1d23;
+      color: #e4e6eb;
+      font-family: inherit;
+      box-sizing: border-box;
+    }
+    #comment-description {
+      resize: vertical;
+      min-height: 80px;
+    }
+    #comment-description:focus, #comment-source:focus {
+      outline: none;
+      border-color: #2563eb;
+    }
+    #edit-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    #edit-overlay.visible { display: flex; }
+    #edit-box {
+      background: #252830;
+      border: 1px solid #3a3f4b;
+      border-radius: 12px;
+      padding: 24px;
+      min-width: 320px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    #edit-box label {
+      display: block;
+      margin: 12px 0 6px;
+      font-size: 13px;
+      color: #b0b4bc;
+    }
+    #edit-box label:first-child { margin-top: 0; }
+    #edit-box #edit-label {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 14px;
+      border: 1px solid #4a5060;
+      border-radius: 6px;
+      background: #1a1d23;
+      color: #e4e6eb;
+    }
+    #edit-box #edit-label:focus {
+      outline: none;
+      border-color: #2563eb;
+    }
+    .edit-row { margin: 12px 0; }
+    #edit-change-color {
+      padding: 8px 14px;
+      border-radius: 6px;
+      border: 1px solid #4a5060;
+      background: #353a46;
+      color: #e4e6eb;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    #edit-change-color:hover { background: #404654; }
+    #edit-colors {
+      display: none;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    #edit-colors.visible {
+      display: flex;
+    }
+    #edit-colors .color-swatch {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    #edit-colors .color-swatch:hover { transform: scale(1.1); }
+    #edit-colors .color-swatch.selected { border-color: #e4e6eb; }
+    #edit-actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    #edit-actions button {
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    #edit-delete {
+      background: #b91c1c;
+      color: #fff;
+      margin-right: auto;
+    }
+    #edit-delete:hover { background: #dc2626; }
+    #edit-delete.hidden { display: none; }
+    #edit-cancel {
+      background: #353a46;
+      color: #e4e6eb;
+      border: 1px solid #4a5060;
+    }
+    #edit-ok { background: #2563eb; color: #fff; }
+    #edit-ok:hover { background: #3b82f6; }
+    #edit-cancel:hover { background: #404654; }
+    .btn-delete-view {
+      background: #4a2525;
+      border-color: #6a3535;
+      color: #e4e6eb;
+    }
+    .btn-delete-view:hover { background: #5a3030; border-color: #7a4545; }
+    #confirm-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    #confirm-overlay.visible { display: flex; }
+    #confirm-box {
+      background: #252830;
+      border: 1px solid #3a3f4b;
+      border-radius: 12px;
+      padding: 24px;
+      min-width: 320px;
+      max-width: 90vw;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    #confirm-message {
+      margin: 0 0 20px;
+      font-size: 14px;
+      color: #e4e6eb;
+      line-height: 1.5;
+    }
+    #confirm-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    #confirm-actions button {
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    #confirm-cancel {
+      background: #353a46;
+      color: #e4e6eb;
+      border: 1px solid #4a5060;
+    }
+    #confirm-cancel:hover { background: #404654; }
+    #confirm-ok {
+      background: #b91c1c;
+      color: #fff;
+    }
+    #confirm-ok:hover { background: #dc2626; }
+  </style>
+</head>
+<body>
+  <div id="toolbar">
+    <div id="toolbar-left">
+      <div class="toolbar-dropdown" id="dropdown-file">
+        <button type="button" class="toolbar-menu-btn" id="btn-file">File</button>
+        <div class="dropdown-menu" id="menu-file">
+          <button type="button" id="btn-save">Save</button>
+          <button type="button" id="btn-import-trigger">Import JSON</button>
+        </div>
+      </div>
+      <div class="toolbar-dropdown" id="dropdown-view">
+        <button type="button" class="toolbar-menu-btn" id="btn-view">View</button>
+        <div class="dropdown-menu" id="menu-view">
+          <button type="button" id="btn-center-view" class="primary">Center View</button>
+          <button type="button" id="btn-delete-view" class="btn-delete-view">Reset Map</button>
+        </div>
+      </div>
+    </div>
+    <div id="toolbar-title">Causal Map for Structured Analytic Techniques</div>
+    <div id="toolbar-right">
+      <button type="button" id="btn-float" class="toolbar-menu-btn">Float is OFF</button>
+    </div>
+    <input type="file" id="file-import" accept=".json,application/json">
+  </div>
+
+  <div id="canvas-wrap">
+    <svg id="svg" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#5a6070" />
+        </marker>
+      </defs>
+      <g id="zoom-pan">
+        <g id="links"></g>
+        <g id="nodes"></g>
+      </g>
+    </svg>
+  </div>
+
+  <div id="prompt-overlay">
+    <div id="prompt-box">
+      <label id="prompt-label">Name the new sub-variable</label>
+      <input type="text" id="prompt-input" placeholder="Enter label..." autocomplete="off">
+      <div id="prompt-colors"></div>
+      <div id="prompt-actions">
+        <button type="button" id="prompt-change-color">Color</button>
+        <button type="button" id="prompt-cancel">Cancel</button>
+        <button type="button" id="prompt-ok">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="side-picker-overlay">
+    <div id="side-picker-box">
+      <p>Place new first-level node on which side?</p>
+      <div class="side-buttons">
+        <button type="button" class="side-btn left" data-side="left">Left</button>
+        <button type="button" class="side-btn right" data-side="right">Right</button>
+        <button type="button" class="side-btn down" data-side="down">Down</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="comment-overlay">
+    <div id="comment-box">
+      <div id="comment-header">
+        <h2 id="comment-title">Comment</h2>
+        <button type="button" id="comment-close" aria-label="Close">×</button>
+      </div>
+      <label for="comment-description">Description</label>
+      <textarea id="comment-description" rows="4" placeholder="Optional description..."></textarea>
+      <label for="comment-source">Source</label>
+      <input type="text" id="comment-source" placeholder="Optional source URL or reference...">
+    </div>
+  </div>
+
+  <div id="confirm-overlay">
+    <div id="confirm-box">
+      <p id="confirm-message">Are you sure? This will remove everything and reset the map to the default.</p>
+      <div id="confirm-actions">
+        <button type="button" id="confirm-cancel">Cancel</button>
+        <button type="button" id="confirm-ok">Reset Map</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="edit-overlay">
+    <div id="edit-box">
+      <label>Label</label>
+      <input type="text" id="edit-label" placeholder="Node label..." autocomplete="off">
+      <div class="edit-row">
+        <button type="button" id="edit-change-color">Change Color</button>
+        <div id="edit-colors"></div>
+      </div>
+      <div id="edit-actions">
+        <button type="button" id="edit-delete" class="edit-delete">Delete</button>
+        <button type="button" id="edit-cancel">Cancel</button>
+        <button type="button" id="edit-ok">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+(function () {
+  'use strict';
+
+  const NODE_MIN_WIDTH = 160;
+  const NODE_MAX_WIDTH = 380;
+  const NODE_WIDTH = 160;
+  const NODE_HEIGHT = 48;
+  const MIN_GAP = 28;
+  const EDGE_CLEARANCE = 24;
+
+  const NODE_COLORS = [
+    '#2d3142', '#3d5a80', '#2d6a4f', '#5c4d7d', '#8b5a2b',
+    '#6a4c93', '#b5651d', '#457b9d', '#2a9d8f', '#e76f51',
+    '#6c757d', '#40916c'
+  ];
+
+  const FORCE_REPULSE = 26000;
+  const FORCE_LINK_IDEAL = 140;
+  const FORCE_LINK_STRENGTH = 0.08;
+  const FORCE_CENTER = 0.02;
+  const FORCE_ITERATIONS = 120;
+  const DAMPING = 0.85;
+
+  const SIDES = ['left', 'right', 'down'];
+
+  function generateId() {
+    return 'n_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 9);
+  }
+
+  function createNode(label, children = [], side) {
+    const node = {
+      id: generateId(),
+      label: label || 'Unnamed',
+      children: Array.isArray(children) ? children : []
+    };
+    if (side && SIDES.includes(side)) node.side = side;
+    return node;
+  }
+
+  function getNodeWidth(node) {
+    const len = (node.label || '').length;
+    return Math.max(NODE_MIN_WIDTH, Math.min(NODE_MAX_WIDTH, 20 + len * 9));
+  }
+
+  const defaultRoot = createNode('Main category', []);
+
+  const TREE_STORAGE_KEY = 'osamuuttuja_tree';
+
+  let tree = JSON.parse(JSON.stringify(defaultRoot));
+  let selectedNodeId = null;
+  let nodePositions = new Map();
+  let lastNodeWidths = new Map();
+  let simPositions = new Map();
+  let simVelocities = new Map();
+  let nodeElements = new Map();
+  let linkElements = [];
+  let animationId = null;
+  let draggingNodeId = null;
+  let dragNode = null;
+  let dragG = null;
+  let dragStartX = 0;
+  let dragStartY = 0;
+  let dragMouseStartX = 0;
+  let dragMouseStartY = 0;
+  let lastDragX = 0;
+  let lastDragY = 0;
+  let didDrag = false;
+  let justDragged = false;
+  let floatMode = false;
+  let dragReturnX = 0;
+  let dragReturnY = 0;
+
+  const zoomPan = document.getElementById('zoom-pan');
+  const linksG = document.getElementById('links');
+  const nodesG = document.getElementById('nodes');
+  const wrap = document.getElementById('canvas-wrap');
+  const svg = document.getElementById('svg');
+
+  const VIEW_STORAGE_KEY = 'osamuuttuja_view';
+  let transform = { x: 0, y: 0, k: 1 };
+  let isPanning = false;
+  let panStart = { x: 0, y: 0 };
+
+  function applyTransform() {
+    zoomPan.setAttribute('transform', `translate(${transform.x},${transform.y}) scale(${transform.k})`);
+  }
+
+  function saveView() {
+    try {
+      sessionStorage.setItem(VIEW_STORAGE_KEY, JSON.stringify({ x: transform.x, y: transform.y, k: transform.k }));
+    } catch (_) {}
+  }
+
+  function restoreView() {
+    try {
+      const s = sessionStorage.getItem(VIEW_STORAGE_KEY);
+      if (!s) return false;
+      const t = JSON.parse(s);
+      if (typeof t.x !== 'number' || typeof t.y !== 'number' || typeof t.k !== 'number') return false;
+      transform.x = t.x;
+      transform.y = t.y;
+      transform.k = Math.max(0.2, Math.min(3, t.k));
+      applyTransform();
+      return true;
+    } catch (_) { return false; }
+  }
+
+  function getTreeBounds() {
+    if (nodePositions.size === 0) return { x: 0, y: 0, w: 400, h: 300 };
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    nodePositions.forEach((pos, id) => {
+      const halfW = (lastNodeWidths.get(id) ?? NODE_WIDTH) / 2;
+      const halfH = NODE_HEIGHT / 2;
+      minX = Math.min(minX, pos.x - halfW - EDGE_CLEARANCE);
+      maxX = Math.max(maxX, pos.x + halfW + EDGE_CLEARANCE);
+      minY = Math.min(minY, pos.y - halfH - EDGE_CLEARANCE);
+      maxY = Math.max(maxY, pos.y + halfH + EDGE_CLEARANCE);
+    });
+    return { x: minX, y: minY, w: maxX - minX, h: maxY - minY };
+  }
+
+  function fitToScreen() {
+    const bounds = getTreeBounds();
+    const padding = 60;
+    const w = wrap.clientWidth;
+    const h = wrap.clientHeight;
+    const scale = Math.min((w - padding * 2) / bounds.w, (h - padding * 2) / bounds.h, 1.5);
+    transform.k = Math.max(0.3, scale);
+    transform.x = w / 2 - (bounds.x + bounds.w / 2) * transform.k;
+    transform.y = h / 2 - (bounds.y + bounds.h / 2) * transform.k;
+    applyTransform();
+    saveView();
+  }
+
+  function screenToGraph(screenX, screenY) {
+    const rect = wrap.getBoundingClientRect();
+    const sx = screenX - rect.left;
+    const sy = screenY - rect.top;
+    return { x: (sx - transform.x) / transform.k, y: (sy - transform.y) / transform.k };
+  }
+
+  wrap.addEventListener('mousedown', (e) => {
+    if (e.target.closest('.node-group') && !e.target.closest('.node-add') && !e.target.closest('.node-edit') && !e.target.closest('.node-comment')) return;
+    isPanning = true;
+    panStart = { x: e.clientX - transform.x, y: e.clientY - transform.y };
+  });
+  wrap.addEventListener('mousemove', (e) => {
+    if (!isPanning) return;
+    transform.x = e.clientX - panStart.x;
+    transform.y = e.clientY - panStart.y;
+    applyTransform();
+  });
+  wrap.addEventListener('mouseup', () => {
+    if (isPanning) saveView();
+    isPanning = false;
+  });
+  wrap.addEventListener('mouseleave', () => {
+    if (isPanning) saveView();
+    isPanning = false;
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!draggingNodeId || !dragG) return;
+    didDrag = true;
+    const gm = screenToGraph(e.clientX, e.clientY);
+    lastDragX = dragStartX + (gm.x - dragMouseStartX);
+    lastDragY = dragStartY + (gm.y - dragMouseStartY);
+    simPositions.set(draggingNodeId, { x: lastDragX, y: lastDragY });
+    dragG.setAttribute('transform', `translate(${lastDragX},${lastDragY})`);
+    updatePositions();
+  });
+  document.addEventListener('mouseup', (e) => {
+    if (!draggingNodeId || !dragNode) return;
+    justDragged = didDrag;
+    if (didDrag && dragNode) {
+      if (floatMode) {
+        simPositions.set(draggingNodeId, { x: dragReturnX, y: dragReturnY });
+        simVelocities.set(draggingNodeId, { vx: 0, vy: 0 });
+        updatePositions();
+      } else {
+        dragNode.x = lastDragX;
+        dragNode.y = lastDragY;
+        simPositions.set(draggingNodeId, { x: lastDragX, y: lastDragY });
+        simVelocities.set(draggingNodeId, { vx: 0, vy: 0 });
+        saveTree();
+      }
+    }
+    draggingNodeId = null;
+    dragNode = null;
+    dragG = null;
+    didDrag = false;
+  });
+
+  wrap.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const scaleFactor = e.deltaY > 0 ? 0.9 : 1.1;
+    const newK = Math.max(0.2, Math.min(3, transform.k * scaleFactor));
+    const rect = wrap.getBoundingClientRect();
+    const cx = e.clientX - rect.left;
+    const cy = e.clientY - rect.top;
+    const wx = (cx - transform.x) / transform.k;
+    const wy = (cy - transform.y) / transform.k;
+    transform.k = newK;
+    transform.x = cx - wx * transform.k;
+    transform.y = cy - wy * transform.k;
+    applyTransform();
+    saveView();
+  }, { passive: false });
+
+  if (wrap.classList) {
+    wrap.addEventListener('mousedown', () => wrap.classList.add('dragging'));
+    wrap.addEventListener('mouseup', () => wrap.classList.remove('dragging'));
+    wrap.addEventListener('mouseleave', () => wrap.classList.remove('dragging'));
+  }
+
+  function collectNodesAndEdges(node, list, edges, depth) {
+    list.push({ id: node.id, node, isRoot: depth === 0 });
+    node.children.forEach((child) => {
+      edges.push({ sourceId: node.id, targetId: child.id });
+      collectNodesAndEdges(child, list, edges, depth + 1);
+    });
+  }
+
+  function clampToBox(px, py, cx, cy, halfW, halfH) {
+    halfW = halfW ?? NODE_WIDTH / 2;
+    halfH = halfH ?? NODE_HEIGHT / 2;
+    const dx = cx - px;
+    const dy = cy - py;
+    if (Math.abs(dx) < 1e-6 && Math.abs(dy) < 1e-6) return { x: px + (dx >= 0 ? halfW : -halfW), y: py };
+    const tx = Math.abs(dx) > 1e-6 ? halfW / Math.abs(dx) : 1;
+    const ty = Math.abs(dy) > 1e-6 ? halfH / Math.abs(dy) : 1;
+    const t = Math.min(tx, ty, 1);
+    return { x: px + dx * t, y: py + dy * t };
+  }
+
+  function runForcesStep(nodes, edges) {
+    const forces = new Map();
+    nodes.forEach((n) => forces.set(n.id, { fx: 0, fy: 0 }));
+    nodes.forEach((a) => {
+      const pa = simPositions.get(a.id);
+      if (!pa) return;
+      if (a.id === draggingNodeId) return;
+      nodes.forEach((b) => {
+        if (a.id === b.id) return;
+        const pb = simPositions.get(b.id);
+        if (!pb) return;
+        const dx = pa.x - pb.x;
+        const dy = pa.y - pb.y;
+        let d = Math.sqrt(dx * dx + dy * dy) || 0.1;
+        d = Math.max(d, 18);
+        const f = FORCE_REPULSE / (d * d);
+        const fa = forces.get(a.id);
+        fa.fx += (f * dx) / d;
+        fa.fy += (f * dy) / d;
+      });
+    });
+    edges.forEach((e) => {
+      const pa = simPositions.get(e.sourceId);
+      const pb = simPositions.get(e.targetId);
+      if (!pa || !pb) return;
+      const dx = pb.x - pa.x;
+      const dy = pb.y - pa.y;
+      const d = Math.sqrt(dx * dx + dy * dy) || 0.1;
+      const stretch = d - FORCE_LINK_IDEAL;
+      const f = stretch * FORCE_LINK_STRENGTH;
+      const fx = (f * dx) / d;
+      const fy = (f * dy) / d;
+      if (e.sourceId !== draggingNodeId) {
+        const fa = forces.get(e.sourceId);
+        fa.fx += fx;
+        fa.fy += fy;
+      }
+      if (e.targetId !== draggingNodeId) {
+        const fb = forces.get(e.targetId);
+        fb.fx -= fx;
+        fb.fy -= fy;
+      }
+    });
+    nodes.forEach((n) => {
+      if (n.id === draggingNodeId) return;
+      const p = simPositions.get(n.id);
+      const v = simVelocities.get(n.id);
+      if (!p || !v) return;
+      const fa = forces.get(n.id);
+      v.vx = (v.vx + fa.fx) * DAMPING - p.x * FORCE_CENTER * 0.01;
+      v.vy = (v.vy + fa.fy) * DAMPING - p.y * FORCE_CENTER * 0.01;
+      p.x += v.vx;
+      p.y += v.vy;
+    });
+  }
+
+  function initSimFromLayout() {
+    nodePositions.forEach((pos, id) => {
+      simPositions.set(id, { x: pos.x, y: pos.y });
+      simVelocities.set(id, { vx: 0, vy: 0 });
+    });
+  }
+
+  function runForces(nodes, edges, positions, rootId) {
+    const pos = new Map();
+    nodes.forEach((n) => {
+      const p = positions.get(n.id) || { x: 0, y: 0 };
+      const hasCustomPos = n.node.x != null && n.node.y != null;
+      pos.set(n.id, { x: p.x, y: p.y, vx: 0, vy: 0, fixed: n.id === rootId || hasCustomPos });
+    });
+    for (let iter = 0; iter < FORCE_ITERATIONS; iter++) {
+      const forces = new Map();
+      nodes.forEach((n) => forces.set(n.id, { fx: 0, fy: 0 }));
+      nodes.forEach((a) => {
+        const pa = pos.get(a.id);
+        if (pa.fixed) return;
+        nodes.forEach((b) => {
+          if (a.id === b.id) return;
+          const pb = pos.get(b.id);
+          const dx = pa.x - pb.x;
+          const dy = pa.y - pb.y;
+          let d = Math.sqrt(dx * dx + dy * dy) || 0.1;
+          d = Math.max(d, 18);
+          const f = FORCE_REPULSE / (d * d);
+          const fx = (f * dx) / d;
+          const fy = (f * dy) / d;
+          const fa = forces.get(a.id);
+          fa.fx += fx;
+          fa.fy += fy;
+        });
+      });
+      edges.forEach((e) => {
+        const pa = pos.get(e.sourceId);
+        const pb = pos.get(e.targetId);
+        if (!pa || !pb) return;
+        const dx = pb.x - pa.x;
+        const dy = pb.y - pa.y;
+        const d = Math.sqrt(dx * dx + dy * dy) || 0.1;
+        const stretch = d - FORCE_LINK_IDEAL;
+        const f = stretch * FORCE_LINK_STRENGTH;
+        const fx = (f * dx) / d;
+        const fy = (f * dy) / d;
+        if (!pa.fixed) {
+          const fa = forces.get(e.sourceId);
+          fa.fx += fx;
+          fa.fy += fy;
+        }
+        if (!pb.fixed) {
+          const fb = forces.get(e.targetId);
+          fb.fx -= fx;
+          fb.fy -= fy;
+        }
+      });
+      nodes.forEach((n) => {
+        const p = pos.get(n.id);
+        if (p.fixed) {
+          p.vx = 0;
+          p.vy = 0;
+          return;
+        }
+        const centerPull = FORCE_CENTER;
+        p.vx = (p.vx + forces.get(n.id).fx) * DAMPING - p.x * centerPull * 0.01;
+        p.vy = (p.vy + forces.get(n.id).fy) * DAMPING - p.y * centerPull * 0.01;
+        p.x += p.vx;
+        p.y += p.vy;
+      });
+    }
+    pos.forEach((p, id) => nodePositions.set(id, { x: p.x, y: p.y }));
+  }
+
+  function computeLayout() {
+    nodePositions.clear();
+    const root = tree;
+    const nodes = [];
+    const edges = [];
+    collectNodesAndEdges(root, nodes, edges, 0);
+    nodePositions.set(root.id, { x: 0, y: 0 });
+    const radius = 180;
+    nodes.forEach((n, i) => {
+      if (n.id === root.id) return;
+      if (n.node.x != null && n.node.y != null) {
+        nodePositions.set(n.id, { x: n.node.x, y: n.node.y });
+      } else {
+        const angle = (i / Math.max(nodes.length - 1, 1)) * Math.PI * 2 * 0.9 + 0.1;
+        nodePositions.set(n.id, { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius });
+      }
+    });
+    runForces(nodes, edges, nodePositions, root.id);
+    nodes.forEach((n) => {
+      if (n.node.x != null && n.node.y != null) {
+        nodePositions.set(n.id, { x: n.node.x, y: n.node.y });
+      }
+    });
+  }
+
+  function renderLink(parentPos, childPos, parentW, childW) {
+    const hwP = (parentW ?? NODE_WIDTH) / 2;
+    const hwC = (childW ?? NODE_WIDTH) / 2;
+    const hh = NODE_HEIGHT / 2;
+    const pad = 4;
+    const start = clampToBox(parentPos.x, parentPos.y, childPos.x, childPos.y, hwP, hh);
+    const end = clampToBox(childPos.x, childPos.y, parentPos.x, parentPos.y, hwC, hh);
+    const dx = end.x - start.x;
+    const dy = end.y - start.y;
+    const dist = Math.sqrt(dx * dx + dy * dy) || 0.1;
+    const inset = Math.min(pad, dist / 2);
+    const s = { x: start.x + (dx / dist) * inset, y: start.y + (dy / dist) * inset };
+    const e = { x: end.x - (dx / dist) * inset, y: end.y - (dy / dist) * inset };
+    return `M ${s.x} ${s.y} L ${e.x} ${e.y}`;
+  }
+
+  function buildNodeWidths(node, map) {
+    map.set(node.id, getNodeWidth(node));
+    node.children.forEach((c) => buildNodeWidths(c, map));
+  }
+
+  function updatePositions() {
+    simPositions.forEach((pos, id) => {
+      nodePositions.set(id, { x: pos.x, y: pos.y });
+      if (!floatMode) {
+        const node = findNode(tree, id);
+        if (node) { node.x = pos.x; node.y = pos.y; }
+      }
+    });
+    nodeElements.forEach((g, id) => {
+      const pos = nodePositions.get(id) || simPositions.get(id);
+      if (pos) g.setAttribute('transform', `translate(${pos.x},${pos.y})`);
+    });
+    const nodeWidths = new Map();
+    buildNodeWidths(tree, nodeWidths);
+    linkElements.forEach(({ pathEl, sourceId, targetId }) => {
+      const ppos = nodePositions.get(sourceId) || simPositions.get(sourceId);
+      const cpos = nodePositions.get(targetId) || simPositions.get(targetId);
+      if (!ppos || !cpos) return;
+      const pnode = findNode(tree, sourceId);
+      const cnode = findNode(tree, targetId);
+      const pw = nodeWidths.get(sourceId) ?? (pnode ? getNodeWidth(pnode) : NODE_WIDTH);
+      const cw = nodeWidths.get(targetId) ?? (cnode ? getNodeWidth(cnode) : NODE_WIDTH);
+      pathEl.setAttribute('d', renderLink(ppos, cpos, pw, cw));
+    });
+  }
+
+  function render(fullBuild) {
+    if (fullBuild !== false) {
+      computeLayout();
+      initSimFromLayout();
+    }
+    const nodeWidths = new Map();
+    buildNodeWidths(tree, nodeWidths);
+    lastNodeWidths = nodeWidths;
+
+    linksG.innerHTML = '';
+    nodesG.innerHTML = '';
+    nodeElements.clear();
+    linkElements = [];
+
+    function addLinks(node) {
+      const pos = nodePositions.get(node.id);
+      if (!pos) return;
+      const pw = nodeWidths.get(node.id);
+      node.children.forEach((child) => {
+        const cpos = nodePositions.get(child.id);
+        if (!cpos) return;
+        const cw = nodeWidths.get(child.id);
+        const path = renderLink(pos, cpos, pw, cw);
+        const el = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        el.setAttribute('class', 'link');
+        el.setAttribute('d', path);
+        linksG.appendChild(el);
+        linkElements.push({ pathEl: el, sourceId: node.id, targetId: child.id });
+        addLinks(child);
+      });
+    }
+    addLinks(tree);
+
+    function addNodeEl(node) {
+      const pos = nodePositions.get(node.id);
+      if (!pos) return;
+
+      const w = getNodeWidth(node);
+      const hw = w / 2;
+      const hh = NODE_HEIGHT / 2;
+      const boxFill = node.color || '#2d3142';
+
+      const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      g.setAttribute('class', 'node-group' + (selectedNodeId === node.id ? ' selected' : ''));
+      g.setAttribute('data-id', node.id);
+      g.setAttribute('transform', `translate(${pos.x},${pos.y})`);
+
+      const box = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      box.setAttribute('class', 'node-box');
+      box.setAttribute('x', -hw);
+      box.setAttribute('y', -hh);
+      box.setAttribute('width', w);
+      box.setAttribute('height', NODE_HEIGHT);
+      box.setAttribute('fill', boxFill);
+      box.style.setProperty('fill', boxFill);
+
+      const labelY = -10;
+      const buttonRowY = 4;
+      const buttonGap = 4;
+      const btnSize = 18;
+      const addBtnW = btnSize;
+      const editBtnW = btnSize;
+      const commentBtnW = btnSize;
+      const buttonRowWidth = addBtnW + buttonGap + editBtnW + buttonGap + commentBtnW;
+      const buttonRowLeft = -buttonRowWidth / 2;
+
+      const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      label.setAttribute('class', 'node-label');
+      label.textContent = node.label;
+      label.setAttribute('x', 0);
+      label.setAttribute('y', labelY);
+
+      const addBtn = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      addBtn.setAttribute('class', 'node-add');
+      addBtn.setAttribute('x', buttonRowLeft);
+      addBtn.setAttribute('y', buttonRowY);
+      addBtn.setAttribute('width', addBtnW);
+      addBtn.setAttribute('height', btnSize);
+      addBtn.setAttribute('rx', 4);
+      addBtn.setAttribute('data-id', node.id);
+
+      const addIcon = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      addIcon.setAttribute('class', 'node-add-icon');
+      addIcon.setAttribute('x', buttonRowLeft + addBtnW / 2);
+      addIcon.setAttribute('y', buttonRowY + btnSize / 2);
+      addIcon.textContent = '+';
+
+      const editBtn = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      editBtn.setAttribute('class', 'node-edit');
+      editBtn.setAttribute('x', buttonRowLeft + addBtnW + buttonGap);
+      editBtn.setAttribute('y', buttonRowY);
+      editBtn.setAttribute('width', editBtnW);
+      editBtn.setAttribute('height', btnSize);
+      editBtn.setAttribute('rx', 4);
+      editBtn.setAttribute('data-id', node.id);
+
+      const editIcon = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      editIcon.setAttribute('class', 'node-edit-icon');
+      editIcon.setAttribute('x', buttonRowLeft + addBtnW + buttonGap + editBtnW / 2);
+      editIcon.setAttribute('y', buttonRowY + btnSize / 2);
+      editIcon.textContent = '✎';
+
+      const commentBtn = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      commentBtn.setAttribute('class', 'node-comment');
+      commentBtn.setAttribute('x', buttonRowLeft + addBtnW + buttonGap + editBtnW + buttonGap);
+      commentBtn.setAttribute('y', buttonRowY);
+      commentBtn.setAttribute('width', commentBtnW);
+      commentBtn.setAttribute('height', btnSize);
+      commentBtn.setAttribute('rx', 4);
+      commentBtn.setAttribute('data-id', node.id);
+
+      const commentIcon = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      commentIcon.setAttribute('class', 'node-comment-icon');
+      commentIcon.setAttribute('x', buttonRowLeft + addBtnW + buttonGap + editBtnW + buttonGap + commentBtnW / 2);
+      commentIcon.setAttribute('y', buttonRowY + btnSize / 2);
+      commentIcon.textContent = '💬';
+
+      g.appendChild(box);
+      g.appendChild(label);
+      g.appendChild(addBtn);
+      g.appendChild(addIcon);
+      g.appendChild(editBtn);
+      g.appendChild(editIcon);
+      g.appendChild(commentBtn);
+      g.appendChild(commentIcon);
+
+      g.addEventListener('mousedown', (e) => {
+        if (e.target.classList.contains('node-add') || e.target.classList.contains('node-add-icon') || e.target.closest('.node-add')) return;
+        if (e.target.classList.contains('node-edit') || e.target.classList.contains('node-edit-icon') || e.target.closest('.node-edit')) return;
+        if (e.target.classList.contains('node-comment') || e.target.classList.contains('node-comment-icon') || e.target.closest('.node-comment')) return;
+        e.preventDefault();
+        e.stopPropagation();
+        const current = simPositions.get(node.id) || nodePositions.get(node.id) || pos;
+        const gm = screenToGraph(e.clientX, e.clientY);
+        draggingNodeId = node.id;
+        dragNode = node;
+        dragG = g;
+        dragStartX = current.x;
+        dragStartY = current.y;
+        dragMouseStartX = gm.x;
+        dragMouseStartY = gm.y;
+        lastDragX = current.x;
+        lastDragY = current.y;
+        didDrag = false;
+        if (floatMode) {
+          dragReturnX = current.x;
+          dragReturnY = current.y;
+        }
+      });
+      g.addEventListener('click', (e) => {
+        if (justDragged) { justDragged = false; return; }
+        if (e.target.classList.contains('node-add') || e.target.classList.contains('node-add-icon') || e.target.closest('.node-add')) return;
+        if (e.target.classList.contains('node-edit') || e.target.classList.contains('node-edit-icon') || e.target.closest('.node-edit')) return;
+        if (e.target.classList.contains('node-comment') || e.target.classList.contains('node-comment-icon') || e.target.closest('.node-comment')) return;
+        selectedNodeId = node.id;
+        render();
+      });
+      g.addEventListener('dblclick', (e) => {
+        if (e.target.closest('.node-add') || e.target.closest('.node-edit') || e.target.closest('.node-comment')) return;
+        e.stopPropagation();
+        openEditNode(node);
+      });
+
+      addBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openPromptWithColor('Name the new sub-variable', NODE_COLORS[0], (name, color) => {
+          const child = createNode(name.trim() || 'Unnamed');
+          child.color = color;
+          if (node.id === tree.id) child.side = 'down';
+          node.children.push(child);
+          saveTree();
+          render();
+        });
+      });
+
+      editBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openEditNode(node);
+      });
+
+      commentBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openCommentPopup(node);
+      });
+
+      nodeElements.set(node.id, g);
+      nodesG.appendChild(g);
+      node.children.forEach((child) => addNodeEl(child));
+    }
+    addNodeEl(tree);
+    if (fullBuild !== false) {
+      simNodes = [];
+      simEdges = [];
+      collectNodesAndEdges(tree, simNodes, simEdges, 0);
+    }
+  }
+
+  let simNodes = [];
+  let simEdges = [];
+  function tick() {
+    if (!floatMode) {
+      animationId = null;
+      return;
+    }
+    if (simNodes.length === 0) {
+      const nodes = [];
+      const edges = [];
+      collectNodesAndEdges(tree, nodes, edges, 0);
+      simNodes = nodes;
+      simEdges = edges;
+    }
+    for (let i = 0; i < 3; i++) runForcesStep(simNodes, simEdges);
+    if (draggingNodeId) {
+      const pos = simPositions.get(draggingNodeId);
+      if (pos) {
+        pos.x = lastDragX;
+        pos.y = lastDragY;
+      }
+      simVelocities.set(draggingNodeId, { vx: 0, vy: 0 });
+    }
+    updatePositions();
+    animationId = requestAnimationFrame(tick);
+  }
+  function syncSimFromTree() {
+    function walk(n) {
+      if (n.x != null && n.y != null) {
+        simPositions.set(n.id, { x: n.x, y: n.y });
+        simVelocities.set(n.id, { vx: 0, vy: 0 });
+      }
+      n.children.forEach(walk);
+    }
+    walk(tree);
+  }
+  function startSimulation() {
+    if (animationId != null) return;
+    syncSimFromTree();
+    const nodes = [];
+    const edges = [];
+    collectNodesAndEdges(tree, nodes, edges, 0);
+    simNodes = nodes;
+    simEdges = edges;
+    tick();
+  }
+  function stopSimulation() {
+    if (animationId != null) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+    syncSimFromTree();
+    updatePositions();
+  }
+
+  const overlay = document.getElementById('prompt-overlay');
+  const promptInput = document.getElementById('prompt-input');
+  const promptLabel = document.getElementById('prompt-label');
+  const promptColorsEl = document.getElementById('prompt-colors');
+  const promptChangeColorBtn = document.getElementById('prompt-change-color');
+
+  function openPrompt(labelText, initialValue, onOk) {
+    promptLabel.textContent = labelText;
+    promptInput.value = initialValue;
+    promptChangeColorBtn.style.display = 'none';
+    promptColorsEl.classList.remove('visible');
+    promptColorsEl.innerHTML = '';
+    overlay.classList.add('visible');
+    promptInput.focus();
+    promptInput.select();
+
+    function finish(ok) {
+      overlay.classList.remove('visible');
+      if (ok) onOk(promptInput.value);
+      promptInput.value = '';
+    }
+
+    document.getElementById('prompt-ok').onclick = () => finish(true);
+    document.getElementById('prompt-cancel').onclick = () => finish(false);
+    promptInput.onkeydown = (e) => {
+      if (e.key === 'Enter') finish(true);
+      if (e.key === 'Escape') finish(false);
+    };
+  }
+
+  function openPromptWithColor(labelText, initialColor, onOk) {
+    promptLabel.textContent = labelText;
+    promptInput.value = '';
+    let chosenColor = initialColor || NODE_COLORS[0];
+    promptChangeColorBtn.style.display = 'block';
+    promptColorsEl.innerHTML = '';
+    promptColorsEl.classList.remove('visible');
+    NODE_COLORS.forEach((hex) => {
+      const swatch = document.createElement('button');
+      swatch.type = 'button';
+      swatch.className = 'color-swatch' + (hex === chosenColor ? ' selected' : '');
+      swatch.style.background = hex;
+      swatch.dataset.color = hex;
+      swatch.addEventListener('click', () => {
+        promptColorsEl.querySelectorAll('.color-swatch').forEach((s) => s.classList.remove('selected'));
+        swatch.classList.add('selected');
+        chosenColor = hex;
+      });
+      promptColorsEl.appendChild(swatch);
+    });
+    overlay.classList.add('visible');
+    promptInput.focus();
+
+    function finish(ok) {
+      overlay.classList.remove('visible');
+      if (ok) onOk(promptInput.value, chosenColor);
+      promptInput.value = '';
+    }
+
+    document.getElementById('prompt-ok').onclick = () => finish(true);
+    document.getElementById('prompt-cancel').onclick = () => finish(false);
+    promptChangeColorBtn.onclick = () => promptColorsEl.classList.toggle('visible');
+    promptInput.onkeydown = (e) => {
+      if (e.key === 'Enter') finish(true);
+      if (e.key === 'Escape') finish(false);
+    };
+  }
+
+  const editOverlay = document.getElementById('edit-overlay');
+  const editLabelInput = document.getElementById('edit-label');
+  const editColorsEl = document.getElementById('edit-colors');
+
+  function openEditNode(node) {
+    const deleteBtn = document.getElementById('edit-delete');
+    editLabelInput.value = node.label || '';
+    editColorsEl.innerHTML = '';
+    editColorsEl.classList.remove('visible');
+    let chosenColor = node.color || NODE_COLORS[0];
+    NODE_COLORS.forEach((hex) => {
+      const swatch = document.createElement('button');
+      swatch.type = 'button';
+      swatch.className = 'color-swatch' + (hex === chosenColor ? ' selected' : '');
+      swatch.style.background = hex;
+      swatch.dataset.color = hex;
+      swatch.addEventListener('click', () => {
+        editColorsEl.querySelectorAll('.color-swatch').forEach((s) => s.classList.remove('selected'));
+        swatch.classList.add('selected');
+        chosenColor = hex;
+      });
+      editColorsEl.appendChild(swatch);
+    });
+    if (node.id === tree.id) {
+      deleteBtn.classList.add('hidden');
+    } else {
+      deleteBtn.classList.remove('hidden');
+    }
+    editOverlay.classList.add('visible');
+    editLabelInput.focus();
+    editLabelInput.select();
+
+    document.getElementById('edit-change-color').onclick = () => {
+      editColorsEl.classList.toggle('visible');
+    };
+
+    function finish(ok) {
+      editOverlay.classList.remove('visible');
+      if (ok) {
+        node.label = (editLabelInput.value && editLabelInput.value.trim()) ? editLabelInput.value.trim() : node.label;
+        node.color = chosenColor;
+        const g = nodeElements.get(node.id);
+        if (g) {
+          const rect = g.querySelector('rect.node-box');
+          if (rect) {
+            const fill = node.color || '#2d3142';
+            rect.setAttribute('fill', fill);
+            rect.style.setProperty('fill', fill);
+          }
+          const labelEl = g.querySelector('text.node-label');
+          if (labelEl) labelEl.textContent = node.label;
+        } else {
+          render();
+        }
+        saveTree();
+      }
+    }
+
+    function doDelete() {
+      const pair = findParent(tree, node.id);
+      if (pair) {
+        const idx = pair.parent.children.indexOf(pair.node);
+        if (idx !== -1) pair.parent.children.splice(idx, 1);
+        editOverlay.classList.remove('visible');
+        saveTree();
+        render();
+        fitToScreen();
+      }
+    }
+
+    document.getElementById('edit-ok').onclick = () => finish(true);
+    document.getElementById('edit-cancel').onclick = () => finish(false);
+    deleteBtn.onclick = () => doDelete();
+    editLabelInput.onkeydown = (e) => {
+      if (e.key === 'Enter') finish(true);
+      if (e.key === 'Escape') finish(false);
+    };
+  }
+
+  const commentOverlay = document.getElementById('comment-overlay');
+  const commentTitleEl = document.getElementById('comment-title');
+  const commentDescriptionEl = document.getElementById('comment-description');
+  const commentSourceEl = document.getElementById('comment-source');
+  let commentPopupNode = null;
+
+  function persistCommentToNode(node) {
+    if (!node) return;
+    const desc = (commentDescriptionEl.value && commentDescriptionEl.value.trim()) ? commentDescriptionEl.value.trim() : '';
+    const src = (commentSourceEl.value && commentSourceEl.value.trim()) ? commentSourceEl.value.trim() : '';
+    if (desc) node.description = desc; else delete node.description;
+    if (src) node.source = src; else delete node.source;
+    saveTree();
+  }
+
+  function openCommentPopup(node) {
+    if (commentPopupNode && commentPopupNode.id !== node.id) {
+      persistCommentToNode(commentPopupNode);
+    }
+    commentPopupNode = node;
+    commentTitleEl.textContent = node.label || 'Comment';
+    commentDescriptionEl.value = node.description || '';
+    commentSourceEl.value = node.source || '';
+    commentOverlay.classList.add('visible');
+    commentDescriptionEl.focus();
+  }
+
+  function closeCommentPopup() {
+    if (commentPopupNode) {
+      persistCommentToNode(commentPopupNode);
+      commentPopupNode = null;
+    }
+    commentOverlay.classList.remove('visible');
+  }
+
+  document.getElementById('comment-close').addEventListener('click', closeCommentPopup);
+  commentOverlay.addEventListener('click', (e) => {
+    if (e.target === commentOverlay) closeCommentPopup();
+  });
+  commentDescriptionEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeCommentPopup();
+  });
+  commentSourceEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeCommentPopup();
+  });
+
+  const sidePickerOverlay = document.getElementById('side-picker-overlay');
+  function openSidePicker(onChoose) {
+    sidePickerOverlay.classList.add('visible');
+    const handler = (e) => {
+      const side = e.target.dataset.side;
+      if (!side || !SIDES.includes(side)) return;
+      sidePickerOverlay.classList.remove('visible');
+      document.querySelectorAll('#side-picker-box .side-btn').forEach((btn) => btn.removeEventListener('click', handler));
+      onChoose(side);
+    };
+    document.querySelectorAll('#side-picker-box .side-btn').forEach((btn) => {
+      btn.addEventListener('click', handler);
+    });
+    const cancel = () => {
+      sidePickerOverlay.classList.remove('visible');
+      document.querySelectorAll('#side-picker-box .side-btn').forEach((b) => b.removeEventListener('click', handler));
+    };
+    sidePickerOverlay.onclick = (e) => { if (e.target === sidePickerOverlay) cancel(); };
+  }
+
+  function findNode(node, id) {
+    if (node.id === id) return node;
+    for (const c of node.children) {
+      const found = findNode(c, id);
+      if (found) return found;
+    }
+    return null;
+  }
+
+  function findParent(root, nodeId) {
+    if (root.id === nodeId) return null;
+    for (const c of root.children) {
+      if (c.id === nodeId) return { parent: root, node: c };
+      const found = findParent(c, nodeId);
+      if (found) return found;
+    }
+    return null;
+  }
+
+  function ensureIds(node, isRoot) {
+    if (!node.id) node.id = generateId();
+    if (!node.label) node.label = 'Unnamed';
+    if (!Array.isArray(node.children)) node.children = [];
+    const asRoot = isRoot === true;
+    node.children.forEach((c) => {
+      if (asRoot && (!c.side || !SIDES.includes(c.side))) c.side = 'down';
+      ensureIds(c, false);
+    });
+  }
+
+  function treeReplacer(key, value) {
+    if (key === 'description' || key === 'source') {
+      if (value == null || value === '') return undefined;
+    }
+    return value;
+  }
+
+  function saveTree() {
+    try {
+      sessionStorage.setItem(TREE_STORAGE_KEY, JSON.stringify(tree, treeReplacer));
+    } catch (_) {}
+  }
+
+  function restoreTree() {
+    try {
+      const s = sessionStorage.getItem(TREE_STORAGE_KEY);
+      if (!s) return false;
+      const data = JSON.parse(s);
+      if (!data || !data.id || !Array.isArray(data.children)) return false;
+      ensureIds(data, true);
+      tree = data;
+      return true;
+    } catch (_) { return false; }
+  }
+
+  function doExport() {
+    const json = JSON.stringify(tree, treeReplacer, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'osamuuttuja-tree.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  document.getElementById('btn-save').addEventListener('click', () => {
+    doExport();
+    document.getElementById('dropdown-file').classList.remove('open');
+  });
+
+  document.getElementById('btn-import-trigger').addEventListener('click', () => {
+    document.getElementById('file-import').click();
+    document.getElementById('dropdown-file').classList.remove('open');
+  });
+
+  document.getElementById('file-import').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result);
+        ensureIds(data, true);
+        tree = data;
+        saveTree();
+        selectedNodeId = null;
+        render();
+        fitToScreen();
+      } catch (err) {
+        alert('Invalid JSON: ' + err.message);
+      }
+      e.target.value = '';
+    };
+    reader.readAsText(file);
+  });
+
+  document.getElementById('btn-center-view').addEventListener('click', () => {
+    fitToScreen();
+    document.getElementById('dropdown-view').classList.remove('open');
+  });
+
+  const confirmOverlay = document.getElementById('confirm-overlay');
+  const confirmMessage = document.getElementById('confirm-message');
+  document.getElementById('btn-delete-view').addEventListener('click', () => {
+    document.getElementById('dropdown-view').classList.remove('open');
+    confirmMessage.textContent = 'Are you sure? This will remove everything and reset the map to the default.';
+    confirmOverlay.classList.add('visible');
+    let resolved = false;
+    const finish = (ok) => {
+      if (resolved) return;
+      resolved = true;
+      confirmOverlay.classList.remove('visible');
+      if (ok) {
+        tree = JSON.parse(JSON.stringify(defaultRoot));
+        saveTree();
+        selectedNodeId = null;
+        render();
+        fitToScreen();
+      }
+    };
+    document.getElementById('confirm-cancel').onclick = () => finish(false);
+    document.getElementById('confirm-ok').onclick = () => finish(true);
+    confirmOverlay.onclick = (e) => { if (e.target === confirmOverlay) finish(false); };
+  });
+
+  document.getElementById('btn-file').addEventListener('click', (e) => {
+    e.stopPropagation();
+    const dd = document.getElementById('dropdown-file');
+    const other = document.getElementById('dropdown-view');
+    other.classList.remove('open');
+    dd.classList.toggle('open');
+  });
+
+  document.getElementById('btn-view').addEventListener('click', (e) => {
+    e.stopPropagation();
+    const dd = document.getElementById('dropdown-view');
+    const other = document.getElementById('dropdown-file');
+    other.classList.remove('open');
+    dd.classList.toggle('open');
+  });
+
+  document.getElementById('menu-file').addEventListener('click', (e) => e.stopPropagation());
+  document.getElementById('menu-view').addEventListener('click', (e) => e.stopPropagation());
+
+  document.addEventListener('click', () => {
+    document.getElementById('dropdown-file').classList.remove('open');
+    document.getElementById('dropdown-view').classList.remove('open');
+  });
+
+  const btnFloat = document.getElementById('btn-float');
+  btnFloat.addEventListener('click', () => {
+    floatMode = !floatMode;
+    if (floatMode) {
+      startSimulation();
+      btnFloat.textContent = 'Float is ON';
+    } else {
+      stopSimulation();
+      btnFloat.textContent = 'Float is OFF';
+    }
+  });
+
+  restoreTree();
+  render();
+  setTimeout(function () {
+    if (!restoreView()) fitToScreen();
+  }, 50);
+})();
+  </script>
+</body>
+</html>
