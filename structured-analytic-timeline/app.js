@@ -2,6 +2,16 @@
   "use strict";
 
   const STORAGE_KEY = "timeline-events";
+  const INDICATORS_STORAGE_KEY = "indicators_store";
+  const INDICATORS_ENTITIES = ["What", "Who", "When", "Where", "Why", "How"];
+  const INDICATORS_PLACEHOLDERS = {
+    What: "What kind of indicator could it be?",
+    Who: "Who could cause the indicator?",
+    When: "When would we see the indicator?",
+    Where: "Where would we see the indicator?",
+    Why: "Why is the indicator important?",
+    How: "How would this indicator manifest / be observed?"
+  };
 
   const form = document.getElementById("event-form");
   const nameInput = document.getElementById("event-name");
@@ -65,6 +75,14 @@
   const btnYearScaleApply = document.getElementById("btn-year-scale-apply");
   const timelineToolbar = document.getElementById("timeline-toolbar");
   const timelineToolbarResizeHandle = document.getElementById("timeline-toolbar-resize-handle");
+  const btnIndicatorsToolbar = document.getElementById("btn-indicators-toolbar");
+  const btnIndicatorsDetails = document.getElementById("btn-indicators-details");
+  const indicatorsOverlay = document.getElementById("indicators-overlay");
+  const indicatorsBackdrop = document.getElementById("indicators-backdrop");
+  const indicatorsModal = document.getElementById("indicators-modal");
+  const indicatorsModalClose = document.getElementById("indicators-modal-close");
+  const indicatorsBtnCreate = document.getElementById("indicators-btn-create");
+  const indicatorsBtnCancel = document.getElementById("indicators-btn-cancel");
 
   var editingId = null;
   var activeEventId = null;
@@ -1097,6 +1115,211 @@
     div.textContent = s;
     return div.innerHTML;
   }
+
+  function loadIndicatorsStore() {
+    try {
+      var raw = localStorage.getItem(INDICATORS_STORAGE_KEY);
+      if (!raw) return { What: [], Who: [], When: [], Where: [], Why: [], How: [] };
+      var o = JSON.parse(raw);
+      INDICATORS_ENTITIES.forEach(function (key) {
+        if (!Array.isArray(o[key])) o[key] = [];
+      });
+      return o;
+    } catch (_) {
+      return { What: [], Who: [], When: [], Where: [], Why: [], How: [] };
+    }
+  }
+
+  function saveIndicatorsStore(store) {
+    localStorage.setItem(INDICATORS_STORAGE_KEY, JSON.stringify(store));
+  }
+
+  function resetIndicatorsForm() {
+    if (!indicatorsModal) return;
+    INDICATORS_ENTITIES.forEach(function (entity) {
+      var block = indicatorsModal.querySelector(".indicators-entity[data-entity=\"" + entity + "\"]");
+      if (!block) return;
+      var rowsContainer = block.querySelector(".indicators-entity-rows");
+      if (!rowsContainer) return;
+      rowsContainer.innerHTML = "";
+      var row = document.createElement("div");
+      row.className = "indicators-row";
+      row.innerHTML =
+        "<input type=\"text\" class=\"indicators-input\" placeholder=\"" + escapeHtml(INDICATORS_PLACEHOLDERS[entity]) + "\" data-entity=\"" + escapeHtml(entity) + "\">" +
+        "<button type=\"button\" class=\"indicators-add-row\" data-entity=\"" + escapeHtml(entity) + "\" aria-label=\"Add row\">+</button>";
+      rowsContainer.appendChild(row);
+      row.querySelector(".indicators-add-row").addEventListener("click", function () {
+        addIndicatorsRow(entity);
+      });
+    });
+  }
+
+  function addIndicatorsRow(entity) {
+    var block = indicatorsModal && indicatorsModal.querySelector(".indicators-entity[data-entity=\"" + entity + "\"]");
+    if (!block) return;
+    var rowsContainer = block.querySelector(".indicators-entity-rows");
+    if (!rowsContainer) return;
+    var row = document.createElement("div");
+    row.className = "indicators-row";
+    row.innerHTML =
+      "<input type=\"text\" class=\"indicators-input\" placeholder=\"" + escapeHtml(INDICATORS_PLACEHOLDERS[entity]) + "\" data-entity=\"" + escapeHtml(entity) + "\">" +
+      "<button type=\"button\" class=\"indicators-add-row\" data-entity=\"" + escapeHtml(entity) + "\" aria-label=\"Add row\">+</button>";
+    rowsContainer.appendChild(row);
+    row.querySelector(".indicators-add-row").addEventListener("click", function () {
+      addIndicatorsRow(entity);
+    });
+  }
+
+  function openIndicatorsPopup(fromDetailsPanel) {
+    if (!indicatorsOverlay || !indicatorsModal) return;
+    resetIndicatorsForm();
+    indicatorsOverlay.hidden = false;
+    if (fromDetailsPanel && panelDetails && !panelDetails.classList.contains("panel-hidden")) {
+      indicatorsOverlay.classList.add("indicators-side-by-side");
+      var panelRect = panelDetails.getBoundingClientRect();
+      indicatorsModal.style.marginLeft = (panelRect.right + 16) + "px";
+      indicatorsModal.style.marginTop = Math.max(16, panelRect.top) + "px";
+    } else {
+      indicatorsOverlay.classList.remove("indicators-side-by-side");
+      indicatorsModal.style.marginLeft = "";
+      indicatorsModal.style.marginTop = "";
+    }
+  }
+
+  function closeIndicatorsPopup() {
+    if (indicatorsOverlay) {
+      indicatorsOverlay.hidden = true;
+      indicatorsOverlay.classList.remove("indicators-side-by-side");
+    }
+  }
+
+  function collectIndicatorsForm() {
+    var out = { What: [], Who: [], When: [], Where: [], Why: [], How: [] };
+    if (!indicatorsModal) return out;
+    INDICATORS_ENTITIES.forEach(function (entity) {
+      var inputs = indicatorsModal.querySelectorAll(".indicators-entity[data-entity=\"" + entity + "\"] .indicators-input");
+      inputs.forEach(function (input) {
+        var val = (input.value || "").trim();
+        if (!val) return;
+        val.split(",").forEach(function (part) {
+          part = part.trim();
+          if (part) out[entity].push(part);
+        });
+      });
+    });
+    return out;
+  }
+
+  function buildIndicatorsText(store) {
+    var lines = [];
+    var hasAny = false;
+    INDICATORS_ENTITIES.forEach(function (entity) {
+      var arr = store[entity];
+      if (arr && arr.length > 0) {
+        hasAny = true;
+        lines.push(entity + "?");
+        arr.forEach(function (item) {
+          lines.push("- " + item);
+        });
+        lines.push("");
+      }
+    });
+    if (!hasAny) return "No indicators yet.";
+    return lines.join("\n").replace(/\n+$/, "");
+  }
+
+  function persistIndicatorsToFile(text, done) {
+    function fallback() {
+      var blob = new Blob([text], { type: "text/plain; charset=utf-8" });
+      if (typeof window !== "undefined" && window.showSaveFilePicker) {
+        window.showSaveFilePicker({ suggestedName: "Indicators.txt", types: [{ description: "Text file", accept: { "text/plain": [".txt"] } }] })
+          .then(function (handle) {
+            return handle.createWritable();
+          })
+          .then(function (writable) {
+            return writable.write(blob).then(function () { return writable.close(); });
+          })
+          .then(function () { if (done) done(); })
+          .catch(function () {
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement("a");
+            a.href = url;
+            a.download = "Indicators.txt";
+            a.click();
+            URL.revokeObjectURL(url);
+            if (done) done();
+          });
+      } else {
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "Indicators.txt";
+        a.click();
+        URL.revokeObjectURL(url);
+        if (done) done();
+      }
+    }
+    fetch("/api/save-indicators", {
+      method: "POST",
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+      body: text
+    }).then(function (res) {
+      if (res.ok) {
+        if (done) done();
+      } else {
+        fallback();
+      }
+    }).catch(function () {
+      fallback();
+    });
+  }
+
+  function onCreateIndicatorsClick() {
+    var formData = collectIndicatorsForm();
+    var store = loadIndicatorsStore();
+    INDICATORS_ENTITIES.forEach(function (key) {
+      (formData[key] || []).forEach(function (item) {
+        store[key].push(item);
+      });
+    });
+    saveIndicatorsStore(store);
+    closeIndicatorsPopup();
+    var batchText = buildIndicatorsText(formData);
+    if (batchText && batchText !== "No indicators yet.") {
+      persistIndicatorsToFile(batchText);
+    }
+    resetIndicatorsForm();
+  }
+
+  if (btnIndicatorsToolbar) {
+    btnIndicatorsToolbar.addEventListener("click", function () {
+      openIndicatorsPopup(false);
+    });
+  }
+  if (btnIndicatorsDetails) {
+    btnIndicatorsDetails.addEventListener("click", function () {
+      openIndicatorsPopup(true);
+    });
+  }
+  if (indicatorsBtnCreate) {
+    indicatorsBtnCreate.addEventListener("click", function () {
+      onCreateIndicatorsClick();
+    });
+  }
+  if (indicatorsBtnCancel) {
+    indicatorsBtnCancel.addEventListener("click", closeIndicatorsPopup);
+  }
+  if (indicatorsModalClose) {
+    indicatorsModalClose.addEventListener("click", closeIndicatorsPopup);
+  }
+  if (indicatorsBackdrop) {
+    indicatorsBackdrop.addEventListener("click", closeIndicatorsPopup);
+  }
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && indicatorsOverlay && !indicatorsOverlay.hidden) {
+      closeIndicatorsPopup();
+    }
+  });
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();

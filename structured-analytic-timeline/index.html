@@ -13,6 +13,10 @@
         <div class="timeline-toolbar-inner">
           <header class="timeline-header-bar" id="timeline-header-bar">
             <div class="timeline-header-left">
+              <a href="http://localhost:3000/" target="_self" class="btn-back-to-hub" aria-label="Back to main screen" title="Back to SAT Tools hub">
+                <svg class="btn-back-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" fill="currentColor"/></svg>
+                Back to Main Screen
+              </a>
               <div class="layouts-wrap" id="layouts-wrap">
                 <button type="button" class="btn-file-menu" id="btn-file-menu" aria-haspopup="true" aria-expanded="false" aria-label="File menu">File</button>
                 <button type="button" class="btn-layouts" id="btn-layouts" aria-haspopup="true" aria-expanded="false" aria-label="Layouts menu">Layouts</button>
@@ -26,6 +30,7 @@
                 <button type="button" class="btn-zoom-in" id="btn-zoom-in" title="Zoom in">+</button>
                 <button type="button" class="btn-reset-view" id="btn-reset-view">Reset view</button>
               </div>
+              <button type="button" class="btn-indicators" id="btn-indicators-toolbar">Create new Indicators</button>
             </div>
           </header>
           <div class="timeline-scale-strip">
@@ -133,6 +138,9 @@
         <div id="event-details-content" class="event-details-content">
           <p class="event-details-placeholder">Empty state — click an event on the timeline or in the Events list to view details.</p>
         </div>
+        <div class="event-details-actions">
+          <button type="button" class="btn-indicators" id="btn-indicators-details">Create new Indicators</button>
+        </div>
       </div>
       <div class="resize-handle" id="panel-details-resize" aria-label="Resize"></div>
     </div>
@@ -159,6 +167,76 @@
       <button type="button" class="file-menu-item file-menu-item-danger" id="file-remove-all" role="menuitem">Remove all Events</button>
     </div>
     <input type="file" id="json-file-input" accept=".json,application/json" hidden>
+    <div class="indicators-overlay" id="indicators-overlay" hidden>
+      <div class="indicators-backdrop" id="indicators-backdrop"></div>
+      <div class="indicators-modal" id="indicators-modal" role="dialog" aria-labelledby="indicators-modal-title" aria-modal="true">
+        <div class="indicators-modal-header">
+          <h2 class="indicators-modal-title" id="indicators-modal-title">Create Indicators</h2>
+          <button type="button" class="indicators-modal-close" id="indicators-modal-close" aria-label="Close">×</button>
+        </div>
+        <p class="indicators-hint">Fill one or more fields (comma-separated for multiple). Not all are required.</p>
+        <div class="indicators-entities" id="indicators-entities">
+          <div class="indicators-entity" data-entity="What">
+            <label class="indicators-entity-label">What?</label>
+            <div class="indicators-entity-rows">
+              <div class="indicators-row">
+                <input type="text" class="indicators-input" placeholder="What kind of indicator could it be?" data-entity="What">
+                <button type="button" class="indicators-add-row" data-entity="What" aria-label="Add row">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="indicators-entity" data-entity="Who">
+            <label class="indicators-entity-label">Who?</label>
+            <div class="indicators-entity-rows">
+              <div class="indicators-row">
+                <input type="text" class="indicators-input" placeholder="Who could cause the indicator?" data-entity="Who">
+                <button type="button" class="indicators-add-row" data-entity="Who" aria-label="Add row">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="indicators-entity" data-entity="When">
+            <label class="indicators-entity-label">When?</label>
+            <div class="indicators-entity-rows">
+              <div class="indicators-row">
+                <input type="text" class="indicators-input" placeholder="When would we see the indicator?" data-entity="When">
+                <button type="button" class="indicators-add-row" data-entity="When" aria-label="Add row">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="indicators-entity" data-entity="Where">
+            <label class="indicators-entity-label">Where?</label>
+            <div class="indicators-entity-rows">
+              <div class="indicators-row">
+                <input type="text" class="indicators-input" placeholder="Where would we see the indicator?" data-entity="Where">
+                <button type="button" class="indicators-add-row" data-entity="Where" aria-label="Add row">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="indicators-entity" data-entity="Why">
+            <label class="indicators-entity-label">Why?</label>
+            <div class="indicators-entity-rows">
+              <div class="indicators-row">
+                <input type="text" class="indicators-input" placeholder="Why is the indicator important?" data-entity="Why">
+                <button type="button" class="indicators-add-row" data-entity="Why" aria-label="Add row">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="indicators-entity" data-entity="How">
+            <label class="indicators-entity-label">How?</label>
+            <div class="indicators-entity-rows">
+              <div class="indicators-row">
+                <input type="text" class="indicators-input" placeholder="How would this indicator manifest / be observed?" data-entity="How">
+                <button type="button" class="indicators-add-row" data-entity="How" aria-label="Add row">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="indicators-modal-actions">
+          <button type="button" class="btn-indicators-primary" id="indicators-btn-create">Create Indicators</button>
+          <button type="button" class="indicators-btn-cancel" id="indicators-btn-cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
   </div>
   <script src="app.js"></script>
 </body>

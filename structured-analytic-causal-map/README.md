@@ -65,6 +65,22 @@ python -m http.server 8000
 Then open:  
 👉 http://localhost:8000
 
+### Option 3: Auto-save indicators to the circleboarding folder  
+To have **Create Indicators** write directly to  
+`Structured-Analytic-Techniques/structured-analytic-circleboarding/indicators.txt`  
+without any save dialog, run the included Node.js server from this folder:
+
+```bash
+cd structured-analytic-causal-map
+node server.js
+```
+
+Then open:  
+👉 http://localhost:8765  
+
+When you click **Create Indicators**, the file is written automatically (no prompt).  
+If you open the app without the server (e.g. by double-clicking `index.html`), the app will fall back to a download or save dialog.
+
 ---
 
 ## 💾 Data storage

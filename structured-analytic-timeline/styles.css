@@ -383,6 +383,35 @@ body {
   border-color: var(--text-muted);
 }
 
+/* Create new Indicators button (toolbar and panel) */
+.btn-indicators {
+  padding: 0.35rem 0.75rem;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #fff;
+  background: #b91c1c;
+  border: 1px solid #b91c1c;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-indicators:hover {
+  background: #dc2626;
+  border-color: #dc2626;
+}
+
+/* Event details panel: actions row */
+.event-details-actions {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+.event-details-actions .btn-indicators {
+  width: 100%;
+}
+
 #overlay-root {
   position: fixed;
   inset: 0;
@@ -394,11 +423,222 @@ body {
   pointer-events: auto;
 }
 
+/* Indicators overlay and modal */
+#overlay-root .indicators-overlay {
+  pointer-events: auto;
+}
+
+#overlay-root .indicators-overlay[hidden] {
+  display: none !important;
+}
+
+.indicators-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.indicators-overlay.indicators-side-by-side {
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 0;
+}
+
+.indicators-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+
+.indicators-side-by-side .indicators-backdrop {
+  display: none;
+}
+
+.indicators-modal {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  padding: 1.25rem;
+}
+
+.indicators-side-by-side .indicators-modal {
+  margin: 0;
+  max-height: 85vh;
+}
+
+.indicators-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.indicators-modal-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.indicators-modal-close {
+  padding: 0.2rem 0.5rem;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.indicators-modal-close:hover {
+  color: var(--text);
+  background: var(--border);
+}
+
+.indicators-hint {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.indicators-entities {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.indicators-entity-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.indicators-entity-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.indicators-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.indicators-row .indicators-input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.indicators-add-row {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  font-size: 1.25rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.indicators-add-row:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.indicators-modal-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn-indicators-primary {
+  padding: 0.5rem 1rem;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #fff;
+  background: #b91c1c;
+  border: 1px solid #b91c1c;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-indicators-primary:hover {
+  background: #dc2626;
+  border-color: #dc2626;
+}
+
+.indicators-btn-cancel {
+  padding: 0.5rem 1rem;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.indicators-btn-cancel:hover {
+  color: var(--text);
+  border-color: var(--text-muted);
+}
+
 .layouts-wrap {
   position: relative;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.btn-back-to-hub {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-back-to-hub:hover {
+  color: var(--text);
+  border-color: var(--text-muted);
+}
+
+.btn-back-icon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
 }
 
 .btn-file-menu {

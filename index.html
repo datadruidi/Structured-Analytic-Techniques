@@ -1,0 +1,89 @@
+A<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Structured Analytic Techniques</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --surface: #1a2332;
+      --border: #2d3a4d;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --accent: #58a6ff;
+      --radius: 8px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+    h1 { margin: 0 0 0.5rem; font-size: 1.5rem; }
+    p.subtitle { margin: 0 0 2rem; color: var(--text-muted); font-size: 0.95rem; }
+    .hub-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      max-width: 900px;
+    }
+    .hub-btn {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100px;
+      padding: 1rem 0.75rem;
+      color: var(--text);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .hub-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .hub-btn svg { width: 32px; height: 32px; fill: currentColor; }
+    .hub-btn svg[stroke] { fill: none; stroke: currentColor; }
+    .hub-btn.extra { opacity: 0.85; }
+  </style>
+</head>
+<body>
+  <h1>Structured Analytic Techniques</h1>
+  <p class="subtitle">Choose a tool to open it in a new tab.</p>
+  <div class="hub-buttons">
+    <a class="hub-btn" href="http://localhost:8765" target="_blank" rel="noopener noreferrer" aria-label="Open Causal Map (port 8765)">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="8" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M8.2 7.2l5.5 3.2M14 10.2l-5 7.2M8.5 7.5L11 16"/></svg>
+      Causal Map
+    </a>
+    <a class="hub-btn" href="http://localhost:8080" target="_blank" rel="noopener noreferrer" aria-label="Open Timeline (port 8080)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
+      Timeline
+    </a>
+    <a class="hub-btn" href="http://localhost:8082" target="_blank" rel="noopener noreferrer" aria-label="Open Circleboarding (port 8082)">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="5" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="19" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/></svg>
+      Circleboarding
+    </a>
+    <a class="hub-btn" href="http://localhost:8083" target="_blank" rel="noopener noreferrer" aria-label="Open Multiple Hypothesis Generation (port 8083)">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 4v16M4 8h4M4 12h3M4 16h5M16 8h4M16 12h3M16 16h4M8 4l2 4 2-4M8 20l2-4 2 4"/></svg>
+      Multiple Hypothesis
+    </a>
+    <a class="hub-btn extra" href="http://localhost:8084" target="_blank" rel="noopener noreferrer" aria-label="EXTRA 2 (port 8084)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"/></svg> EXTRA 2</a>
+    <a class="hub-btn extra" href="http://localhost:8085" target="_blank" rel="noopener noreferrer" aria-label="EXTRA 3 (port 8085)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"/></svg> EXTRA 3</a>
+    <a class="hub-btn extra" href="http://localhost:8086" target="_blank" rel="noopener noreferrer" aria-label="EXTRA 4 (port 8086)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"/></svg> EXTRA 4</a>
+    <a class="hub-btn extra" href="http://localhost:8087" target="_blank" rel="noopener noreferrer" aria-label="EXTRA 5 (port 8087)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"/></svg> EXTRA 5</a>
+  </div>
+</body>
+</html>

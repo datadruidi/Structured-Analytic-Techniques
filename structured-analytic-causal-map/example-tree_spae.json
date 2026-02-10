@@ -1,0 +1,123 @@
+{
+  "id": "n_root_001",
+  "name": "Sosiaalinen",
+  "depth": 0,
+  "description": "Root category for social factors.",
+  "source": "Expert workshop 2024",
+  "children": [
+    {
+      "id": "n_l1_a",
+      "name": "Yhteisöllisyys",
+      "depth": 1,
+      "description": "Community and social cohesion aspects.",
+      "source": "Literature review",
+      "side": "down",
+      "children": [
+        {
+          "id": "n_l2_a1",
+          "name": "Demografinen paine",
+          "depth": 2,
+          "description": "Population structure and demographic pressure on services.",
+          "source": "Statistics Finland",
+          "children": [
+            {
+              "id": "n_l3_a1x",
+              "name": "Ikärakenne",
+              "depth": 3,
+              "description": "Age structure and dependency ratio.",
+              "source": "Population forecast 2024",
+              "children": [
+                {
+                  "id": "n_l4_leaf1",
+                  "name": "Vanhenevat ikäluokat",
+                  "depth": 4,
+                  "description": "Aging cohorts and pension expenditure.",
+                  "source": "ETK report",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "n_l3_a1y",
+              "name": "Maahanmuutto",
+              "depth": 3,
+              "description": "Migration flows and integration needs.",
+              "source": "Migri statistics",
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "n_l2_a2",
+          "name": "Integraatio",
+          "depth": 2,
+          "description": "Integration of different groups into society.",
+          "source": "Ministry of Justice",
+          "children": [
+            {
+              "id": "n_l3_a2x",
+              "name": "Kielitaito",
+              "depth": 3,
+              "description": "Language skills and training availability.",
+              "source": "Opetushallitus",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n_l1_b",
+      "name": "Turvallisuus",
+      "depth": 1,
+      "description": "Safety and security factors.",
+      "source": "Police statistics",
+      "side": "down",
+      "children": [
+        {
+          "id": "n_l2_b1",
+          "name": "Sosiaalistuminen / vakaus",
+          "depth": 2,
+          "description": "Socialisation and stability of communities.",
+          "source": "Local surveys",
+          "children": []
+        },
+        {
+          "id": "n_l2_b2",
+          "name": "Konflikti",
+          "depth": 2,
+          "description": "Conflict and tension indicators.",
+          "source": "Conflict barometer",
+          "children": [
+            {
+              "id": "n_l3_b2x",
+              "name": "Väkivalta",
+              "depth": 3,
+              "description": "Violence and crime rates.",
+              "source": "Rikostilasto",
+              "children": [
+                {
+                  "id": "n_l4_leaf2",
+                  "name": "Kotiväkivalta",
+                  "depth": 4,
+                  "description": "Domestic violence incidents.",
+                  "source": "Näin.fi",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n_l1_c",
+      "name": "Elinolosuhteet",
+      "depth": 1,
+      "description": "Living conditions and welfare.",
+      "source": "THL welfare report",
+      "side": "down",
+      "children": []
+    }
+  ]
+}

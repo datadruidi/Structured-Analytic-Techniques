@@ -1,0 +1,200 @@
+{
+  "id": "n_mlff19mc_cylgwc7",
+  "name": "Level 0",
+  "depth": 0,
+  "children": [
+    {
+      "id": "n_mlfggylv_hfqxiqa",
+      "name": "Level 1",
+      "depth": 1,
+      "children": [
+        {
+          "id": "n_mlfgkjiz_fqe7d31",
+          "name": "Level 2",
+          "depth": 2,
+          "children": [
+            {
+              "id": "n_mlfi73wz_u2garnd",
+              "name": "Level 3",
+              "depth": 3,
+              "children": [
+                {
+                  "id": "n_mlfi7vg0_ho4k14t",
+                  "name": "Level 4",
+                  "depth": 4,
+                  "children": [],
+                  "color": "#6a4c93",
+                  "description": "Lorem Ipsum",
+                  "source": "Lorem Ipsum",
+                  "date": "2025-01-01",
+                  "time": "12:34"
+                },
+                {
+                  "id": "n_mlfi7zz4_eofnh82",
+                  "name": "Level 4",
+                  "depth": 4,
+                  "children": [],
+                  "color": "#6a4c93",
+                  "description": "Lorem Ipsum",
+                  "source": "Lorem Ipsum",
+                  "date": "2025-01-01",
+                  "time": "12:34"
+                }
+              ],
+              "color": "#6c757d",
+              "description": "Lorem Ipsum",
+              "source": "Lorem Ipsum",
+              "date": "2025-01-01",
+              "time": "12:34"
+            }
+          ],
+          "color": "#40916c",
+          "description": "Lorem Ipsum",
+          "source": "Lorem Ipsum",
+          "date": "2025-01-01",
+          "time": "12:34"
+        }
+      ],
+      "color": "#8b5a2b",
+      "description": "Lorem Ipsum",
+      "source": "Lorem Ipsum",
+      "side": "down",
+      "date": "2025-01-01",
+      "time": "12:34"
+    },
+    {
+      "id": "n_mlfgh90o_f5ol3bw",
+      "name": "Level 1",
+      "depth": 1,
+      "children": [
+        {
+          "id": "n_mlfgk9yf_gq4wr89",
+          "name": "Level 2",
+          "depth": 2,
+          "children": [
+            {
+              "id": "n_mlfgky1i_z4t1hom",
+              "name": "Level 3",
+              "depth": 3,
+              "children": [
+                {
+                  "id": "n_mlfi9pw5_fj651xe",
+                  "name": "Level 4",
+                  "depth": 4,
+                  "children": [],
+                  "color": "#6a4c93",
+                  "description": "Lorem Ipsum",
+                  "source": "Lorem Ipsum",
+                  "date": "2025-01-01",
+                  "time": "12:34"
+                }
+              ],
+              "color": "#6c757d",
+              "description": "Lorem Ipsum",
+              "source": "Lorem Ipsum",
+              "date": "2025-01-01",
+              "time": "12:34"
+            }
+          ],
+          "color": "#40916c",
+          "description": "Lorem Ipsum",
+          "source": "Lorem Ipsum",
+          "date": "2025-01-01",
+          "time": "12:34"
+        }
+      ],
+      "color": "#8b5a2b",
+      "description": "Lorem Ipsum",
+      "source": "Lorem Ipsum",
+      "side": "down",
+      "date": "2025-01-01",
+      "time": "12:34"
+    },
+    {
+      "id": "n_mlfghwx9_ntovfho",
+      "name": "Level 1",
+      "depth": 1,
+      "children": [
+        {
+          "id": "n_mlfgiddw_0a1sna0",
+          "name": "Level 2",
+          "depth": 2,
+          "children": [
+            {
+              "id": "n_mlfgj382_yqnvb1e",
+              "name": "Level 3",
+              "depth": 3,
+              "children": [
+                {
+                  "id": "n_mlfgjtpw_2n37bn3",
+                  "name": "Level 4",
+                  "depth": 4,
+                  "children": [],
+                  "color": "#6a4c93",
+                  "description": "Lorem Ipsum",
+                  "source": "Lorem Ipsum",
+                  "date": "2025-01-01",
+                  "time": "12:34"
+                },
+                {
+                  "id": "n_mlfgjyrg_ttsc6s7",
+                  "name": "Level 4",
+                  "depth": 4,
+                  "children": [],
+                  "color": "#6a4c93",
+                  "description": "Lorem Ipsum",
+                  "source": "Lorem Ipsum",
+                  "date": "2025-01-01",
+                  "time": "12:34"
+                }
+              ],
+              "color": "#6c757d",
+              "description": "Lorem Ipsum",
+              "source": "Lorem Ipsum",
+              "date": "2025-01-01",
+              "time": "12:34"
+            },
+            {
+              "id": "n_mlfgjhdq_n3gr58k",
+              "name": "Level 3",
+              "depth": 3,
+              "children": [],
+              "color": "#6c757d",
+              "description": "Lorem Ipsum",
+              "source": "Lorem Ipsum",
+              "date": "2025-01-01",
+              "time": "12:34"
+            }
+          ],
+          "color": "#40916c",
+          "description": "Lorem Ipsum",
+          "source": "Lorem Ipsum",
+          "date": "2025-01-01",
+          "time": "12:34"
+        },
+        {
+          "id": "n_mlfgiliy_rfw7pzm",
+          "name": "Level 2",
+          "depth": 2,
+          "children": [],
+          "color": "#40916c",
+          "description": "Lorem Ipsum",
+          "source": "Lorem Ipsum",
+          "date": "2025-01-01",
+          "time": "12:34"
+        }
+      ],
+      "color": "#8b5a2b",
+      "description": "Lorem Ipsum",
+      "source": "Lorem Ipsum",
+      "side": "down",
+      "date": "2025-01-01",
+      "time": "12:34"
+    }
+  ],
+  "color": "#e76f51",
+  "description": "Lorem Ipsum",
+  "source": "Lorem Ipsum",
+  "date": "2025-01-01",
+  "time": "12:34"
+}

@@ -17,6 +17,7 @@ A lightweight, browser-based timeline tool for **Structured Analytic Techniques 
 - Zoom in/out to support analysis at different levels of detail
 - Manage UI panels from **Layouts** (show/hide + reset layouts)
 - Import/export events as **JSON** from **File**
+- **Create new Indicators** (What / Who / When / Where / Why / How) from the toolbar or Event Details panel; export to `Indicators.txt` or save via optional server
 
 ---
 
@@ -29,11 +30,17 @@ A lightweight, browser-based timeline tool for **Structured Analytic Techniques 
 ### Run locally (Option 2: local server)
 Some browsers restrict certain features when opening files directly. If you run into issues, start a simple local server:
 
+- **Node** (includes `POST /api/save-indicators` to write indicators to `../structured-analytic-circleboarding/indicators.txt` without a save dialog):
+  ```bash
+  node server.js
+  ```
+  Then open http://localhost:8080
+
 - **Python**
   ```bash
   python -m http.server 8000
-
-Then open http://localhost:8000 in your browser.
+  ```
+  Then open http://localhost:8000 in your browser.
 
 ### Use on GitHub Pages
 Enable GitHub Pages from the repo settings and point it to `/ (root)` or `/docs` depending on your setup.
@@ -70,6 +77,9 @@ Use **File** to:
 - **Export Events** (JSON)
 - **Download JSON Template**
 - **Remove all Events** (start from a blank timeline)
+
+### 5) Create Indicators
+Click **Create new Indicators** (toolbar or Event Details panel) to open the Indicators popup. Fill one or more of What? / Who? / When? / Where? / Why? / How? (comma-separated for multiple). Click **Create Indicators** to append to the stored list and export. With `node server.js`, indicators are written to `../structured-analytic-circleboarding/indicators.txt`; otherwise the browser offers a save dialog or download.
 
 ---
 

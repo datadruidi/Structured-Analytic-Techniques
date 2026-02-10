@@ -41,6 +41,11 @@
       cursor: pointer;
       font-size: 13px;
     }
+    #btn-file, #btn-view, #btn-filter, #btn-float {
+      width: 128px;
+      min-width: 128px;
+      box-sizing: border-box;
+    }
     #toolbar button:hover, .toolbar-menu-btn:hover {
       background: #404654;
       border-color: #5a6070;
@@ -100,6 +105,40 @@
     .toolbar-dropdown .dropdown-menu button.danger:hover {
       background: #4a2525;
     }
+    .toolbar-dropdown .dropdown-menu .filter-levels {
+      padding: 8px 16px 12px;
+      min-width: 140px;
+    }
+    .toolbar-dropdown .dropdown-menu .filter-levels .filter-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 0;
+      cursor: pointer;
+      color: #e4e6eb;
+      font-size: 13px;
+    }
+    .toolbar-dropdown .dropdown-menu .filter-levels .filter-row:hover {
+      background: transparent;
+    }
+    .toolbar-dropdown .dropdown-menu .filter-levels input[type="checkbox"] {
+      cursor: pointer;
+      accent-color: #3d5a80;
+    }
+    .btn-keywords,
+    #toolbar .btn-keywords,
+    #btn-keywords {
+      background: #b91c1c !important;
+      color: #fff !important;
+      border-color: #991b1b !important;
+    }
+    .btn-keywords:hover,
+    #toolbar .btn-keywords:hover,
+    #btn-keywords:hover {
+      background: #dc2626 !important;
+      border-color: #b91c1b !important;
+      color: #fff !important;
+    }
     #toolbar-title {
       position: absolute;
       left: 50%;
@@ -114,6 +153,14 @@
       display: flex;
       align-items: center;
     }
+    .toolbar-btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: inherit;
+    }
+    .toolbar-btn-back svg { width: 18px; height: 18px; flex-shrink: 0; fill: currentColor; }
     #toolbar input[type="file"] {
       display: none;
     }
@@ -170,6 +217,22 @@
       dominant-baseline: central;
       pointer-events: none;
       user-select: none;
+    }
+    .node-label-wrap {
+      margin: 0;
+      padding: 6px 12px 4px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #e4e6eb;
+      line-height: 1.35;
+      word-wrap: break-word;
+      word-break: break-word;
+      white-space: normal;
+      text-align: center;
+      pointer-events: none;
+      user-select: none;
+      width: 100%;
+      box-sizing: border-box;
     }
     .node-add {
       fill: #2563eb;
@@ -347,6 +410,106 @@
     #side-picker-box .side-btn.left { border-color: #3d5a80; }
     #side-picker-box .side-btn.right { border-color: #5c7e9e; }
     #side-picker-box .side-btn.down { border-color: #2d6a4f; }
+    #keywords-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    #keywords-overlay.visible { display: flex; }
+    #keywords-box {
+      background: #252830;
+      border: 1px solid #3a3f4b;
+      border-radius: 12px;
+      padding: 24px;
+      min-width: 360px;
+      max-width: 90vw;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    #keywords-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    #keywords-title { margin: 0; font-size: 16px; font-weight: 600; color: #e4e6eb; }
+    #keywords-close {
+      background: transparent; border: none; color: #b0b4bc; font-size: 24px;
+      line-height: 1; cursor: pointer; padding: 0 4px; border-radius: 4px;
+    }
+    #keywords-close:hover { color: #e4e6eb; background: #353a46; }
+    #keywords-hint {
+      margin: 0 0 16px; font-size: 12px; color: #9ca3af;
+    }
+    #keywords-box label {
+      display: block; margin: 12px 0 6px; font-size: 13px; color: #b0b4bc;
+    }
+    #keywords-box label:first-of-type { margin-top: 0; }
+    #keywords-box input[type="text"] {
+      width: 100%; padding: 10px 12px; font-size: 14px;
+      border: 1px solid #4a5060; border-radius: 6px;
+      background: #1a1d23; color: #e4e6eb; box-sizing: border-box;
+    }
+    #keywords-box input:focus {
+      outline: none; border-color: #2563eb;
+    }
+    .keyword-entity {
+      margin-bottom: 12px;
+    }
+    .keyword-entity > label {
+      display: block;
+      margin: 12px 0 6px;
+      font-size: 13px;
+      color: #b0b4bc;
+    }
+    .keyword-entity > label:first-child { margin-top: 0; }
+    .keyword-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .keyword-row input {
+      flex: 1;
+      min-width: 0;
+    }
+    .keyword-add-row {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      border: 1px dashed #4a5060;
+      border-radius: 6px;
+      background: #2a2e36;
+      color: #9ca3af;
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .keyword-add-row:hover {
+      background: #353a46;
+      color: #e4e6eb;
+      border-color: #5a6070;
+    }
+    #keywords-actions {
+      display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap;
+    }
+    #keywords-actions button {
+      padding: 10px 18px; font-size: 14px; border-radius: 6px;
+      cursor: pointer; border: 1px solid #4a5060;
+      background: #353a46; color: #e4e6eb;
+    }
+    #keywords-actions button.primary {
+      background: #b91c1c; border-color: #991b1b; color: #fff;
+    }
+    #keywords-actions button.primary:hover { background: #dc2626; }
+    #keywords-actions button:hover { background: #4a5060; }
+
     #comment-overlay {
       display: none;
       position: fixed;
@@ -357,6 +520,48 @@
       justify-content: center;
     }
     #comment-overlay.visible { display: flex; }
+    #comment-panels-wrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      max-width: 95vw;
+      max-height: 95vh;
+      overflow: auto;
+    }
+    #comment-keywords-slot {
+      flex-shrink: 0;
+    }
+    #comment-keywords-slot:empty {
+      display: none;
+    }
+    #comment-keywords-slot .keywords-box-inline {
+      align-self: stretch;
+    }
+    #comment-actions-row {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    #comment-save-close {
+      padding: 10px 18px;
+      font-size: 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid #2563eb;
+      background: #2563eb;
+      color: #fff;
+    }
+    #comment-save-close:hover {
+      background: #3b82f6;
+      border-color: #3b82f6;
+    }
     #comment-box {
       background: #252830;
       border: 1px solid #3a3f4b;
@@ -400,7 +605,7 @@
       color: #b0b4bc;
     }
     #comment-box label:first-of-type { margin-top: 0; }
-    #comment-description, #comment-source {
+    #comment-description, #comment-source, #comment-date, #comment-time {
       width: 100%;
       padding: 10px 12px;
       font-size: 14px;
@@ -415,9 +620,15 @@
       resize: vertical;
       min-height: 80px;
     }
-    #comment-description:focus, #comment-source:focus {
+    #comment-description:focus, #comment-source:focus, #comment-date:focus, #comment-time:focus {
       outline: none;
       border-color: #2563eb;
+    }
+    #comment-btn-keywords {
+      padding: 10px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
     }
     #edit-overlay {
       display: none;
@@ -575,10 +786,15 @@
 <body>
   <div id="toolbar">
     <div id="toolbar-left">
+      <a href="http://localhost:3000/" target="_self" class="toolbar-menu-btn toolbar-btn-back" aria-label="Back to main screen">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        Back to Main Screen
+      </a>
       <div class="toolbar-dropdown" id="dropdown-file">
         <button type="button" class="toolbar-menu-btn" id="btn-file">File</button>
         <div class="dropdown-menu" id="menu-file">
           <button type="button" id="btn-save">Save</button>
+          <button type="button" id="btn-export">Export JSON</button>
           <button type="button" id="btn-import-trigger">Import JSON</button>
         </div>
       </div>
@@ -589,10 +805,17 @@
           <button type="button" id="btn-delete-view" class="btn-delete-view">Reset Map</button>
         </div>
       </div>
+      <div class="toolbar-dropdown" id="dropdown-filter">
+        <button type="button" class="toolbar-menu-btn" id="btn-filter">Filter</button>
+        <div class="dropdown-menu" id="menu-filter">
+          <div class="filter-levels" id="filter-levels"></div>
+        </div>
+      </div>
+      <button type="button" id="btn-float" class="toolbar-menu-btn">Float is OFF</button>
     </div>
     <div id="toolbar-title">Causal Map for Structured Analytic Techniques</div>
     <div id="toolbar-right">
-      <button type="button" id="btn-float" class="toolbar-menu-btn">Float is OFF</button>
+      <button type="button" id="btn-keywords" class="toolbar-menu-btn btn-keywords">Create new Indicators</button>
     </div>
     <input type="file" id="file-import" accept=".json,application/json">
   </div>
@@ -635,16 +858,77 @@
     </div>
   </div>
 
-  <div id="comment-overlay">
-    <div id="comment-box">
-      <div id="comment-header">
-        <h2 id="comment-title">Comment</h2>
-        <button type="button" id="comment-close" aria-label="Close">×</button>
+  <div id="keywords-overlay">
+    <div id="keywords-box">
+      <div id="keywords-header">
+        <h2 id="keywords-title">Create Indicators</h2>
+        <button type="button" id="keywords-close" aria-label="Close">×</button>
       </div>
-      <label for="comment-description">Description</label>
-      <textarea id="comment-description" rows="4" placeholder="Optional description..."></textarea>
-      <label for="comment-source">Source</label>
-      <input type="text" id="comment-source" placeholder="Optional source URL or reference...">
+      <p id="keywords-hint">Fill one or more fields (comma-separated for multiple). Not all are required.</p>
+      <div class="keyword-entity" data-entity="What">
+        <label>What?</label>
+        <div class="keyword-rows">
+          <div class="keyword-row"><input type="text" placeholder="What kind of indicator could it be?"><button type="button" class="keyword-add-row" aria-label="Add row">+</button></div>
+        </div>
+      </div>
+      <div class="keyword-entity" data-entity="Who">
+        <label>Who?</label>
+        <div class="keyword-rows">
+          <div class="keyword-row"><input type="text" placeholder="Who could cause the indicator?"><button type="button" class="keyword-add-row" aria-label="Add row">+</button></div>
+        </div>
+      </div>
+      <div class="keyword-entity" data-entity="When">
+        <label>When?</label>
+        <div class="keyword-rows">
+          <div class="keyword-row"><input type="text" placeholder="When would we see the indicator?"><button type="button" class="keyword-add-row" aria-label="Add row">+</button></div>
+        </div>
+      </div>
+      <div class="keyword-entity" data-entity="Where">
+        <label>Where?</label>
+        <div class="keyword-rows">
+          <div class="keyword-row"><input type="text" placeholder="Where would we see the indicator?"><button type="button" class="keyword-add-row" aria-label="Add row">+</button></div>
+        </div>
+      </div>
+      <div class="keyword-entity" data-entity="Why">
+        <label>Why?</label>
+        <div class="keyword-rows">
+          <div class="keyword-row"><input type="text" placeholder="Why is the indicator important?"><button type="button" class="keyword-add-row" aria-label="Add row">+</button></div>
+        </div>
+      </div>
+      <div class="keyword-entity" data-entity="How">
+        <label>How?</label>
+        <div class="keyword-rows">
+          <div class="keyword-row"><input type="text" placeholder="How would this indicator manifest / be observed?"><button type="button" class="keyword-add-row" aria-label="Add row">+</button></div>
+        </div>
+      </div>
+      <div id="keywords-actions">
+        <button type="button" id="keywords-create" class="primary">Create Indicators</button>
+        <button type="button" id="keywords-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="comment-overlay">
+    <div id="comment-panels-wrapper">
+      <div id="comment-box">
+        <div id="comment-header">
+          <h2 id="comment-title">Comment</h2>
+          <button type="button" id="comment-close" aria-label="Close">×</button>
+        </div>
+        <label for="comment-description">Description</label>
+        <textarea id="comment-description" rows="4" placeholder="Optional description..."></textarea>
+        <label for="comment-source">Source</label>
+        <input type="text" id="comment-source" placeholder="Optional source URL or reference...">
+        <label for="comment-date">Date</label>
+        <input type="text" id="comment-date" placeholder="YYYY-MM-DD">
+        <label for="comment-time">Time</label>
+        <input type="text" id="comment-time" placeholder="HH:MM">
+        <div id="comment-actions-row">
+          <button type="button" id="comment-btn-keywords" class="btn-keywords">Create new Indicators</button>
+          <button type="button" id="comment-save-close" class="comment-save-close">Save and Close</button>
+        </div>
+      </div>
+      <div id="comment-keywords-slot"></div>
     </div>
   </div>
 
@@ -700,33 +984,67 @@
 
   const SIDES = ['left', 'right', 'down'];
 
+  function getNodeName(node) {
+    return node.name != null ? node.name : (node.label != null ? node.label : 'Unnamed');
+  }
+
   function generateId() {
     return 'n_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 9);
   }
 
-  function createNode(label, children = [], side) {
+  function createNode(name, children = [], side, depth = 0) {
     const node = {
       id: generateId(),
-      label: label || 'Unnamed',
+      name: name || 'Unnamed',
+      depth: depth,
       children: Array.isArray(children) ? children : []
     };
     if (side && SIDES.includes(side)) node.side = side;
     return node;
   }
 
-  function getNodeWidth(node) {
-    const len = (node.label || '').length;
-    return Math.max(NODE_MIN_WIDTH, Math.min(NODE_MAX_WIDTH, 20 + len * 9));
+  const NODE_TEXT_PADDING_X = 12;
+  const NODE_TEXT_PADDING_TOP = 6;
+  const NODE_BUTTON_ROW_HEIGHT = 26;
+  let nodeSizeMeasurer = null;
+
+  function getNodeSize(node) {
+    if (!nodeSizeMeasurer) {
+      nodeSizeMeasurer = document.createElement('div');
+      nodeSizeMeasurer.style.cssText = 'position:fixed;left:-9999px;top:0;visibility:hidden;white-space:normal;word-wrap:break-word;word-break:break-word;font-size:14px;font-weight:500;line-height:1.35;font-family:inherit;padding:0;margin:0;';
+      document.body.appendChild(nodeSizeMeasurer);
+    }
+    const maxContentWidth = NODE_MAX_WIDTH - 2 * NODE_TEXT_PADDING_X;
+    nodeSizeMeasurer.style.maxWidth = maxContentWidth + 'px';
+    nodeSizeMeasurer.style.width = 'max-content';
+    nodeSizeMeasurer.textContent = getNodeName(node) || 'Unnamed';
+    const naturalW = nodeSizeMeasurer.offsetWidth;
+    const naturalH = nodeSizeMeasurer.offsetHeight;
+    nodeSizeMeasurer.style.width = maxContentWidth + 'px';
+    const wrappedW = nodeSizeMeasurer.offsetWidth;
+    const wrappedH = nodeSizeMeasurer.offsetHeight;
+    const contentW = naturalW <= maxContentWidth ? naturalW : wrappedW;
+    const contentH = naturalW <= maxContentWidth ? naturalH : wrappedH;
+    const w = Math.max(NODE_MIN_WIDTH, Math.min(NODE_MAX_WIDTH, contentW + 2 * NODE_TEXT_PADDING_X));
+    const textH = contentH + NODE_TEXT_PADDING_TOP + 4;
+    const h = Math.max(NODE_HEIGHT, textH + NODE_BUTTON_ROW_HEIGHT);
+    return { w, h };
   }
 
-  const defaultRoot = createNode('Main category', []);
+  function getNodeWidth(node) {
+    return getNodeSize(node).w;
+  }
+
+  const defaultRoot = createNode('Main category', [], undefined, 0);
 
   const TREE_STORAGE_KEY = 'osamuuttuja_tree';
 
   let tree = JSON.parse(JSON.stringify(defaultRoot));
   let selectedNodeId = null;
+  let visibleDepths = null;
   let nodePositions = new Map();
   let lastNodeWidths = new Map();
+  let lastNodeHeights = new Map();
   let simPositions = new Map();
   let simVelocities = new Map();
   let nodeElements = new Map();
@@ -898,6 +1216,17 @@
     });
   }
 
+  function getDepthsInTree(node, set) {
+    const d = node.depth ?? 0;
+    set.add(d);
+    node.children.forEach((c) => getDepthsInTree(c, set));
+  }
+
+  function isDepthVisible(depth) {
+    if (visibleDepths === null) return true;
+    return visibleDepths.has(depth);
+  }
+
   function clampToBox(px, py, cx, cy, halfW, halfH) {
     halfW = halfW ?? NODE_WIDTH / 2;
     halfH = halfH ?? NODE_HEIGHT / 2;
@@ -1065,13 +1394,14 @@
     });
   }
 
-  function renderLink(parentPos, childPos, parentW, childW) {
+  function renderLink(parentPos, childPos, parentW, childW, parentH, childH) {
     const hwP = (parentW ?? NODE_WIDTH) / 2;
     const hwC = (childW ?? NODE_WIDTH) / 2;
-    const hh = NODE_HEIGHT / 2;
+    const hhP = (parentH ?? NODE_HEIGHT) / 2;
+    const hhC = (childH ?? NODE_HEIGHT) / 2;
     const pad = 4;
-    const start = clampToBox(parentPos.x, parentPos.y, childPos.x, childPos.y, hwP, hh);
-    const end = clampToBox(childPos.x, childPos.y, parentPos.x, parentPos.y, hwC, hh);
+    const start = clampToBox(parentPos.x, parentPos.y, childPos.x, childPos.y, hwP, hhP);
+    const end = clampToBox(childPos.x, childPos.y, parentPos.x, parentPos.y, hwC, hhC);
     const dx = end.x - start.x;
     const dy = end.y - start.y;
     const dist = Math.sqrt(dx * dx + dy * dy) || 0.1;
@@ -1084,6 +1414,11 @@
   function buildNodeWidths(node, map) {
     map.set(node.id, getNodeWidth(node));
     node.children.forEach((c) => buildNodeWidths(c, map));
+  }
+
+  function buildNodeHeights(node, map) {
+    map.set(node.id, getNodeSize(node).h);
+    node.children.forEach((c) => buildNodeHeights(c, map));
   }
 
   function updatePositions() {
@@ -1099,7 +1434,9 @@
       if (pos) g.setAttribute('transform', `translate(${pos.x},${pos.y})`);
     });
     const nodeWidths = new Map();
+    const nodeHeights = new Map();
     buildNodeWidths(tree, nodeWidths);
+    buildNodeHeights(tree, nodeHeights);
     linkElements.forEach(({ pathEl, sourceId, targetId }) => {
       const ppos = nodePositions.get(sourceId) || simPositions.get(sourceId);
       const cpos = nodePositions.get(targetId) || simPositions.get(targetId);
@@ -1108,7 +1445,9 @@
       const cnode = findNode(tree, targetId);
       const pw = nodeWidths.get(sourceId) ?? (pnode ? getNodeWidth(pnode) : NODE_WIDTH);
       const cw = nodeWidths.get(targetId) ?? (cnode ? getNodeWidth(cnode) : NODE_WIDTH);
-      pathEl.setAttribute('d', renderLink(ppos, cpos, pw, cw));
+      const ph = nodeHeights.get(sourceId) ?? (pnode ? getNodeSize(pnode).h : NODE_HEIGHT);
+      const ch = nodeHeights.get(targetId) ?? (cnode ? getNodeSize(cnode).h : NODE_HEIGHT);
+      pathEl.setAttribute('d', renderLink(ppos, cpos, pw, cw, ph, ch));
     });
   }
 
@@ -1118,8 +1457,11 @@
       initSimFromLayout();
     }
     const nodeWidths = new Map();
+    const nodeHeights = new Map();
     buildNodeWidths(tree, nodeWidths);
+    buildNodeHeights(tree, nodeHeights);
     lastNodeWidths = nodeWidths;
+    lastNodeHeights = nodeHeights;
 
     linksG.innerHTML = '';
     nodesG.innerHTML = '';
@@ -1127,14 +1469,18 @@
     linkElements = [];
 
     function addLinks(node) {
+      if (!isDepthVisible(node.depth ?? 0)) return;
       const pos = nodePositions.get(node.id);
       if (!pos) return;
       const pw = nodeWidths.get(node.id);
+      const ph = nodeHeights.get(node.id);
       node.children.forEach((child) => {
+        if (!isDepthVisible(child.depth ?? 0)) return;
         const cpos = nodePositions.get(child.id);
         if (!cpos) return;
         const cw = nodeWidths.get(child.id);
-        const path = renderLink(pos, cpos, pw, cw);
+        const ch = nodeHeights.get(child.id);
+        const path = renderLink(pos, cpos, pw, cw, ph, ch);
         const el = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         el.setAttribute('class', 'link');
         el.setAttribute('d', path);
@@ -1146,12 +1492,14 @@
     addLinks(tree);
 
     function addNodeEl(node) {
-      const pos = nodePositions.get(node.id);
-      if (!pos) return;
-
-      const w = getNodeWidth(node);
+      if (isDepthVisible(node.depth ?? 0)) {
+        const pos = nodePositions.get(node.id);
+        if (pos) {
+      const size = getNodeSize(node);
+      const w = size.w;
+      const h = size.h;
       const hw = w / 2;
-      const hh = NODE_HEIGHT / 2;
+      const hh = h / 2;
       const boxFill = node.color || '#2d3142';
 
       const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -1164,12 +1512,12 @@
       box.setAttribute('x', -hw);
       box.setAttribute('y', -hh);
       box.setAttribute('width', w);
-      box.setAttribute('height', NODE_HEIGHT);
+      box.setAttribute('height', h);
       box.setAttribute('fill', boxFill);
       box.style.setProperty('fill', boxFill);
 
-      const labelY = -10;
-      const buttonRowY = 4;
+      const textAreaHeight = h - NODE_BUTTON_ROW_HEIGHT;
+      const buttonRowY = hh - NODE_BUTTON_ROW_HEIGHT + 4;
       const buttonGap = 4;
       const btnSize = 18;
       const addBtnW = btnSize;
@@ -1178,11 +1526,15 @@
       const buttonRowWidth = addBtnW + buttonGap + editBtnW + buttonGap + commentBtnW;
       const buttonRowLeft = -buttonRowWidth / 2;
 
-      const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      label.setAttribute('class', 'node-label');
-      label.textContent = node.label;
-      label.setAttribute('x', 0);
-      label.setAttribute('y', labelY);
+      const fo = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
+      fo.setAttribute('x', -hw);
+      fo.setAttribute('y', -hh);
+      fo.setAttribute('width', w);
+      fo.setAttribute('height', textAreaHeight);
+      fo.setAttribute('class', 'node-label-fo');
+      const labelDiv = document.createElementNS('http://www.w3.org/1999/xhtml', 'div');
+      labelDiv.setAttribute('class', 'node-label-wrap');
+      labelDiv.textContent = getNodeName(node);
 
       const addBtn = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
       addBtn.setAttribute('class', 'node-add');
@@ -1229,8 +1581,9 @@
       commentIcon.setAttribute('y', buttonRowY + btnSize / 2);
       commentIcon.textContent = '💬';
 
+      fo.appendChild(labelDiv);
       g.appendChild(box);
-      g.appendChild(label);
+      g.appendChild(fo);
       g.appendChild(addBtn);
       g.appendChild(addIcon);
       g.appendChild(editBtn);
@@ -1278,7 +1631,7 @@
       addBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         openPromptWithColor('Name the new sub-variable', NODE_COLORS[0], (name, color) => {
-          const child = createNode(name.trim() || 'Unnamed');
+          const child = createNode(name.trim() || 'Unnamed', [], undefined, (node.depth ?? 0) + 1);
           child.color = color;
           if (node.id === tree.id) child.side = 'down';
           node.children.push(child);
@@ -1299,6 +1652,8 @@
 
       nodeElements.set(node.id, g);
       nodesG.appendChild(g);
+        }
+      }
       node.children.forEach((child) => addNodeEl(child));
     }
     addNodeEl(tree);
@@ -1438,7 +1793,7 @@
 
   function openEditNode(node) {
     const deleteBtn = document.getElementById('edit-delete');
-    editLabelInput.value = node.label || '';
+    editLabelInput.value = getNodeName(node) || '';
     editColorsEl.innerHTML = '';
     editColorsEl.classList.remove('visible');
     let chosenColor = node.color || NODE_COLORS[0];
@@ -1471,22 +1826,10 @@
     function finish(ok) {
       editOverlay.classList.remove('visible');
       if (ok) {
-        node.label = (editLabelInput.value && editLabelInput.value.trim()) ? editLabelInput.value.trim() : node.label;
+        node.name = (editLabelInput.value && editLabelInput.value.trim()) ? editLabelInput.value.trim() : getNodeName(node);
         node.color = chosenColor;
-        const g = nodeElements.get(node.id);
-        if (g) {
-          const rect = g.querySelector('rect.node-box');
-          if (rect) {
-            const fill = node.color || '#2d3142';
-            rect.setAttribute('fill', fill);
-            rect.style.setProperty('fill', fill);
-          }
-          const labelEl = g.querySelector('text.node-label');
-          if (labelEl) labelEl.textContent = node.label;
-        } else {
-          render();
-        }
         saveTree();
+        render(false);
       }
     }
 
@@ -1515,14 +1858,20 @@
   const commentTitleEl = document.getElementById('comment-title');
   const commentDescriptionEl = document.getElementById('comment-description');
   const commentSourceEl = document.getElementById('comment-source');
+  const commentDateEl = document.getElementById('comment-date');
+  const commentTimeEl = document.getElementById('comment-time');
   let commentPopupNode = null;
 
   function persistCommentToNode(node) {
     if (!node) return;
     const desc = (commentDescriptionEl.value && commentDescriptionEl.value.trim()) ? commentDescriptionEl.value.trim() : '';
     const src = (commentSourceEl.value && commentSourceEl.value.trim()) ? commentSourceEl.value.trim() : '';
+    const dt = (commentDateEl.value && commentDateEl.value.trim()) ? commentDateEl.value.trim() : '';
+    const tm = (commentTimeEl.value && commentTimeEl.value.trim()) ? commentTimeEl.value.trim() : '';
     if (desc) node.description = desc; else delete node.description;
     if (src) node.source = src; else delete node.source;
+    if (dt) node.date = dt; else delete node.date;
+    if (tm) node.time = tm; else delete node.time;
     saveTree();
   }
 
@@ -1531,9 +1880,11 @@
       persistCommentToNode(commentPopupNode);
     }
     commentPopupNode = node;
-    commentTitleEl.textContent = node.label || 'Comment';
+    commentTitleEl.textContent = getNodeName(node) || 'Comment';
     commentDescriptionEl.value = node.description || '';
     commentSourceEl.value = node.source || '';
+    commentDateEl.value = node.date || '';
+    commentTimeEl.value = node.time || '';
     commentOverlay.classList.add('visible');
     commentDescriptionEl.focus();
   }
@@ -1543,10 +1894,18 @@
       persistCommentToNode(commentPopupNode);
       commentPopupNode = null;
     }
+    var kwBox = document.getElementById('keywords-box');
+    var kwSlot = document.getElementById('comment-keywords-slot');
+    var kwOverlay = document.getElementById('keywords-overlay');
+    if (kwSlot && kwBox && kwBox.parentNode === kwSlot) {
+      kwSlot.removeChild(kwBox);
+      kwOverlay.appendChild(kwBox);
+    }
     commentOverlay.classList.remove('visible');
   }
 
   document.getElementById('comment-close').addEventListener('click', closeCommentPopup);
+  document.getElementById('comment-save-close').addEventListener('click', closeCommentPopup);
   commentOverlay.addEventListener('click', (e) => {
     if (e.target === commentOverlay) closeCommentPopup();
   });
@@ -1555,6 +1914,196 @@
   });
   commentSourceEl.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeCommentPopup();
+  });
+  commentDateEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeCommentPopup();
+  });
+  commentTimeEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeCommentPopup();
+  });
+
+  const KEYWORDS_STORAGE_KEY = 'osamuuttuja_keywords';
+  const KEYWORD_ENTITIES = ['What', 'Who', 'When', 'Where', 'Why', 'How'];
+
+  function getKeywordsFromStorage() {
+    try {
+      const s = localStorage.getItem(KEYWORDS_STORAGE_KEY);
+      if (!s) return Object.fromEntries(KEYWORD_ENTITIES.map((e) => [e, []]));
+      const data = JSON.parse(s);
+      const out = {};
+      KEYWORD_ENTITIES.forEach((e) => {
+        out[e] = Array.isArray(data[e]) ? data[e] : [];
+      });
+      return out;
+    } catch (_) {
+      return Object.fromEntries(KEYWORD_ENTITIES.map((e) => [e, []]));
+    }
+  }
+
+  function saveKeywordsToStorage(data) {
+    try {
+      localStorage.setItem(KEYWORDS_STORAGE_KEY, JSON.stringify(data));
+    } catch (_) {}
+  }
+
+  function parseKeywordInput(val) {
+    if (!val || typeof val !== 'string') return [];
+    return val.split(',').map((s) => s.trim()).filter(Boolean);
+  }
+
+  function buildKeywordsTextFile(data) {
+    const lines = [];
+    KEYWORD_ENTITIES.forEach((entity) => {
+      const items = data[entity];
+      if (items.length === 0) return;
+      lines.push(entity + '?');
+      items.forEach((item) => lines.push('- ' + item));
+      lines.push('');
+    });
+    return lines.join('\n').trimEnd() || 'No indicators yet.';
+  }
+
+  const keywordsOverlay = document.getElementById('keywords-overlay');
+  const keywordsBox = document.getElementById('keywords-box');
+  const commentKeywordsSlot = document.getElementById('comment-keywords-slot');
+
+  function resetKeywordEntitiesToSingleRow() {
+    keywordsBox.querySelectorAll('.keyword-entity').forEach((entityEl) => {
+      const rows = entityEl.querySelector('.keyword-rows');
+      if (!rows) return;
+      const rowEls = rows.querySelectorAll('.keyword-row');
+      const addBtn = rows.querySelector('.keyword-add-row');
+      const firstRow = rowEls[0];
+      if (!firstRow || !addBtn) return;
+      for (let i = 1; i < rowEls.length; i++) rowEls[i].remove();
+      const input = firstRow.querySelector('input');
+      if (input) input.value = '';
+    });
+  }
+
+  function collectKeywordInputsByEntity() {
+    const out = {};
+    KEYWORD_ENTITIES.forEach((e) => { out[e] = []; });
+    keywordsBox.querySelectorAll('.keyword-entity').forEach((entityEl) => {
+      const entity = entityEl.getAttribute('data-entity');
+      if (!entity || !KEYWORD_ENTITIES.includes(entity)) return;
+      entityEl.querySelectorAll('.keyword-row input').forEach((input) => {
+        parseKeywordInput(input.value).forEach((v) => out[entity].push(v));
+      });
+    });
+    return out;
+  }
+
+  function isKeywordsInCommentSlot() {
+    return commentKeywordsSlot && keywordsBox && keywordsBox.parentNode === commentKeywordsSlot;
+  }
+
+  function openKeywordsPopup(fromComment) {
+    resetKeywordEntitiesToSingleRow();
+    if (fromComment && commentOverlay && commentOverlay.classList.contains('visible')) {
+      if (keywordsBox.parentNode === keywordsOverlay) {
+        keywordsOverlay.removeChild(keywordsBox);
+        commentKeywordsSlot.appendChild(keywordsBox);
+      } else if (!commentKeywordsSlot.contains(keywordsBox)) {
+        commentKeywordsSlot.appendChild(keywordsBox);
+      }
+    } else {
+      if (keywordsBox.parentNode === commentKeywordsSlot) {
+        commentKeywordsSlot.removeChild(keywordsBox);
+        keywordsOverlay.appendChild(keywordsBox);
+      }
+      keywordsOverlay.classList.add('visible');
+    }
+    const firstInput = keywordsBox.querySelector('.keyword-row input');
+    if (firstInput) firstInput.focus();
+  }
+
+  function closeKeywordsPopup() {
+    if (isKeywordsInCommentSlot()) {
+      commentKeywordsSlot.removeChild(keywordsBox);
+      keywordsOverlay.appendChild(keywordsBox);
+    }
+    keywordsOverlay.classList.remove('visible');
+  }
+
+  document.getElementById('btn-keywords').addEventListener('click', () => {
+    openKeywordsPopup(false);
+  });
+
+  document.getElementById('comment-btn-keywords').addEventListener('click', () => {
+    openKeywordsPopup(true);
+  });
+
+  keywordsBox.addEventListener('click', (e) => {
+    if (!e.target.classList.contains('keyword-add-row')) return;
+    const btn = e.target;
+    const currentRow = btn.closest('.keyword-row');
+    const rows = btn.closest('.keyword-rows');
+    if (!rows || !currentRow) return;
+    const placeholder = currentRow.querySelector('input') && currentRow.querySelector('input').getAttribute('placeholder');
+    const newRow = document.createElement('div');
+    newRow.className = 'keyword-row';
+    const input = document.createElement('input');
+    input.type = 'text';
+    if (placeholder) input.setAttribute('placeholder', placeholder);
+    const newBtn = document.createElement('button');
+    newBtn.type = 'button';
+    newBtn.className = 'keyword-add-row';
+    newBtn.setAttribute('aria-label', 'Add row');
+    newBtn.textContent = '+';
+    newRow.appendChild(input);
+    newRow.appendChild(newBtn);
+    rows.insertBefore(newRow, currentRow.nextSibling);
+  });
+
+  document.getElementById('keywords-close').addEventListener('click', closeKeywordsPopup);
+  keywordsOverlay.addEventListener('click', (e) => {
+    if (e.target === keywordsOverlay) closeKeywordsPopup();
+  });
+
+  document.getElementById('keywords-cancel').addEventListener('click', closeKeywordsPopup);
+
+  document.getElementById('keywords-create').addEventListener('click', async () => {
+    const fromForm = collectKeywordInputsByEntity();
+    closeKeywordsPopup();
+    const data = getKeywordsFromStorage();
+    KEYWORD_ENTITIES.forEach((entity) => {
+      (fromForm[entity] || []).forEach((v) => data[entity].push(v));
+    });
+    saveKeywordsToStorage(data);
+    const text = buildKeywordsTextFile(data);
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const filename = 'Indicators.txt';
+    try {
+      const r = await fetch('/api/save-indicators', { method: 'POST', body: text, headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
+      if (r.ok) {
+        resetKeywordEntitiesToSingleRow();
+        return;
+      }
+    } catch (_) {}
+    if (typeof window.showSaveFilePicker === 'function') {
+      try {
+        const handle = await window.showSaveFilePicker({ suggestedName: filename, types: [{ description: 'Text file', accept: { 'text/plain': ['.txt'] } }] });
+        const writable = await handle.createWritable();
+        await writable.write(text);
+        await writable.close();
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = filename;
+          a.click();
+          URL.revokeObjectURL(a.href);
+        }
+      }
+    } else {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+    resetKeywordEntitiesToSingleRow();
   });
 
   const sidePickerOverlay = document.getElementById('side-picker-overlay');
@@ -1596,19 +2145,21 @@
     return null;
   }
 
-  function ensureIds(node, isRoot) {
+  function ensureIds(node, isRoot, depth = 0) {
     if (!node.id) node.id = generateId();
-    if (!node.label) node.label = 'Unnamed';
+    node.name = node.name != null ? node.name : (node.label != null ? node.label : 'Unnamed');
     if (!Array.isArray(node.children)) node.children = [];
+    node.depth = isRoot ? 0 : depth;
     const asRoot = isRoot === true;
     node.children.forEach((c) => {
       if (asRoot && (!c.side || !SIDES.includes(c.side))) c.side = 'down';
-      ensureIds(c, false);
+      ensureIds(c, false, node.depth + 1);
     });
   }
 
   function treeReplacer(key, value) {
-    if (key === 'description' || key === 'source') {
+    if (key === 'label') return undefined;
+    if (key === 'description' || key === 'source' || key === 'date' || key === 'time') {
       if (value == null || value === '') return undefined;
     }
     return value;
@@ -1626,13 +2177,19 @@
       if (!s) return false;
       const data = JSON.parse(s);
       if (!data || !data.id || !Array.isArray(data.children)) return false;
-      ensureIds(data, true);
+      ensureIds(data, true, 0);
       tree = data;
       return true;
     } catch (_) { return false; }
   }
 
+  function ensureDepths(node, depth) {
+    node.depth = depth;
+    node.children.forEach((c) => ensureDepths(c, depth + 1));
+  }
+
   function doExport() {
+    ensureDepths(tree, 0);
     const json = JSON.stringify(tree, treeReplacer, 2);
     const blob = new Blob([json], { type: 'application/json' });
     const a = document.createElement('a');
@@ -1643,6 +2200,11 @@
   }
 
   document.getElementById('btn-save').addEventListener('click', () => {
+    doExport();
+    document.getElementById('dropdown-file').classList.remove('open');
+  });
+
+  document.getElementById('btn-export').addEventListener('click', () => {
     doExport();
     document.getElementById('dropdown-file').classList.remove('open');
   });
@@ -1659,7 +2221,7 @@
     reader.onload = () => {
       try {
         const data = JSON.parse(reader.result);
-        ensureIds(data, true);
+        ensureIds(data, true, 0);
         tree = data;
         saveTree();
         selectedNodeId = null;
@@ -1691,6 +2253,7 @@
       confirmOverlay.classList.remove('visible');
       if (ok) {
         tree = JSON.parse(JSON.stringify(defaultRoot));
+        visibleDepths = null;
         saveTree();
         selectedNodeId = null;
         render();
@@ -1706,7 +2269,9 @@
     e.stopPropagation();
     const dd = document.getElementById('dropdown-file');
     const other = document.getElementById('dropdown-view');
+    const otherF = document.getElementById('dropdown-filter');
     other.classList.remove('open');
+    otherF.classList.remove('open');
     dd.classList.toggle('open');
   });
 
@@ -1714,16 +2279,56 @@
     e.stopPropagation();
     const dd = document.getElementById('dropdown-view');
     const other = document.getElementById('dropdown-file');
+    const otherF = document.getElementById('dropdown-filter');
     other.classList.remove('open');
+    otherF.classList.remove('open');
     dd.classList.toggle('open');
+  });
+
+  function buildFilterLevels() {
+    const depths = new Set();
+    getDepthsInTree(tree, depths);
+    const sorted = [...depths].sort((a, b) => a - b);
+    const container = document.getElementById('filter-levels');
+    container.innerHTML = '';
+    if (visibleDepths === null) visibleDepths = new Set(sorted);
+    sorted.forEach((d) => {
+      const row = document.createElement('label');
+      row.className = 'filter-row';
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = visibleDepths.has(d);
+      cb.dataset.depth = String(d);
+      cb.addEventListener('change', () => {
+        if (cb.checked) visibleDepths.add(d);
+        else visibleDepths.delete(d);
+        render(false);
+      });
+      row.appendChild(cb);
+      row.appendChild(document.createTextNode('Level ' + d));
+      container.appendChild(row);
+    });
+  }
+
+  document.getElementById('btn-filter').addEventListener('click', (e) => {
+    e.stopPropagation();
+    const dd = document.getElementById('dropdown-filter');
+    const other = document.getElementById('dropdown-file');
+    const otherV = document.getElementById('dropdown-view');
+    other.classList.remove('open');
+    otherV.classList.remove('open');
+    dd.classList.toggle('open');
+    if (dd.classList.contains('open')) buildFilterLevels();
   });
 
   document.getElementById('menu-file').addEventListener('click', (e) => e.stopPropagation());
   document.getElementById('menu-view').addEventListener('click', (e) => e.stopPropagation());
+  document.getElementById('menu-filter').addEventListener('click', (e) => e.stopPropagation());
 
   document.addEventListener('click', () => {
     document.getElementById('dropdown-file').classList.remove('open');
     document.getElementById('dropdown-view').classList.remove('open');
+    document.getElementById('dropdown-filter').classList.remove('open');
   });
 
   const btnFloat = document.getElementById('btn-float');
