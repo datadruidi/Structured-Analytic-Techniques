@@ -165,7 +165,10 @@
       </div>
     </div>
     <div class="file-dropdown overlay-dropdown" id="file-dropdown" role="menu" hidden>
-      <button type="button" class="file-menu-item" id="file-import-events" role="menuitem">Import Evidence</button>
+      <div class="file-menu-row file-menu-row-with-tip">
+        <button type="button" class="file-menu-item" id="file-import-events" role="menuitem">Import Evidence</button>
+        <button type="button" class="file-menu-item file-menu-item-tip" id="file-import-tip" aria-label="Tip about import file location" title="Import tip">?</button>
+      </div>
       <button type="button" class="file-menu-item" id="file-export-events" role="menuitem">Export Evidence</button>
       <button type="button" class="file-menu-item" id="file-download-template" role="menuitem">Download JSON Template</button>
       <button type="button" class="file-menu-item file-menu-item-danger" id="file-remove-all" role="menuitem">Remove all Evidence</button>

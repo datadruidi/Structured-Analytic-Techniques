@@ -67,9 +67,9 @@ python -m http.server 8000
 Then open:  
 👉 http://localhost:8000
 
-### Option 3: Auto-save indicators to the circleboarding folder  
-To have **Create Indicators** write directly to  
-`Structured-Analytic-Techniques/structured-analytic-circleboarding/indicators.txt`  
+### Option 3: Auto-save hypothesis keywords to the circleboarding folder  
+To have **Generate Hypothesis Keywords** / **Create Keywords** append directly to  
+`structured-analytic-circleboarding/hypothesis_keywords.jsonl`  
 without any save dialog, run the included Node.js server from this folder:
 
 ```bash
@@ -80,8 +80,16 @@ node server.js
 Then open:  
 👉 http://localhost:8765  
 
-When you click **Create Indicators**, the file is written automatically (no prompt).  
+When you click **Create Keywords** (in the keywords popup), the record is appended to the JSONL file automatically (no prompt).  
 If you open the app without the server (e.g. by double-clicking `index.html`), the app will fall back to a download or save dialog.
+
+---
+
+## 📋 Workflow tips
+
+- **Load test-data** — Use **File → Load test-data JSON** to load the sample file (`samples/test-data.json`) and explore the map. This helps you understand how nodes, evidence, and comments work.
+- **Download template** — The main way of working is **bottom‑up**: you start from a blank map and build it node by node yourself. Alternatively, you can use **File → Download template JSON** to get the expected JSON structure, then structure your data (e.g. with AI or in a spreadsheet) and **File → Import JSON** to load it in the correct format.
+- **Save and use in other tools** — When you finish your project, use **File → Save** to export your map as JSON. You can upload that JSON into the next analysis tool: the same format is supported in **Timeline** and **ACH** (Analysis of Competing Hypotheses). If you have used **Generate Hypothesis Keywords**, the keywords are appended to `hypothesis_keywords.jsonl` in the **circleboarding** tool folder; you can upload or use that file from the circleboarding tool’s UI.
 
 ---
 
@@ -127,6 +135,39 @@ The app loads and saves a **hierarchical node tree** with:
           "children": []
         }
       ]
+    }
+  ]
+}
+```
+
+---
+
+## Input / output (import vs export)
+
+**Import:** JSON file with a **hierarchical tree**. Each node can use `label` or `name` (both accepted); `id`, `children` (array), and optionally `description`, `source`, `color`, `evidence`, `date`, `time`, `depth`.
+
+**Export:** Same tree structure. The app exports using `name` (not `label`); empty `description`/`source`/`date`/`time` are omitted. Default download filename: `causal_map.json`.
+
+**Example export (one node):**
+
+```json
+{
+  "id": "root-1",
+  "name": "Main topic",
+  "depth": 0,
+  "evidence": "",
+  "children": [
+    {
+      "id": "child-1",
+      "name": "Sub-topic",
+      "depth": 1,
+      "evidence": "Yes",
+      "children": [],
+      "color": "#6c757d",
+      "description": "Context note",
+      "source": "https://example.com",
+      "date": "2025-01-15",
+      "time": "12:00"
     }
   ]
 }

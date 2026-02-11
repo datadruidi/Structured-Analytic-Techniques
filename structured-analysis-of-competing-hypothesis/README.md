@@ -55,3 +55,52 @@ A single-page tool for building and editing an **Analysis of Competing Hypothesi
 - Single HTML file (`evidence-list.html`) with embedded CSS and JavaScript.
 - Node server (`server.js`) for static files and save APIs.
 - No build step; run the server and open the app in a browser.
+
+---
+
+## Input / output (import vs export)
+
+**Import:**
+
+1. **Evidence** — **Update from file** (or initial load) reads a JSON file (default: `evidence_example.json`). Structure: **hierarchical tree**. Root and each node: `id`, `name`, `depth`, `evidence` ("Yes" or ""), `H1`…`H5` (e.g. "", "+", "-", "++"), `analysis_description`, `children` (array). Leaf nodes can also have `color`, `description`, `source`, `source_reliability`, `source_credibility`, `date`, `time`.
+2. **Hypothesis** — **Import Hypothesis** (or initial load) reads JSON. Structure: one object with `intelligence_requirement` (string) and `H1`…`H5`; each value is `{ id, title, description }`.
+
+**Export:**
+
+1. **Evidence** — **Save** / **Export Evidence** writes the same tree to `evidence_example.json` (or your chosen file) and updates `evidence_list.jsonl` (flat: one JSON object per line, one line per evidence node).
+2. **Hypothesis** — **Save** in the hypothesis modal (or **Import Hypothesis**) writes the same object to `hypothesis_example.json`.
+
+**Example evidence node (in tree):**
+
+```json
+{
+  "id": "n_abc123",
+  "name": "Mutual military assistance clause",
+  "depth": 3,
+  "evidence": "Yes",
+  "H1": "++",
+  "H2": "+",
+  "H3": "-",
+  "H4": "",
+  "H5": "+",
+  "analysis_description": "Consistent with alignment hypothesis.",
+  "children": [],
+  "color": "#00ff00",
+  "description": "Leaders signed an agreement with assistance clause.",
+  "source": "https://example.com/source",
+  "source_reliability": "A",
+  "source_credibility": "2",
+  "date": "2024-06-19",
+  "time": ""
+}
+```
+
+**Example hypothesis_example.json (excerpt):**
+
+```json
+{
+  "intelligence_requirement": "Short-term trajectories",
+  "H1": {"id":"H1","title":"Rapid expansion","description":"Increases capacity in the short term."},
+  "H2": {"id":"H2","title":"Quality focus","description":"Prioritizes efficiency."}
+}
+```

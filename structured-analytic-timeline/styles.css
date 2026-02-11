@@ -772,6 +772,41 @@ body {
   background: rgba(248, 81, 73, 0.15);
 }
 
+.file-menu-row-with-tip {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.file-menu-row-with-tip .file-menu-item:first-child {
+  flex: 1;
+  min-width: 0;
+}
+
+.file-menu-item-tip {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  padding: 0;
+  margin: 0 0.25rem 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--text-muted);
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.file-menu-item-tip:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
 .timeline-viewport {
   position: relative;
   flex: 1 1 auto;

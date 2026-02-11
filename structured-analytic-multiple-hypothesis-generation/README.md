@@ -49,3 +49,40 @@ This module has two main views, switched by the top buttons: **Hypothesis Genera
 ## Port
 
 This app’s server uses **port 8083** (see repo root `HUB-PAGE-INSTRUCTIONS.md`).
+
+---
+
+## Input / output (import vs export)
+
+**Import (source files):**
+
+1. **Multiple_Hypothesis_Generation.txt** — Plain text. Optional first line: `So What?`. Then one item per line; lines starting with `- ` have the hyphen stripped. Each line becomes a row in the Hypothesis Generation source list.
+2. **Hypotheses.txt** — Plain text, one hypothesis per line. Lines appear in the Hypothesis Ranking left panel; order is preserved. The server overwrites this file when you reorder or remove items.
+
+**Export:**
+
+1. **Save hypothesis** (from a Permutation row) — Appends that hypothesis line to **Hypotheses.txt** in this folder.
+2. **Save Hypothesis for ACH** (from an H1–H5 card) — POSTs to the server; writes **hypothesis.json** into `structured-analysis-of-competing-hypothesis/`. That file is a single JSON object: `intelligence_requirement` (string) and `H1`…`H5` (each `{ id, title, description }`), used by the ACH evidence-list tool.
+
+**Example Multiple_Hypothesis_Generation.txt:**
+
+```
+So What?
+- Local forces
+- Force buildup
+- Forward deploy
+```
+
+**Example Hypotheses.txt:**
+
+```
+Move forward to launch fast.
+Negotiate under sustained pressure.
+Maneuver to set conditions.
+```
+
+**Example hypothesis.json (for ACH):**
+
+```json
+{"intelligence_requirement":"Short-term trajectories","H1":{"id":"H1","title":"Rapid expansion","description":"Increases capacity in the short term."},"H2":{"id":"H2","title":"Quality focus","description":"Prioritizes efficiency over size."}}
+```

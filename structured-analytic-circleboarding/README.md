@@ -48,3 +48,29 @@ This tool’s server uses **port 8082** (see repo root `HUB-PAGE-INSTRUCTIONS.md
 - `hypothesis_keywords.jsonl` – Produced by other modules; read-only for circleboard, merged in on Refresh.
 - `CircleboardData.txt` – Created/updated by the app when the server is used.
 - `server.js` – Static server + POST `/api/save-circleboard` to write CircleboardData.txt.
+
+---
+
+## Input / output (import vs export)
+
+**Import (load):**
+
+1. **CircleboardData.txt** — JSON object: `who`, `what`, `where`, `when`, `why`, `how` (arrays of `{ id, text }`), and `soWhatLanes`, `trashLanes` (arrays of arrays of `{ id, text }`). Loaded first when the server is used.
+2. **hypothesis_keywords.jsonl** — JSON Lines: one JSON object per line. Each line has `createdAt`, `what`, `who`, `when`, `where`, `why`, `how` (arrays of strings), and optional `id`. Used when you click **Refresh from hypothesis_keywords.jsonl**; new items are merged into the board.
+
+**Export (save):**
+
+1. **CircleboardData.txt** — Same JSON shape as import (full state: categories + soWhatLanes + trashLanes). Written by the app on save when the server is running.
+2. **Save for Hypothesis Generation** — Writes **Multiple_Hypothesis_Generation.txt** in `structured-analytic-multiple-hypothesis-generation/`: plain text with a `So What?` header and `- item` lines (one per “So what?” item).
+
+**Example hypothesis_keywords.jsonl (one line):**
+
+```json
+{"createdAt":"2026-02-10T12:00:00.000Z","what":["Security demands"],"who":["Russia"],"when":["2022-01-10"],"where":["Geneva"],"why":["Coercion"],"how":["Treaty proposal"]}
+```
+
+**Example CircleboardData.txt (excerpt):**
+
+```json
+{"who":[{"id":"id-1","text":"Actor A"}],"what":[{"id":"id-2","text":"Event X"}],"where":[],"when":[],"why":[],"how":[],"soWhatLanes":[[{"id":"id-3","text":"So what item"}]],"trashLanes":[[],[]]}
+```

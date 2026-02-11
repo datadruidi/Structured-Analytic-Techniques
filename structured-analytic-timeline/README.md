@@ -117,3 +117,55 @@ Example:
     "time": "15:50"
   }
 ]
+```
+
+---
+
+## Input / output (import vs export)
+
+**Import:** The app accepts **two** formats:
+
+1. **Tree** — A single object with `children` (array). Each node can have `id`, `name`, `depth`, `evidence`, `children`, `color`, `description`, `source`, `date`, `time`. Events are derived from the tree.
+2. **Flat array** — An array of event objects, each with required `name`, `description`, `source`, `date`, `time` (and optional `evidence`: `"Yes"`). `date` = YYYY-MM-DD, `time` = HH:MM.
+
+**Export (File → Export Events):** Always a **tree**: one root object with `id`, `name`, `depth`, `evidence`, `children` (array of event nodes). Each event node has `id`, `name`, `depth`, `evidence`, `children`, `color`, `description`, `source`, `date`, `time`. Download filename: `timeline-events.json`.
+
+**Example import (flat array):**
+
+```json
+[
+  {
+    "name": "Event name",
+    "description": "What happened.",
+    "source": "https://example.com",
+    "date": "2026-01-27",
+    "time": "15:50",
+    "evidence": "Yes"
+  }
+]
+```
+
+**Example export (tree, excerpt):**
+
+```json
+{
+  "id": "root-123",
+  "name": "Timeline",
+  "depth": 0,
+  "evidence": "",
+  "children": [
+    {
+      "id": "evt-1",
+      "name": "Event name",
+      "depth": 1,
+      "evidence": "Yes",
+      "children": [],
+      "color": "#6c757d",
+      "description": "What happened.",
+      "source": "https://example.com",
+      "date": "2026-01-27",
+      "time": "15:50"
+    }
+  ]
+}
+```

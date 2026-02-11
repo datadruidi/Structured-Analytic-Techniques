@@ -2094,6 +2094,14 @@
       jsonFileInput.click();
     });
   }
+  var fileImportTip = document.getElementById("file-import-tip");
+  if (fileImportTip) {
+    fileImportTip.addEventListener("click", function (e) {
+      e.stopPropagation();
+      var msg = "If you have used the Causal Map analysis tool before Timeline, the file is most likely in your Downloads folder with the name \"causal_map.json\".";
+      alert(msg);
+    });
+  }
   if (fileExportEvents) {
     fileExportEvents.addEventListener("click", function () {
       exportEventsToJson();

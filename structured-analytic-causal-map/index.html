@@ -42,9 +42,12 @@
       font-size: 13px;
     }
     #btn-file, #btn-view, #btn-filter, #btn-float {
-      width: 128px;
-      min-width: 128px;
+      width: 88px;
+      min-width: 88px;
       box-sizing: border-box;
+    }
+    #btn-float {
+      white-space: nowrap;
     }
     #toolbar button:hover, .toolbar-menu-btn:hover {
       background: #404654;
@@ -285,6 +288,52 @@
       text-anchor: middle;
       dominant-baseline: central;
       pointer-events: none;
+    }
+    .node-button-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      font-size: 9px;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .node-button-row .node-add,
+    .node-button-row .node-edit,
+    .node-button-row .node-comment {
+      pointer-events: auto;
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 3px;
+      flex-shrink: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: opacity 0.15s, background 0.15s;
+    }
+    .node-button-row .node-add {
+      color: #93c5fd;
+      background: transparent;
+    }
+    .node-button-row .node-add:hover {
+      background: rgba(59, 130, 246, 0.4);
+    }
+    .node-button-row .node-edit {
+      color: #fca5a5;
+      background: transparent;
+    }
+    .node-button-row .node-edit:hover {
+      background: rgba(239, 68, 68, 0.4);
+    }
+    .node-button-row .node-comment {
+      color: #86efac;
+      background: transparent;
+    }
+    .node-button-row .node-comment:hover {
+      background: rgba(34, 197, 94, 0.4);
     }
     #prompt-overlay {
       display: none;
@@ -549,9 +598,19 @@
       gap: 12px;
       flex-wrap: wrap;
     }
+    #comment-actions-row #comment-btn-keywords,
+    #comment-actions-row #comment-save-close {
+      flex: 0 0 auto;
+      width: 140px;
+      max-width: 140px;
+      padding: 8px 12px;
+      font-size: 13px;
+      box-sizing: border-box;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     #comment-save-close {
-      padding: 10px 18px;
-      font-size: 14px;
       border-radius: 6px;
       cursor: pointer;
       border: 1px solid #2563eb;
@@ -642,11 +701,66 @@
     .comment-evidence-row span {
       color: #e4e6eb;
     }
+    .comment-evidence-info-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .comment-evidence-info-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      padding: 0;
+      border: none;
+      border-radius: 50%;
+      background: #3a3f4b;
+      color: #9ca3af;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .comment-evidence-info-btn:hover {
+      background: #4a5060;
+      color: #e4e6eb;
+    }
+    .comment-evidence-info-popover {
+      display: none;
+      position: absolute;
+      left: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      margin-left: 8px;
+      padding: 12px 14px;
+      width: 280px;
+      max-width: min(320px, calc(100vw - 120px));
+      background: #252830;
+      border: 1px solid #3a3f4b;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      font-size: 12px;
+      line-height: 1.5;
+      color: #e4e6eb;
+      z-index: 10;
+    }
+    .comment-evidence-info-popover.visible {
+      display: block;
+    }
+    .comment-evidence-info-popover p {
+      margin: 0 0 6px;
+    }
+    .comment-evidence-info-popover p:last-child {
+      margin-bottom: 0;
+    }
+    .comment-evidence-info-popover strong {
+      color: #b0b4bc;
+    }
     #comment-btn-keywords {
-      padding: 10px 14px;
       border-radius: 6px;
       cursor: pointer;
-      font-size: 13px;
     }
     #edit-overlay {
       display: none;
@@ -811,9 +925,10 @@
       <div class="toolbar-dropdown" id="dropdown-file">
         <button type="button" class="toolbar-menu-btn" id="btn-file">File</button>
         <div class="dropdown-menu" id="menu-file">
-          <button type="button" id="btn-save">Save</button>
-          <button type="button" id="btn-export">Export JSON</button>
+          <button type="button" id="btn-export">Save</button>
           <button type="button" id="btn-import-trigger">Import JSON</button>
+          <button type="button" id="btn-load-example">Load test-data JSON</button>
+          <button type="button" id="btn-export-sample">Download template JSON</button>
         </div>
       </div>
       <div class="toolbar-dropdown" id="dropdown-view">
@@ -829,7 +944,7 @@
           <div class="filter-levels" id="filter-levels"></div>
         </div>
       </div>
-      <button type="button" id="btn-float" class="toolbar-menu-btn">Float is OFF</button>
+      <button type="button" id="btn-float" class="toolbar-menu-btn">Float OFF</button>
     </div>
     <div id="toolbar-title">Causal Map for Structured Analytic Techniques</div>
     <div id="toolbar-right">
@@ -879,7 +994,7 @@
   <div id="keywords-overlay">
     <div id="keywords-box">
       <div id="keywords-header">
-        <h2 id="keywords-title">Create Indicators</h2>
+        <h2 id="keywords-title">Create Keywords</h2>
         <button type="button" id="keywords-close" aria-label="Close">×</button>
       </div>
       <p id="keywords-hint">Fill one or more fields (comma-separated for multiple). Not all are required.</p>
@@ -920,7 +1035,7 @@
         </div>
       </div>
       <div id="keywords-actions">
-        <button type="button" id="keywords-create" class="primary">Create Indicators</button>
+        <button type="button" id="keywords-create" class="primary">Create Keywords</button>
         <button type="button" id="keywords-cancel">Cancel</button>
       </div>
     </div>
@@ -941,13 +1056,22 @@
         <input type="text" id="comment-date" placeholder="YYYY-MM-DD">
         <label for="comment-time">Time</label>
         <input type="text" id="comment-time" placeholder="HH:MM">
-        <label class="comment-evidence-row">
-          <input type="checkbox" id="comment-evidence" aria-describedby="comment-evidence-desc">
-          <span id="comment-evidence-desc">Use as Evidence?</span>
-        </label>
+        <div class="comment-evidence-row">
+          <label class="comment-evidence-info-wrap" for="comment-evidence">
+            <input type="checkbox" id="comment-evidence" aria-describedby="comment-evidence-desc">
+            <span id="comment-evidence-desc">Use as Evidence?</span>
+          </label>
+          <span style="position: relative;">
+            <button type="button" class="comment-evidence-info-btn" id="comment-evidence-info-btn" aria-label="Information about Use as Evidence" aria-expanded="false" aria-controls="comment-evidence-info-popover">i</button>
+            <div id="comment-evidence-info-popover" class="comment-evidence-info-popover" role="tooltip" aria-hidden="true">
+              <p>If this is checked, the event will appear as <strong>evidence</strong> in the later analysis phase.</p>
+              <p>It is recommended to tag events that have a source, although it is not mandatory.</p>
+            </div>
+          </span>
+        </div>
         <div id="comment-actions-row">
-          <button type="button" id="comment-btn-keywords" class="btn-keywords">Generate Hypothesis Keywords</button>
-          <button type="button" id="comment-save-close" class="comment-save-close">Save and Close</button>
+          <button type="button" id="comment-btn-keywords" class="btn-keywords">Generate Keywords</button>
+          <button type="button" id="comment-save-close" class="comment-save-close">Save</button>
         </div>
       </div>
       <div id="comment-keywords-slot"></div>
@@ -1540,14 +1664,7 @@
       box.style.setProperty('fill', boxFill);
 
       const textAreaHeight = h - NODE_BUTTON_ROW_HEIGHT;
-      const buttonRowY = hh - NODE_BUTTON_ROW_HEIGHT + 4;
-      const buttonGap = 4;
-      const btnSize = 18;
-      const addBtnW = btnSize;
-      const editBtnW = btnSize;
-      const commentBtnW = btnSize;
-      const buttonRowWidth = addBtnW + buttonGap + editBtnW + buttonGap + commentBtnW;
-      const buttonRowLeft = -buttonRowWidth / 2;
+      const buttonRowY = hh - NODE_BUTTON_ROW_HEIGHT;
 
       const fo = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
       fo.setAttribute('x', -hw);
@@ -1559,60 +1676,38 @@
       labelDiv.setAttribute('class', 'node-label-wrap');
       labelDiv.textContent = getNodeName(node);
 
-      const addBtn = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      const buttonRowFo = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
+      buttonRowFo.setAttribute('x', -hw);
+      buttonRowFo.setAttribute('y', buttonRowY);
+      buttonRowFo.setAttribute('width', w);
+      buttonRowFo.setAttribute('height', NODE_BUTTON_ROW_HEIGHT);
+      const buttonRowDiv = document.createElementNS('http://www.w3.org/1999/xhtml', 'div');
+      buttonRowDiv.setAttribute('class', 'node-button-row');
+
+      const addBtn = document.createElementNS('http://www.w3.org/1999/xhtml', 'span');
       addBtn.setAttribute('class', 'node-add');
-      addBtn.setAttribute('x', buttonRowLeft);
-      addBtn.setAttribute('y', buttonRowY);
-      addBtn.setAttribute('width', addBtnW);
-      addBtn.setAttribute('height', btnSize);
-      addBtn.setAttribute('rx', 4);
       addBtn.setAttribute('data-id', node.id);
+      addBtn.textContent = 'Add node';
 
-      const addIcon = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      addIcon.setAttribute('class', 'node-add-icon');
-      addIcon.setAttribute('x', buttonRowLeft + addBtnW / 2);
-      addIcon.setAttribute('y', buttonRowY + btnSize / 2);
-      addIcon.textContent = '+';
-
-      const editBtn = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      const editBtn = document.createElementNS('http://www.w3.org/1999/xhtml', 'span');
       editBtn.setAttribute('class', 'node-edit');
-      editBtn.setAttribute('x', buttonRowLeft + addBtnW + buttonGap);
-      editBtn.setAttribute('y', buttonRowY);
-      editBtn.setAttribute('width', editBtnW);
-      editBtn.setAttribute('height', btnSize);
-      editBtn.setAttribute('rx', 4);
       editBtn.setAttribute('data-id', node.id);
+      editBtn.textContent = 'Rename';
 
-      const editIcon = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      editIcon.setAttribute('class', 'node-edit-icon');
-      editIcon.setAttribute('x', buttonRowLeft + addBtnW + buttonGap + editBtnW / 2);
-      editIcon.setAttribute('y', buttonRowY + btnSize / 2);
-      editIcon.textContent = '✎';
-
-      const commentBtn = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      const commentBtn = document.createElementNS('http://www.w3.org/1999/xhtml', 'span');
       commentBtn.setAttribute('class', 'node-comment');
-      commentBtn.setAttribute('x', buttonRowLeft + addBtnW + buttonGap + editBtnW + buttonGap);
-      commentBtn.setAttribute('y', buttonRowY);
-      commentBtn.setAttribute('width', commentBtnW);
-      commentBtn.setAttribute('height', btnSize);
-      commentBtn.setAttribute('rx', 4);
       commentBtn.setAttribute('data-id', node.id);
+      commentBtn.textContent = 'Comment';
 
-      const commentIcon = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      commentIcon.setAttribute('class', 'node-comment-icon');
-      commentIcon.setAttribute('x', buttonRowLeft + addBtnW + buttonGap + editBtnW + buttonGap + commentBtnW / 2);
-      commentIcon.setAttribute('y', buttonRowY + btnSize / 2);
-      commentIcon.textContent = '💬';
+      buttonRowDiv.appendChild(addBtn);
+      buttonRowDiv.appendChild(editBtn);
+      buttonRowDiv.appendChild(commentBtn);
+      buttonRowFo.appendChild(buttonRowDiv);
 
       fo.appendChild(labelDiv);
       g.appendChild(box);
       g.appendChild(fo);
-      g.appendChild(addBtn);
-      g.appendChild(addIcon);
-      g.appendChild(editBtn);
-      g.appendChild(editIcon);
-      g.appendChild(commentBtn);
-      g.appendChild(commentIcon);
+      g.appendChild(buttonRowFo);
 
       g.addEventListener('mousedown', (e) => {
         if (e.target.classList.contains('node-add') || e.target.classList.contains('node-add-icon') || e.target.closest('.node-add')) return;
@@ -1912,6 +2007,8 @@
     commentDateEl.value = node.date || '';
     commentTimeEl.value = node.time || '';
     if (commentEvidenceEl) commentEvidenceEl.checked = node.evidence === 'Yes';
+    var evidencePopover = document.getElementById('comment-evidence-info-popover');
+    if (evidencePopover) evidencePopover.classList.remove('visible');
     commentOverlay.classList.add('visible');
     commentDescriptionEl.focus();
   }
@@ -1928,11 +2025,41 @@
       kwSlot.removeChild(kwBox);
       kwOverlay.appendChild(kwBox);
     }
+    var evidencePopover = document.getElementById('comment-evidence-info-popover');
+    if (evidencePopover) evidencePopover.classList.remove('visible');
     commentOverlay.classList.remove('visible');
   }
 
+  (function setupEvidenceInfoPopover() {
+    var btn = document.getElementById('comment-evidence-info-btn');
+    var popover = document.getElementById('comment-evidence-info-popover');
+    if (!btn || !popover) return;
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var isOpen = popover.classList.toggle('visible');
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      popover.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+    });
+    document.addEventListener('click', function (e) {
+      if (!popover.classList.contains('visible')) return;
+      if (e.target !== btn && e.target !== popover && !popover.contains(e.target) && !btn.contains(e.target)) {
+        popover.classList.remove('visible');
+        btn.setAttribute('aria-expanded', 'false');
+        popover.setAttribute('aria-hidden', 'true');
+      }
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && popover.classList.contains('visible')) {
+        popover.classList.remove('visible');
+        btn.setAttribute('aria-expanded', 'false');
+        popover.setAttribute('aria-hidden', 'true');
+        e.stopPropagation();
+      }
+    });
+  })();
+
   document.getElementById('comment-close').addEventListener('click', closeCommentPopup);
-  document.getElementById('comment-save-close').addEventListener('click', closeCommentPopup);
   commentOverlay.addEventListener('click', (e) => {
     if (e.target === commentOverlay) closeCommentPopup();
   });
@@ -1948,6 +2075,8 @@
   commentTimeEl.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeCommentPopup();
   });
+
+  document.getElementById('comment-save-close').addEventListener('click', closeCommentPopup);
 
   const KEYWORDS_STORAGE_KEY = 'osamuuttuja_keywords';
   const KEYWORD_ENTITIES = ['What', 'Who', 'When', 'Where', 'Why', 'How'];
@@ -2242,31 +2371,87 @@
     node.children.forEach(ensureEvidence);
   }
 
-  function doExport() {
+  function doExport(filename) {
     ensureDepths(tree, 0);
     ensureEvidence(tree);
     const json = JSON.stringify(tree, treeReplacer, 2);
     const blob = new Blob([json], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'osamuuttuja-tree.json';
+    a.download = filename || 'causal_map.json';
     a.click();
     URL.revokeObjectURL(a.href);
   }
 
-  document.getElementById('btn-save').addEventListener('click', () => {
-    doExport();
-    document.getElementById('dropdown-file').classList.remove('open');
-  });
+  async function doSaveWithPicker() {
+    ensureDepths(tree, 0);
+    ensureEvidence(tree);
+    const json = JSON.stringify(tree, treeReplacer, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const defaultName = 'causal_map.json';
+    if (typeof window.showSaveFilePicker === 'function') {
+      try {
+        const handle = await window.showSaveFilePicker({
+          suggestedName: defaultName,
+          types: [{ description: 'JSON file', accept: { 'application/json': ['.json'] } }]
+        });
+        const writable = await handle.createWritable();
+        await writable.write(blob);
+        await writable.close();
+        return;
+      } catch (err) {
+        if (err.name === 'AbortError') return;
+      }
+    }
+    doExport(defaultName);
+  }
 
   document.getElementById('btn-export').addEventListener('click', () => {
-    doExport();
     document.getElementById('dropdown-file').classList.remove('open');
+    doSaveWithPicker();
   });
 
   document.getElementById('btn-import-trigger').addEventListener('click', () => {
     document.getElementById('file-import').click();
     document.getElementById('dropdown-file').classList.remove('open');
+  });
+
+  document.getElementById('btn-export-sample').addEventListener('click', () => {
+    document.getElementById('dropdown-file').classList.remove('open');
+    fetch('samples/template.json')
+      .then((r) => {
+        if (!r.ok) throw new Error(r.statusText || 'Failed to load');
+        return r.blob();
+      })
+      .then((blob) => {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'template.json';
+        a.click();
+        URL.revokeObjectURL(a.href);
+      })
+      .catch(() => {
+        doExport('template.json');
+      });
+  });
+
+  document.getElementById('btn-load-example').addEventListener('click', () => {
+    document.getElementById('dropdown-file').classList.remove('open');
+    fetch('samples/test-data.json')
+      .then((r) => {
+        if (!r.ok) throw new Error(r.statusText || 'Failed to load');
+        return r.json();
+      })
+      .then((data) => {
+        if (!data || !data.id || !Array.isArray(data.children)) throw new Error('Invalid example format');
+        ensureIds(data, true, 0);
+        tree = data;
+        saveTree();
+        selectedNodeId = null;
+        render();
+        fitToScreen();
+      })
+      .catch((err) => alert('Could not load test-data: ' + (err.message || err)));
   });
 
   document.getElementById('file-import').addEventListener('change', (e) => {
@@ -2391,10 +2576,10 @@
     floatMode = !floatMode;
     if (floatMode) {
       startSimulation();
-      btnFloat.textContent = 'Float is ON';
+      btnFloat.textContent = 'Float ON';
     } else {
       stopSimulation();
-      btnFloat.textContent = 'Float is OFF';
+      btnFloat.textContent = 'Float OFF';
     }
   });
 

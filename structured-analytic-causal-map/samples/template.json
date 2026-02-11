@@ -1,0 +1,76 @@
+{
+  "id": "n_ab12cd34_ef56gh7",
+  "name": "Example root topic",
+  "depth": 0,
+  "evidence": "",
+  "children": [
+    {
+      "id": "n_aa11bb22_cc33dd4",
+      "name": "Category layer",
+      "depth": 1,
+      "evidence": "Yes",
+      "children": [
+        {
+          "id": "n_ee55ff66_gg77hh8",
+          "name": "Subcategory layer",
+          "depth": 2,
+          "evidence": "",
+          "children": [
+            {
+              "id": "n_ii99jj00_kk11ll2",
+              "name": "Theme layer",
+              "depth": 3,
+              "evidence": "Yes",
+              "children": [
+                {
+                  "id": "n_mm33nn44_oo55pp6",
+                  "name": "Event node",
+                  "depth": 4,
+                  "evidence": "Yes",
+                  "children": [],
+                  "color": "#6a4c93",
+                  "description": "A short event description explaining what happened and why it matters.",
+                  "source": "https://example.org/source",
+                  "date": "2026-02-11",
+                  "time": "14:30"
+                },
+                {
+                  "id": "n_qq77rr88_ss99tt0",
+                  "name": "Scenario note",
+                  "depth": 4,
+                  "evidence": "",
+                  "children": [],
+                  "color": "#6a4c93",
+                  "description": "Analyst view: plausible next-step scenario and implications for escalation/response.",
+                  "source": "Analyst judgement",
+                  "date": "2026-02-11",
+                  "time": ""
+                }
+              ],
+              "color": "#6c757d",
+              "description": "A brief synthesis describing what these events imply at this theme level.",
+              "source": "Mixed sources",
+              "date": "2026-02-11",
+              "time": "09:00"
+            }
+          ],
+          "color": "#40916c",
+          "description": "A short summary of the subcategory and why it matters to the root question.",
+          "source": "Background",
+          "date": "2026-02-10",
+          "time": ""
+        }
+      ],
+      "color": "#8b5a2b",
+      "description": "Top-level lens (e.g., Diplomatic/Military/Economic) and how it shapes the analysis.",
+      "source": "Overview sources",
+      "date": "2026-02-10",
+      "time": "18:00"
+    }
+  ],
+  "color": "#e76f51",
+  "description": "One-paragraph root description summarizing what the tree covers and the analytic intent.",
+  "source": "Analyst synthesis",
+  "date": "2026-02-10",
+  "time": "21:56"
+}
