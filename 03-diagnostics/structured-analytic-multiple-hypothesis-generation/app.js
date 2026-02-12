@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  const SOURCE_FILE = 'Multiple_Hypothesis_Generation.txt';
+  const SOURCE_FILE = 'input/Multiple_Hypothesis_Generation.txt';
   const STORAGE_KEY_GENERATION = 'hypothesis-generation-state';
   const STORAGE_KEY_RANKING = 'hypothesis-ranking-state';
   const STORAGE_KEY_PAGE = 'hypothesis-current-page';
@@ -942,6 +942,7 @@
       if (btnRank) { btnRank.classList.add('is-active'); btnRank.setAttribute('aria-pressed', 'true'); }
       if (btnGen) { btnGen.classList.remove('is-active'); btnGen.setAttribute('aria-pressed', 'false'); }
       loadHypothesesFile();
+      loadHypothesisAchForRanking();
     }
   }
 
@@ -987,6 +988,17 @@
     wraps.forEach(function (wrap) { addDropZoneToWrap(wrap); });
   }
 
+  function loadHypothesisAchForRanking() {
+    var input = document.getElementById('intelligence-requirement-input-ranking');
+    if (!input) return;
+    fetch('/api/hypothesis-ach').then(function (r) {
+      if (!r.ok) return;
+      return r.json();
+    }).then(function (data) {
+      if (data && data.intelligence_requirement != null) input.value = String(data.intelligence_requirement);
+    }).catch(function () {});
+  }
+
   function initSaveHypothesisAch() {
     var container = document.getElementById('hypothesis-cards-container');
     if (!container) return;
@@ -1001,10 +1013,78 @@
       if (first) title = first.textContent;
       var descEl = card.querySelector('.hypothesis-card-description');
       var description = descEl ? descEl.value : '';
+      var irEl = document.getElementById('intelligence-requirement-input-ranking');
+      var intelligence_requirement = irEl ? irEl.value.trim() : '';
+      var payload = { id: id, title: title, description: description };
+      if (intelligence_requirement !== '') payload.intelligence_requirement = intelligence_requirement;
       fetch('/api/save-hypothesis-ach', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: id, title: title, description: description })
+        body: JSON.stringify(payload)
+      }).then(function (r) {
+        if (r.ok) {
+          var label = btn.textContent;
+          btn.textContent = 'Saved';
+          setTimeout(function () { btn.textContent = label; }, 2000);
+        }
+      }).catch(function () {});
+    });
+  }
+
+  function initSaveAchBar(btnId, inputId) {
+    var btn = document.getElementById(btnId);
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      var irEl = document.getElementById(inputId);
+      var intelligence_requirement = irEl ? irEl.value.trim() : '';
+      fetch('/api/save-hypothesis-ach', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ intelligence_requirement: intelligence_requirement })
+      }).then(function (r) {
+        if (r.ok) {
+          var label = btn.textContent;
+          btn.textContent = 'Saved';
+          setTimeout(function () { btn.textContent = label; }, 2000);
+        }
+      }).catch(function () {});
+    });
+  }
+
+  function initSaveAchGeneration() {
+    initSaveAchBar('btn-save-ach-generation', 'intelligence-requirement-input-generation');
+  }
+
+  function initSaveAchRanking() {
+    initSaveAchBar('btn-save-ach-ranking', 'intelligence-requirement-input-ranking');
+  }
+
+  function collectPermutationTitles() {
+    var titles = [];
+    groups.forEach(function (who) {
+      (who.whats || []).forEach(function (what) {
+        (what.whys || []).forEach(function (why) {
+          var t = (why.editValue != null ? why.editValue : '').trim();
+          titles.push(t);
+        });
+      });
+    });
+    return titles.slice(0, 5);
+  }
+
+  function initSavePermutationsToAch() {
+    var btn = document.getElementById('btn-save-permutations-ach');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      var titles = collectPermutationTitles();
+      var irEl = document.getElementById('intelligence-requirement-input-generation');
+      var intelligence_requirement = irEl ? irEl.value.trim() : '';
+      var payload = { titles: titles };
+      if (intelligence_requirement !== '') payload.intelligence_requirement = intelligence_requirement;
+      fetch('/api/save-hypothesis-ach', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
       }).then(function (r) {
         if (r.ok) {
           var label = btn.textContent;
@@ -1050,6 +1130,9 @@
     initPageSwitcher();
     setupHypothesisCardList();
     initSaveHypothesisAch();
+    initSaveAchGeneration();
+    initSaveAchRanking();
+    initSavePermutationsToAch();
     initHypothesisCardToggle();
     initUpdateSourceButton();
     initAddSourceModal();

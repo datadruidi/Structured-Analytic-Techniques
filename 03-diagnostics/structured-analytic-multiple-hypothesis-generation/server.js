@@ -12,9 +12,9 @@ const path = require("path");
 
 const PORT = 8083;
 const ROOT = __dirname;
-const SOURCE_FILE = path.join(ROOT, "Multiple_Hypothesis_Generation.txt");
+const SOURCE_FILE = path.join(ROOT, "input", "Multiple_Hypothesis_Generation.txt");
 const HYPOTHESES_FILE = path.join(ROOT, "Hypotheses.txt");
-const JSONL_PATH = path.resolve(ROOT, "..", "structured-analytic-circleboarding", "hypothesis_keywords.jsonl");
+const JSONL_PATH = path.resolve(ROOT, "..", "..", "02-exploration", "structured-analytic-circleboarding", "input", "hypothesis_keywords.jsonl");
 
 function toArray(val) {
   if (Array.isArray(val)) return val.map((v) => String(v).trim()).filter(Boolean);
@@ -78,6 +78,8 @@ const server = http.createServer((req, res) => {
         return;
       }
       const line = "\n- " + label;
+      const inputDir = path.dirname(SOURCE_FILE);
+      if (!fs.existsSync(inputDir)) fs.mkdirSync(inputDir, { recursive: true });
       fs.readFile(SOURCE_FILE, "utf8", (err, content) => {
         const toWrite = err && err.code === "ENOENT" ? "So What?" + line : (content || "") + line;
         fs.writeFile(SOURCE_FILE, toWrite, "utf8", (writeErr) => {
@@ -105,6 +107,8 @@ const server = http.createServer((req, res) => {
       }
       const items = Array.isArray(body.items) ? body.items.map((l) => (l == null ? "" : String(l).trim())).filter(Boolean) : [];
       const content = "So What?\n" + items.map((i) => "- " + i).join("\n") + (items.length ? "\n" : "");
+      const inputDir = path.dirname(SOURCE_FILE);
+      if (!fs.existsSync(inputDir)) fs.mkdirSync(inputDir, { recursive: true });
       fs.writeFile(SOURCE_FILE, content, "utf8", (writeErr) => {
         if (writeErr) {
           send(res, 500, JSON.stringify({ ok: false, error: String(writeErr.message) }), "application/json");
@@ -180,6 +184,24 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  if (req.method === "GET" && urlPath === "/api/hypothesis-ach") {
+    const achDir = path.join(ROOT, "..", "structured-analysis-of-competing-hypothesis");
+    const outPath = path.join(achDir, "hypothesis.json");
+    try {
+      let payload = {};
+      if (fs.existsSync(outPath)) {
+        try {
+          payload = JSON.parse(fs.readFileSync(outPath, "utf8"));
+        } catch (_) {}
+      }
+      if (typeof payload !== "object" || payload === null) payload = {};
+      send(res, 200, JSON.stringify(payload), "application/json");
+    } catch (err) {
+      send(res, 500, JSON.stringify({ ok: false, error: String(err.message) }), "application/json");
+    }
+    return;
+  }
+
   if (req.method === "POST" && urlPath === "/api/save-hypothesis-ach") {
     const chunks = [];
     req.on("data", (chunk) => chunks.push(chunk));
@@ -191,9 +213,11 @@ const server = http.createServer((req, res) => {
         send(res, 400, JSON.stringify({ ok: false, error: "Invalid JSON" }), "application/json");
         return;
       }
-      const id = typeof body.id === "string" && /^H\d+$/.test(body.id) ? body.id : "H1";
+      const id = typeof body.id === "string" && /^H\d+$/.test(body.id) ? body.id : null;
       const title = typeof body.title === "string" ? body.title : "";
       const description = typeof body.description === "string" ? body.description : "";
+      const intelligenceRequirement = body.intelligence_requirement !== undefined ? String(body.intelligence_requirement).trim() : undefined;
+      const titles = Array.isArray(body.titles) ? body.titles.map((t) => (t != null ? String(t).trim() : "")) : null;
       const achDir = path.join(ROOT, "..", "structured-analysis-of-competing-hypothesis");
       const outPath = path.join(achDir, "hypothesis.json");
       try {
@@ -207,7 +231,18 @@ const server = http.createServer((req, res) => {
           } catch (_) {}
         }
         if (typeof payload !== "object" || payload === null) payload = {};
-        payload[id] = { id, title, description };
+        if (intelligenceRequirement !== undefined) payload.intelligence_requirement = intelligenceRequirement;
+        if (titles && titles.length > 0) {
+          for (let i = 0; i < Math.min(5, titles.length); i++) {
+            const key = "H" + (i + 1);
+            const newTitle = titles[i] !== undefined ? titles[i] : "";
+            const existing = payload[key] && typeof payload[key] === "object" ? payload[key] : null;
+            const existingDesc = existing && typeof existing.description === "string" ? existing.description : "";
+            payload[key] = { id: key, title: newTitle, description: existingDesc };
+          }
+        } else if (id) {
+          payload[id] = { id, title, description };
+        }
         fs.writeFileSync(outPath, JSON.stringify(payload, null, 2), "utf8");
       } catch (err) {
         send(res, 500, JSON.stringify({ ok: false, error: String(err.message) }), "application/json");

@@ -28,13 +28,19 @@ These tools support practical SAT workflows: they make assumptions, relationship
 
 ## Tools
 
+Tools are grouped by phase:
+
+- **01 – Getting Organized:** Causal Map, Timeline  
+- **02 – Exploration:** Circleboarding  
+- **03 – Diagnostics:** Multiple Hypothesis Generation, Analysis of Competing Hypothesis (ACH)
+
 | Tool | Port | Folder |
 |------|------|--------|
-| Causal Map | 8765 | `structured-analytic-causal-map` |
-| Timeline | 8080 | `structured-analytic-timeline` |
-| Circleboarding | 8082 | `structured-analytic-circleboarding` |
-| Multiple Hypothesis Generation | 8083 | `structured-analytic-multiple-hypothesis-generation` |
-| Analysis of Competing Hypothesis | 8084 | `structured-analysis-of-competing-hypothesis` |
+| Causal Map | 8765 | `01-getting-organized/structured-analytic-causal-map` |
+| Timeline | 8080 | `01-getting-organized/structured-analytic-timeline` |
+| Circleboarding | 8082 | `02-exploration/structured-analytic-circleboarding` |
+| Multiple Hypothesis Generation | 8083 | `03-diagnostics/structured-analytic-multiple-hypothesis-generation` |
+| Analysis of Competing Hypothesis | 8084 | `03-diagnostics/structured-analysis-of-competing-hypothesis` |
 
 - **Causal Map** — Causal/concept map editor. Renders a hierarchical dataset as an interactive node-link graph (SVG); add, edit, annotate nodes; pan & zoom; Float mode; JSON import/export.
 - **Timeline** — Timeline of events (name, description, source, date/time). Scale range, zoom, Event Details; export to Indicators / hypothesis keywords (JSONL).

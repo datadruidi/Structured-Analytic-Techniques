@@ -7,11 +7,11 @@
 | Tool                 | Port  | Folder |
 |----------------------|-------|--------|
 | Hub                  | 3000  | repo root |
-| Causal Map           | 8765  | `structured-analytic-causal-map` |
-| Timeline             | 8080  | `structured-analytic-timeline` |
-| Circleboarding       | 8082  | `structured-analytic-circleboarding` |
-| Multiple Hypothesis  | 8083  | `structured-analytic-multiple-hypothesis-generation` |
-| Competing Hypothesis | 8084  | `structured-analysis-of-competing-hypothesis` |
+| Causal Map           | 8765  | `01-getting-organized/structured-analytic-causal-map` |
+| Timeline             | 8080  | `01-getting-organized/structured-analytic-timeline` |
+| Circleboarding       | 8082  | `02-exploration/structured-analytic-circleboarding` |
+| Multiple Hypothesis  | 8083  | `03-diagnostics/structured-analytic-multiple-hypothesis-generation` |
+| Competing Hypothesis | 8084  | `03-diagnostics/structured-analysis-of-competing-hypothesis` |
 | EXTRA 2              | 8085  | reserved |
 | EXTRA 3              | 8086  | reserved |
 | EXTRA 4              | 8087  | reserved |

@@ -8,7 +8,7 @@ This guide and the **Producer Guide** (`HYPOTHESIS-KEYWORDS-JSONL-PRODUCER-GUIDE
 ## 1. What you get
 
 - **JSONL only** — one JSON object per line; no commas between lines, no top-level array.
-- **Path** — `structured-analytic-circleboarding/hypothesis_keywords.jsonl` (relative to repo root).
+- **Path** — `02-exploration/structured-analytic-circleboarding/input/hypothesis_keywords.jsonl` (relative to repo root).
 - **Append-only** — new records are added at the end of the file.
 - **One line per “Generate” action** — each time a producer (e.g. Timeline, Causal Map) runs “Generate Hypothesis Keywords”, one new line is appended.
 
@@ -67,7 +67,7 @@ Each line is a single JSON object. **Guaranteed fields** (every record):
 const fs = require("fs");
 const path = require("path");
 
-const JSONL_PATH = path.join(__dirname, "structured-analytic-circleboarding", "hypothesis_keywords.jsonl");
+const JSONL_PATH = path.join(__dirname, "02-exploration", "structured-analytic-circleboarding", "input", "hypothesis_keywords.jsonl");
 
 function loadRecords() {
   const raw = fs.readFileSync(JSONL_PATH, "utf8");
@@ -112,7 +112,7 @@ function loadRecords() {
 
 | Topic        | Detail |
 |-------------|--------|
-| **File**    | `structured-analytic-circleboarding/hypothesis_keywords.jsonl` |
+| **File**    | `02-exploration/structured-analytic-circleboarding/input/hypothesis_keywords.jsonl` |
 | **Format**  | JSON Lines (one JSON object per line, no wrapping array) |
 | **Schema**   | Per line: `createdAt` (string) + `what`, `who`, `when`, `where`, `why`, `how` (string arrays); optional `id`, `evidence`, `sessionId`, `appVersion` |
 | **Growth**  | Append-only; one line per “Generate” action from producers |

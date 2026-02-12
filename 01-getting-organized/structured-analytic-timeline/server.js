@@ -1,7 +1,7 @@
 /**
  * Optional local server for the Timeline app.
  * Serves static files and provides POST /api/save-indicators to append
- * one JSON Lines (NDJSON) record to ../structured-analytic-circleboarding/hypothesis_keywords.jsonl.
+ * one JSON Lines (NDJSON) record to 02-exploration/structured-analytic-circleboarding/input/hypothesis_keywords.jsonl.
  * One "Generate Hypothesis Keywords" click = one line (append-only).
  *
  * Run: node server.js
@@ -14,7 +14,7 @@ const path = require("path");
 
 const PORT = 8080;
 const ROOT = __dirname;
-const JSONL_PATH = path.resolve(ROOT, "..", "structured-analytic-circleboarding", "hypothesis_keywords.jsonl");
+const JSONL_PATH = path.resolve(ROOT, "..", "..", "02-exploration", "structured-analytic-circleboarding", "input", "hypothesis_keywords.jsonl");
 
 function toArray(val) {
   if (Array.isArray(val)) return val.map((v) => String(v).trim()).filter(Boolean);
@@ -90,20 +90,15 @@ const server = http.createServer((req, res) => {
       const record = normalizeRecord(body);
       const line = JSON.stringify(record) + "\n";
       const dir = path.dirname(JSONL_PATH);
-      fs.mkdir(dir, { recursive: true }, (err) => {
-        if (err) {
-          send(res, 500, JSON.stringify({ ok: false, error: "Could not create directory" }), "application/json");
-          return;
-        }
-        fs.appendFile(JSONL_PATH, line, "utf8", (writeErr) => {
-          if (writeErr) {
-            send(res, 500, JSON.stringify({ ok: false, error: String(writeErr.message) }), "application/json");
-            return;
-          }
-          console.log("Appended hypothesis keywords to:", JSONL_PATH);
-          send(res, 200, JSON.stringify({ ok: true }), "application/json");
-        });
-      });
+      try {
+        if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+        fs.appendFileSync(JSONL_PATH, line, "utf8");
+        console.log("Appended hypothesis keywords to:", JSONL_PATH);
+        send(res, 200, JSON.stringify({ ok: true }), "application/json");
+      } catch (err) {
+        console.error("Error writing hypothesis keywords:", err.message);
+        send(res, 500, JSON.stringify({ ok: false, error: String(err.message) }), "application/json");
+      }
     });
     return;
   }

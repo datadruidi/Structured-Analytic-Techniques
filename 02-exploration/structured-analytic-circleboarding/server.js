@@ -15,7 +15,7 @@ const path = require("path");
 const PORT = 8082;
 const ROOT = __dirname;
 const CIRCLEBOARD_DATA_FILE = path.join(ROOT, "CircleboardData.txt");
-const HYPOTHESIS_DIR = path.resolve(ROOT, "..", "03-diagnostics", "structured-analytic-multiple-hypothesis-generation", "input");
+const HYPOTHESIS_DIR = path.resolve(ROOT, "..", "..", "03-diagnostics", "structured-analytic-multiple-hypothesis-generation", "input");
 const HYPOTHESIS_FILE = path.resolve(HYPOTHESIS_DIR, "Multiple_Hypothesis_Generation.txt");
 
 const MIME = {

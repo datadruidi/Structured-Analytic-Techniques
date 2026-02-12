@@ -54,11 +54,11 @@ const hubServer = http.createServer((req, res) => {
 
 const SERVERS = [
   { name: 'Hub', dir: null, port: HUB_PORT },
-  { name: 'Causal map', dir: 'structured-analytic-causal-map', port: 8765 },
-  { name: 'Timeline', dir: 'structured-analytic-timeline', port: 8080 },
-  { name: 'Circleboarding', dir: 'structured-analytic-circleboarding', port: 8082 },
-  { name: 'Multiple Hypothesis Generation', dir: 'structured-analytic-multiple-hypothesis-generation', port: 8083 },
-  { name: 'Competing Hypothesis', dir: 'structured-analysis-of-competing-hypothesis', port: 8084 },
+  { name: 'Causal map', dir: '01-getting-organized/structured-analytic-causal-map', port: 8765 },
+  { name: 'Timeline', dir: '01-getting-organized/structured-analytic-timeline', port: 8080 },
+  { name: 'Circleboarding', dir: '02-exploration/structured-analytic-circleboarding', port: 8082 },
+  { name: 'Multiple Hypothesis Generation', dir: '03-diagnostics/structured-analytic-multiple-hypothesis-generation', port: 8083 },
+  { name: 'Competing Hypothesis', dir: '03-diagnostics/structured-analysis-of-competing-hypothesis', port: 8084 },
 ];
 
 function run(entry) {

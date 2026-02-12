@@ -1,6 +1,6 @@
 /**
  * Local server for causal-map. Serves the app and appends one JSONL record to
- * ../structured-analytic-circleboarding/hypothesis_keywords.jsonl when requested.
+ * 02-exploration/structured-analytic-circleboarding/input/hypothesis_keywords.jsonl when requested.
  * Run from this folder: node server.js
  * Then open http://localhost:8765 in the browser.
  */
@@ -9,7 +9,7 @@ const fs = require('fs');
 const path = require('path');
 
 const PORT = 8765;
-const JSONL_PATH = path.resolve(__dirname, '..', 'structured-analytic-circleboarding', 'hypothesis_keywords.jsonl');
+const JSONL_PATH = path.resolve(__dirname, '..', '..', '02-exploration', 'structured-analytic-circleboarding', 'input', 'hypothesis_keywords.jsonl');
 
 function toArray(val) {
   if (Array.isArray(val)) return val.map((v) => String(v).trim()).filter(Boolean);

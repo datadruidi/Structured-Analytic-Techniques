@@ -1,6 +1,6 @@
 # Circleboarding
 
-A **Kanban-style dashboard** for 5WH + “So what?” indicators. Six category boxes (Who?, What?, Why?, When?, Where?, How?) plus a 6-lane “So what?” area. Other modules (e.g. Timeline, Causal Map) export to **hypothesis_keywords.jsonl**; the circleboard keeps its own data in **CircleboardData.txt**.
+A **Kanban-style dashboard** for 5WH + “So what?” indicators. Six category boxes (Who?, What?, Why?, When?, Where?, How?) plus a 6-lane “So what?” area. Other modules (e.g. Timeline, Causal Map) export to **input/hypothesis_keywords.jsonl**; the circleboard keeps its own data in **CircleboardData.txt**.
 
 ## Screenshot
 
@@ -10,12 +10,12 @@ A **Kanban-style dashboard** for 5WH + “So what?” indicators. Six category b
 ## Data files
 
 - **CircleboardData.txt** – The app’s main data file (when the server is used). Loaded first on startup. All saves (drags, edits) write here and to the browser’s localStorage.
-- **hypothesis_keywords.jsonl** – JSON Lines file produced by other tools. The circleboard **never overwrites** it. Use **Refresh from hypothesis_keywords.jsonl** to **merge** new keywords into the current board (existing items and “So what?” lanes are kept; only new items are appended per category).
+- **input/hypothesis_keywords.jsonl** – JSON Lines file produced by other tools. The circleboard **never overwrites** it. Use **Refresh from hypothesis_keywords.jsonl** to **merge** new keywords into the current board (existing items and “So what?” lanes are kept; only new items are appended per category).
 
 ## Load order
 
 1. **CircleboardData.txt** – if present (when served by `node server.js`), loaded first.
-2. **hypothesis_keywords.jsonl** – if CircleboardData.txt is missing or unavailable, used as initial data.
+2. **input/hypothesis_keywords.jsonl** – if CircleboardData.txt is missing or unavailable, used as initial data.
 3. **localStorage** – if the app has been used before in this browser.
 4. **Embedded fallback** – if nothing else is available (e.g. opening `index.html` via file://).
 
@@ -34,7 +34,7 @@ Click **Refresh from hypothesis_keywords.jsonl** to read the JSONL file and merg
 **From repo root:** Run `node start-all.js` and open the hub at http://localhost:3000, then click **Circleboarding** (port 8082).
 
 - **With server (recommended):** run `node server.js` in this folder, then open **http://localhost:8082**. Data is read/written from **CircleboardData.txt**.
-- **Without server:** open `index.html` (e.g. via file://). Data is kept in localStorage only; Refresh fetches **hypothesis_keywords.jsonl** when the page was loaded from a server.
+- **Without server:** open `index.html` (e.g. via file://). Data is kept in localStorage only; Refresh fetches **input/hypothesis_keywords.jsonl** when the page was loaded from a server.
 
 ## Port
 
@@ -44,8 +44,8 @@ This tool’s server uses **port 8082** (see repo root `HUB-PAGE-INSTRUCTIONS.md
 
 - `index.html` – Dashboard and Refresh button.
 - `styles.css` – Layout and styles.
-- `app.js` – Load (CircleboardData.txt → hypothesis_keywords.jsonl), merge, save, drag-and-drop.
-- `hypothesis_keywords.jsonl` – Produced by other modules; read-only for circleboard, merged in on Refresh.
+- `app.js` – Load (CircleboardData.txt → input/hypothesis_keywords.jsonl), merge, save, drag-and-drop.
+- `input/hypothesis_keywords.jsonl` – Produced by other modules; read-only for circleboard, merged in on Refresh.
 - `CircleboardData.txt` – Created/updated by the app when the server is used.
 - `server.js` – Static server + POST `/api/save-circleboard` to write CircleboardData.txt.
 
@@ -56,12 +56,12 @@ This tool’s server uses **port 8082** (see repo root `HUB-PAGE-INSTRUCTIONS.md
 **Import (load):**
 
 1. **CircleboardData.txt** — JSON object: `who`, `what`, `where`, `when`, `why`, `how` (arrays of `{ id, text }`), and `soWhatLanes`, `trashLanes` (arrays of arrays of `{ id, text }`). Loaded first when the server is used.
-2. **hypothesis_keywords.jsonl** — JSON Lines: one JSON object per line. Each line has `createdAt`, `what`, `who`, `when`, `where`, `why`, `how` (arrays of strings), and optional `id`. Used when you click **Refresh from hypothesis_keywords.jsonl**; new items are merged into the board.
+2. **input/hypothesis_keywords.jsonl** — JSON Lines: one JSON object per line. Each line has `createdAt`, `what`, `who`, `when`, `where`, `why`, `how` (arrays of strings), and optional `id`. Used when you click **Refresh from hypothesis_keywords.jsonl**; new items are merged into the board.
 
 **Export (save):**
 
 1. **CircleboardData.txt** — Same JSON shape as import (full state: categories + soWhatLanes + trashLanes). Written by the app on save when the server is running.
-2. **Save for Hypothesis Generation** — Writes **Multiple_Hypothesis_Generation.txt** in `structured-analytic-multiple-hypothesis-generation/`: plain text with a `So What?` header and `- item` lines (one per “So what?” item).
+2. **Save for Hypothesis Generation** — Writes **Multiple_Hypothesis_Generation.txt** in `03-diagnostics/structured-analytic-multiple-hypothesis-generation/`: plain text with a `So What?` header and `- item` lines (one per “So what?” item).
 
 **Example hypothesis_keywords.jsonl (one line):**
 

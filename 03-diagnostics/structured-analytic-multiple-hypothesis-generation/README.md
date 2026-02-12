@@ -24,12 +24,12 @@ This module has two main views, switched by the top buttons: **Hypothesis Genera
 
 | File | Purpose |
 |------|--------|
-| **Multiple_Hypothesis_Generation.txt** | Source list for the **Hypothesis Generation** view. Each line (after stripping a leading `- `) is shown in the left panel as a row with a **Generate** button. Updated when you add items or when the Circleboarding app writes “Save for Hypothesis Generation”. |
+| **input/Multiple_Hypothesis_Generation.txt** | Source list for the **Hypothesis Generation** view. The **Update** button reads this file. Each line (after stripping a leading `- `) is shown in the left panel as a row with a **Generate** button. Updated when you add items or when the Circleboarding app writes “Save for Hypothesis Generation”. |
 | **Hypotheses.txt** | Source list for the **Hypothesis Ranking** view. Lines appear in the left panel; you reorder by drag and assign items to H1–H5 cards. The server overwrites this file when you remove items or reorder. |
 
 ## Hypothesis Generation workflow
 
-1. **Source list (left):** Items from **Multiple_Hypothesis_Generation.txt** (and any you add with **Add +**) appear as rows with a **Generate** button. Use **Update** to re-read the file.
+1. **Source list (left):** Items from **input/Multiple_Hypothesis_Generation.txt** (and any you add with **Add +**) appear as rows with a **Generate** button. Use **Update** to re-read the file.
 2. **Generate:** Click **Generate** on an item → popup asks **Who?**, **What?**, **Why?** (What and Why unlock after you have at least one Who or What). Choose one → the item becomes a card in that column.
 3. **Tree:** Columns are Who → What → Why → **Permutations**. Cards can be dragged to reorder within a column; card text is editable. Use **Clear** to reset the tree and **Update** to propagate What/Why to new Who branches.
 4. **Save:** Use **Save hypothesis** on a permutation row to send that hypothesis to the ranking list (and **Hypotheses.txt**).
@@ -42,7 +42,7 @@ This module has two main views, switched by the top buttons: **Hypothesis Genera
 
 ## Source of Multiple_Hypothesis_Generation.txt (optional)
 
-1. Run the Circleboarding app from **structured-analytic-circleboarding** (`node server.js`, **http://localhost:8082**).
+1. Run the Circleboarding app from **02-exploration/structured-analytic-circleboarding** (`node server.js`, **http://localhost:8082**).
 2. Add or drag items into the **So what?** section, then click **Save for Hypothesis Generation**.
 3. The file is written here with a “So What?” header and `- item` lines.
 
@@ -56,15 +56,15 @@ This app’s server uses **port 8083** (see repo root `HUB-PAGE-INSTRUCTIONS.md`
 
 **Import (source files):**
 
-1. **Multiple_Hypothesis_Generation.txt** — Plain text. Optional first line: `So What?`. Then one item per line; lines starting with `- ` have the hyphen stripped. Each line becomes a row in the Hypothesis Generation source list.
+1. **input/Multiple_Hypothesis_Generation.txt** — Plain text. Optional first line: `So What?`. Then one item per line; lines starting with `- ` have the hyphen stripped. Each line becomes a row in the Hypothesis Generation source list.
 2. **Hypotheses.txt** — Plain text, one hypothesis per line. Lines appear in the Hypothesis Ranking left panel; order is preserved. The server overwrites this file when you reorder or remove items.
 
 **Export:**
 
 1. **Save hypothesis** (from a Permutation row) — Appends that hypothesis line to **Hypotheses.txt** in this folder.
-2. **Save Hypothesis for ACH** (from an H1–H5 card) — POSTs to the server; writes **hypothesis.json** into `structured-analysis-of-competing-hypothesis/`. That file is a single JSON object: `intelligence_requirement` (string) and `H1`…`H5` (each `{ id, title, description }`), used by the ACH evidence-list tool.
+2. **Save Hypothesis for ACH** (from an H1–H5 card) — POSTs to the server; writes **hypothesis.json** into `03-diagnostics/structured-analysis-of-competing-hypothesis/`. That file is a single JSON object: `intelligence_requirement` (string) and `H1`…`H5` (each `{ id, title, description }`), used by the ACH evidence-list tool. The **id** field is optional when reading (ACH infers it from the key). You can create the file with **only titles** from **Hypothesis Generation** (use **Save permutations to ACH**); then in **Hypothesis Ranking** you add or edit descriptions and save per card.
 
-**Example Multiple_Hypothesis_Generation.txt:**
+**Example input/Multiple_Hypothesis_Generation.txt:**
 
 ```
 So What?

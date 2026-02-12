@@ -5,7 +5,7 @@
   const CATEGORY_KEYS = ['who', 'what', 'why', 'when', 'where', 'how'];
   const LANE_ORDER = ['who', 'what', 'why', 'when', 'where', 'how'];
   var CIRCLEBOARD_DATA_FILE = 'CircleboardData.txt';
-  var INDICATORS_FILE = 'hypothesis_keywords.jsonl';
+  var INDICATORS_FILE = 'input/hypothesis_keywords.jsonl';
 
   function genId() {
     return 'id-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);

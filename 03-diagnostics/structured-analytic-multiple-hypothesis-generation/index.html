@@ -16,7 +16,13 @@
     <div id="page-generation" class="app-page" aria-hidden="false">
       <header class="app-header">
         <h1 class="app-title">Multiple Hypothesis Generation</h1>
-        <p class="app-subtitle">Click Generate on a source item and choose Who, What, or Why to build the tree. The tree grows left to right.</p>
+        <p class="app-subtitle">Click Generate on a source item and choose Who, What, or Why to build the tree. The tree grows left to right. The source list is loaded from <strong>input/Multiple_Hypothesis_Generation.txt</strong> in this folder.</p>
+        <div class="intelligence-requirement-bar">
+          <label for="intelligence-requirement-input-generation">Intelligence requirement</label>
+          <input type="text" id="intelligence-requirement-input-generation" placeholder="Brief title of the analysis" aria-label="Intelligence requirement">
+          <button type="button" class="btn-save-ach-bar" id="btn-save-ach-generation" aria-label="Save intelligence requirement to hypothesis.json">Save to ACH</button>
+          <button type="button" class="btn-save-ach-bar" id="btn-save-permutations-ach" aria-label="Save permutation titles to hypothesis.json (H1–H5); add descriptions in Hypothesis Ranking">Save permutations to ACH</button>
+        </div>
       </header>
 
       <div class="app-body">
@@ -55,6 +61,11 @@
       <header class="app-header">
         <h1 class="app-title">Hypothesis Ranking</h1>
         <p class="app-subtitle">Saved permutations from Hypotheses.txt. Use Update to re-read the file.</p>
+        <div class="intelligence-requirement-bar">
+          <label for="intelligence-requirement-input-ranking">Intelligence requirement</label>
+          <input type="text" id="intelligence-requirement-input-ranking" placeholder="Brief title of the analysis" aria-label="Intelligence requirement">
+          <button type="button" class="btn-save-ach-bar" id="btn-save-ach-ranking" aria-label="Save intelligence requirement to hypothesis.json">Save to ACH</button>
+        </div>
       </header>
       <div class="ranking-body">
         <div class="ranking-left">
