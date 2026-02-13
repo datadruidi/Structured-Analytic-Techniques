@@ -762,6 +762,31 @@
       border-radius: 6px;
       cursor: pointer;
     }
+    .evidence-info-tip {
+      flex-shrink: 0;
+      width: 1.3rem;
+      height: 1.3rem;
+      min-width: 1.3rem;
+      min-height: 1.3rem;
+      padding: 0;
+      margin: 0 0 0 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      line-height: 1;
+      color: #9ca3af;
+      background: transparent;
+      border: 1px solid #4a5060;
+      border-radius: 50%;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+    }
+    .evidence-info-tip:hover {
+      color: #e4e6eb;
+      border-color: #e4e6eb;
+    }
     #edit-overlay {
       display: none;
       position: fixed;
@@ -926,6 +951,7 @@
         <button type="button" class="toolbar-menu-btn" id="btn-file">File</button>
         <div class="dropdown-menu" id="menu-file">
           <button type="button" id="btn-export">Save</button>
+          <button type="button" id="btn-download">Download Evidence</button>
           <button type="button" id="btn-import-trigger">Import JSON</button>
           <button type="button" id="btn-load-example">Load test-data JSON</button>
           <button type="button" id="btn-export-sample">Download template JSON</button>
@@ -949,6 +975,7 @@
     <div id="toolbar-title">Causal Map for Structured Analytic Techniques</div>
     <div id="toolbar-right">
       <button type="button" id="btn-keywords" class="toolbar-menu-btn btn-keywords">Generate Hypothesis Keywords</button>
+      <button type="button" class="evidence-info-tip" id="indicators-tip-toolbar" aria-label="Hypothesis keywords info" title="Hypothesis keywords info">?</button>
     </div>
     <input type="file" id="file-import" accept=".json,application/json">
   </div>
@@ -1071,6 +1098,7 @@
         </div>
         <div id="comment-actions-row">
           <button type="button" id="comment-btn-keywords" class="btn-keywords">Generate Keywords</button>
+          <button type="button" class="evidence-info-tip" id="indicators-tip-comment" aria-label="Hypothesis keywords info" title="Hypothesis keywords info">?</button>
           <button type="button" id="comment-save-close" class="comment-save-close">Save</button>
         </div>
       </div>
@@ -2202,6 +2230,17 @@
     openKeywordsPopup(true);
   });
 
+  function showKeywordsInfoTip(e) {
+    e.preventDefault();
+    alert(
+      'If the evidence brings to mind important Who, What, When, Where, Why, or How details, ' +
+      'you can create hypothesis keywords here.\n\n' +
+      'The keywords will be processed in the Exploration phase of the analysis process.'
+    );
+  }
+  document.getElementById('indicators-tip-toolbar').addEventListener('click', showKeywordsInfoTip);
+  document.getElementById('indicators-tip-comment').addEventListener('click', showKeywordsInfoTip);
+
   keywordsBox.addEventListener('click', (e) => {
     if (!e.target.classList.contains('keyword-add-row')) return;
     const btn = e.target;
@@ -2348,7 +2387,15 @@
 
   function saveTree() {
     try {
-      localStorage.setItem(TREE_STORAGE_KEY, JSON.stringify(tree, treeReplacer));
+      ensureDepths(tree, 0);
+      ensureEvidence(tree);
+      const json = JSON.stringify(tree, treeReplacer, 2);
+      localStorage.setItem(TREE_STORAGE_KEY, json);
+      fetch('/api/save-evidence', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: json
+      }).catch(() => {});
     } catch (_) {}
   }
 
@@ -2409,9 +2456,39 @@
     doExport(defaultName);
   }
 
-  document.getElementById('btn-export').addEventListener('click', () => {
+  document.getElementById('btn-export').addEventListener('click', async () => {
     document.getElementById('dropdown-file').classList.remove('open');
+    ensureDepths(tree, 0);
+    ensureEvidence(tree);
+    const json = JSON.stringify(tree, treeReplacer, 2);
+    try {
+      const r = await fetch('/api/save-evidence', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: json
+      });
+      if (r.ok) return;
+    } catch (_) {}
     doSaveWithPicker();
+  });
+
+  document.getElementById('btn-download').addEventListener('click', () => {
+    document.getElementById('dropdown-file').classList.remove('open');
+    fetch('/data/evidence.json')
+      .then(function (r) {
+        if (!r.ok) throw new Error('not found');
+        return r.blob();
+      })
+      .then(function (blob) {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'evidence.json';
+        a.click();
+        URL.revokeObjectURL(a.href);
+      })
+      .catch(function () {
+        doExport('evidence.json');
+      });
   });
 
   document.getElementById('btn-import-trigger').addEventListener('click', () => {
@@ -2586,11 +2663,33 @@
     }
   });
 
-  restoreTree();
-  render();
-  setTimeout(function () {
-    if (!restoreView()) fitToScreen();
-  }, 50);
+  function startApp() {
+    render();
+    setTimeout(function () {
+      if (!restoreView()) fitToScreen();
+    }, 50);
+  }
+
+  fetch('/data/evidence.json')
+    .then(function (r) {
+      if (!r.ok) return Promise.reject(new Error('not found'));
+      return r.json();
+    })
+    .then(function (data) {
+      if (data && data.id && Array.isArray(data.children)) {
+        ensureIds(data, true, 0);
+        tree = data;
+        try { localStorage.setItem(TREE_STORAGE_KEY, JSON.stringify(tree, treeReplacer, 2)); } catch (_) {}
+        startApp();
+      } else {
+        restoreTree();
+        startApp();
+      }
+    })
+    .catch(function () {
+      restoreTree();
+      startApp();
+    });
 })();
   </script>
 </body>

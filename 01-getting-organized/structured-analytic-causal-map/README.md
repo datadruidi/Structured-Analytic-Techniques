@@ -69,7 +69,7 @@ Then open:
 
 ### Option 3: Auto-save hypothesis keywords to the circleboarding folder  
 To have **Generate Hypothesis Keywords** / **Create Keywords** append directly to  
-`02-exploration/structured-analytic-circleboarding/input/hypothesis_keywords.jsonl`  
+`data/hypothesis_keywords.jsonl`  
 without any save dialog, run the included Node.js server from this folder:
 
 ```bash
@@ -89,7 +89,7 @@ If you open the app without the server (e.g. by double-clicking `index.html`), t
 
 - **Load test-data** — Use **File → Load test-data JSON** to load the sample file (`input/test-data.json`) and explore the map. This helps you understand how nodes, evidence, and comments work.
 - **Download template** — The main way of working is **bottom‑up**: you start from a blank map and build it node by node yourself. Alternatively, you can use **File → Download template JSON** to get the expected JSON structure, then structure your data (e.g. with AI or in a spreadsheet) and **File → Import JSON** to load it in the correct format.
-- **Save and use in other tools** — When you finish your project, use **File → Save** to export your map as JSON. You can upload that JSON into the next analysis tool: the same format is supported in **Timeline** and **ACH** (Analysis of Competing Hypotheses). If you have used **Generate Hypothesis Keywords**, the keywords are appended to `input/hypothesis_keywords.jsonl` in the **circleboarding** tool folder; you can upload or use that file from the circleboarding tool’s UI.
+- **Save and use in other tools** — When you finish your project, use **File → Save** to export your map as JSON. You can upload that JSON into the next analysis tool: the same format is supported in **Timeline** and **ACH** (Analysis of Competing Hypotheses). If you have used **Generate Hypothesis Keywords**, the keywords are appended to `data/hypothesis_keywords.jsonl` in the **repo root**; you can upload or use that file from the circleboarding tool’s UI.
 
 ---
 

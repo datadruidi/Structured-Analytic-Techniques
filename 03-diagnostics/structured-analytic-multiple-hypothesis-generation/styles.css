@@ -849,6 +849,7 @@ body {
 }
 
 .btn-update-source,
+.btn-clear-source,
 .btn-add-source {
   padding: 0.6rem 1rem;
   font-size: 0.95rem;
@@ -862,6 +863,7 @@ body {
 }
 
 .btn-update-source:hover,
+.btn-clear-source:hover,
 .btn-add-source:hover {
   border-color: #6b9bd1;
   background: #f0f6fc;

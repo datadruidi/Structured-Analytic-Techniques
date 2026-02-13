@@ -1,0 +1,24 @@
+{
+  "hypotheses": [
+    {
+      "id": "hyp-1770977597019-mzvhun",
+      "title": "afdsdef",
+      "slot": "H1",
+      "description": "fdsa"
+    },
+    {
+      "id": "hyp-1770977728949-cf2zj2",
+      "title": "Test from CLI"
+    },
+    {
+      "id": "hyp-1770977924787-yr66a6",
+      "title": "afdsdefa"
+    }
+  ],
+  "H1": {
+    "id": "H1",
+    "title": "afdsdef",
+    "description": "fdsa",
+    "hypothesisId": "hyp-1770977597019-mzvhun"
+  }
+}

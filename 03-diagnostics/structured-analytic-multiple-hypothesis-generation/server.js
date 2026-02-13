@@ -14,7 +14,7 @@ const PORT = 8083;
 const ROOT = __dirname;
 const SOURCE_FILE = path.join(ROOT, "input", "Multiple_Hypothesis_Generation.txt");
 const HYPOTHESES_FILE = path.join(ROOT, "Hypotheses.txt");
-const JSONL_PATH = path.resolve(ROOT, "..", "..", "02-exploration", "structured-analytic-circleboarding", "input", "hypothesis_keywords.jsonl");
+const JSONL_PATH = path.resolve(ROOT, "..", "..", "data", "hypothesis_keywords.jsonl");
 
 function toArray(val) {
   if (Array.isArray(val)) return val.map((v) => String(v).trim()).filter(Boolean);
@@ -165,27 +165,39 @@ const server = http.createServer((req, res) => {
     req.on("data", (chunk) => chunks.push(chunk));
     req.on("end", () => {
       const raw = Buffer.concat(chunks).toString("utf8");
-      let body = raw;
+      let title = raw.trim();
       if (req.headers["content-type"] && req.headers["content-type"].includes("application/json")) {
         try {
           const json = JSON.parse(raw);
-          body = typeof json.permutation === "string" ? json.permutation : (typeof json.text === "string" ? json.text : raw);
+          title = typeof json.title === "string" ? json.title.trim() : (typeof json.permutation === "string" ? json.permutation.trim() : (typeof json.text === "string" ? json.text.trim() : title));
         } catch (_) {}
       }
-      const line = (body === undefined ? "" : body) + "\n";
-      fs.appendFile(HYPOTHESES_FILE, line, { encoding: "utf8", flag: "a" }, (err) => {
-        if (err) {
-          send(res, 500, JSON.stringify({ ok: false, error: String(err.message) }), "application/json");
-          return;
+      const dataDir = path.resolve(ROOT, "..", "..", "data");
+      const outPath = path.join(dataDir, "hypothesis.json");
+      try {
+        if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+        let payload = {};
+        if (fs.existsSync(outPath)) {
+          try { payload = JSON.parse(fs.readFileSync(outPath, "utf8")); } catch (_) {}
         }
+        if (typeof payload !== "object" || payload === null) payload = {};
+        if (!Array.isArray(payload.hypotheses)) payload.hypotheses = [];
+        const exists = payload.hypotheses.some((h) => h && h.title === title);
+        if (!exists) {
+          const hypId = "hyp-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8);
+          payload.hypotheses.push({ id: hypId, title: title });
+        }
+        fs.writeFileSync(outPath, JSON.stringify(payload, null, 2), "utf8");
         send(res, 200, JSON.stringify({ ok: true }), "application/json");
-      });
+      } catch (err) {
+        send(res, 500, JSON.stringify({ ok: false, error: String(err.message) }), "application/json");
+      }
     });
     return;
   }
 
   if (req.method === "GET" && urlPath === "/api/hypothesis-ach") {
-    const achDir = path.join(ROOT, "..", "structured-analysis-of-competing-hypothesis");
+    const achDir = path.resolve(ROOT, "..", "..", "data");
     const outPath = path.join(achDir, "hypothesis.json");
     try {
       let payload = {};
@@ -216,9 +228,10 @@ const server = http.createServer((req, res) => {
       const id = typeof body.id === "string" && /^H\d+$/.test(body.id) ? body.id : null;
       const title = typeof body.title === "string" ? body.title : "";
       const description = typeof body.description === "string" ? body.description : "";
+      const hypothesisId = typeof body.hypothesisId === "string" ? body.hypothesisId.trim() : null;
       const intelligenceRequirement = body.intelligence_requirement !== undefined ? String(body.intelligence_requirement).trim() : undefined;
       const titles = Array.isArray(body.titles) ? body.titles.map((t) => (t != null ? String(t).trim() : "")) : null;
-      const achDir = path.join(ROOT, "..", "structured-analysis-of-competing-hypothesis");
+      const achDir = path.resolve(ROOT, "..", "..", "data");
       const outPath = path.join(achDir, "hypothesis.json");
       try {
         if (!fs.existsSync(achDir)) {
@@ -231,6 +244,7 @@ const server = http.createServer((req, res) => {
           } catch (_) {}
         }
         if (typeof payload !== "object" || payload === null) payload = {};
+        if (!Array.isArray(payload.hypotheses)) payload.hypotheses = [];
         if (intelligenceRequirement !== undefined) payload.intelligence_requirement = intelligenceRequirement;
         if (titles && titles.length > 0) {
           for (let i = 0; i < Math.min(5, titles.length); i++) {
@@ -242,6 +256,14 @@ const server = http.createServer((req, res) => {
           }
         } else if (id) {
           payload[id] = { id, title, description };
+          if (hypothesisId) {
+            payload[id].hypothesisId = hypothesisId;
+            const match = payload.hypotheses.find((h) => h && h.id === hypothesisId);
+            if (match) {
+              match.slot = id;
+              match.description = description;
+            }
+          }
         }
         fs.writeFileSync(outPath, JSON.stringify(payload, null, 2), "utf8");
       } catch (err) {
@@ -276,14 +298,22 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  if (req.method === "POST" && urlPath === "/api/delete-hypotheses-file") {
-    fs.unlink(HYPOTHESES_FILE, (err) => {
-      if (err && err.code !== "ENOENT") {
-        send(res, 500, JSON.stringify({ ok: false, error: String(err.message) }), "application/json");
-        return;
+  if (req.method === "POST" && urlPath === "/api/clear-hypotheses") {
+    const dataDir = path.resolve(ROOT, "..", "..", "data");
+    const outPath = path.join(dataDir, "hypothesis.json");
+    try {
+      let payload = {};
+      if (fs.existsSync(outPath)) {
+        try { payload = JSON.parse(fs.readFileSync(outPath, "utf8")); } catch (_) {}
       }
+      if (typeof payload !== "object" || payload === null) payload = {};
+      payload.hypotheses = [];
+      ["H1", "H2", "H3", "H4", "H5"].forEach((k) => { delete payload[k]; });
+      fs.writeFileSync(outPath, JSON.stringify(payload, null, 2), "utf8");
       send(res, 200, JSON.stringify({ ok: true }), "application/json");
-    });
+    } catch (err) {
+      send(res, 500, JSON.stringify({ ok: false, error: String(err.message) }), "application/json");
+    }
     return;
   }
 

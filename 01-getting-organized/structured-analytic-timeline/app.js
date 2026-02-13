@@ -185,6 +185,7 @@
 
   function saveEvents(events) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
+    livePostEvidence();
   }
 
   function loadTree() {
@@ -199,6 +200,59 @@
   function saveTree(tree) {
     if (tree != null) localStorage.setItem(TREE_STORAGE_KEY, JSON.stringify(tree));
     else localStorage.removeItem(TREE_STORAGE_KEY);
+    livePostEvidence();
+  }
+
+  /** Build the full evidence tree from current state (tree + events). */
+  function buildEvidenceTree() {
+    var tree = loadTree();
+    var events = loadEvents();
+    function pad2(n) { return n < 10 ? "0" + n : String(n); }
+    if (tree && typeof tree === "object") {
+      var treeCopy = deepCloneTree(tree);
+      events.forEach(function (evt) { applyEventToTreeNode(treeCopy, evt); });
+      return treeCopy;
+    }
+    return {
+      id: "root-" + Date.now(),
+      name: "Timeline",
+      depth: 0,
+      evidence: "",
+      children: events.map(function (evt) {
+        var d = new Date(evt.time || 0);
+        var dateStr = Number.isNaN(d.getTime()) ? "" : (d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()));
+        var timeStr = Number.isNaN(d.getTime()) ? "" : (pad2(d.getHours()) + ":" + pad2(d.getMinutes()));
+        return {
+          id: evt.id,
+          name: evt.name || "",
+          depth: 1,
+          evidence: evt.evidence === "Yes" ? "Yes" : "",
+          children: [],
+          color: "#6c757d",
+          description: evt.description || "",
+          source: evt.source != null && evt.source !== "" ? evt.source : "",
+          date: dateStr,
+          time: timeStr
+        };
+      }),
+      color: "#e76f51",
+      description: "",
+      source: "",
+      date: "",
+      time: ""
+    };
+  }
+
+  /** Fire-and-forget POST of the full evidence tree to server. */
+  function livePostEvidence() {
+    try {
+      var json = JSON.stringify(buildEvidenceTree(), null, 2);
+      fetch("/api/save-evidence", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: json
+      }).catch(function () {});
+    } catch (_) {}
   }
 
   function flattenTreeToEvents(root) {
@@ -300,11 +354,12 @@
     }
 
     var timeIso = null;
+    if (!timeRaw || timeRaw.trim() === "") {
+      timeRaw = "00:00";
+      if (timeInput) timeInput.value = "00:00";
+    }
     if (!dateRaw || dateRaw.trim() === "") {
       if (errorDate) setFieldError(dateInput, errorDate, "Date is required.");
-      valid = false;
-    } else if (!timeRaw || timeRaw.trim() === "") {
-      if (errorTime) setFieldError(timeInput, errorTime, "Time is required.");
       valid = false;
     } else {
       try {
@@ -1139,20 +1194,24 @@
       return;
     }
     var displayIndex = getDisplayIndexForId(activeEventId);
-    var sourceHtml = evt.source && String(evt.source).trim()
-      ? '<p class="event-details-source"><a href="' + escapeHtml(evt.source) + '" target="_blank" rel="noopener noreferrer">Source</a></p>'
+    var sourceInlineHtml = evt.source && String(evt.source).trim()
+      ? ' <a class="event-details-source-link" href="' + escapeHtml(evt.source) + '" target="_blank" rel="noopener noreferrer">[Source]</a>'
       : "";
     var dateTimeHtml = '<p class="event-details-datetime">' + escapeHtml(formatDisplayTime(evt.time || "")) + "</p>";
     var evidenceChecked = evt.evidence === "Yes";
-    var evidenceHtml = '<label class="evidence-row event-details-evidence-row">' +
+    var evidenceHtml = '<div class="evidence-row-wrap">' +
+      '<label class="evidence-row event-details-evidence-row">' +
       '<input type="checkbox" id="details-evidence" aria-describedby="details-evidence-desc" ' + (evidenceChecked ? "checked" : "") + '>' +
-      '<span id="details-evidence-desc">Use as Evidence?</span></label>';
+      '<span id="details-evidence-desc">Use as Evidence?</span></label>' +
+      '<button type="button" class="evidence-info-tip" id="details-evidence-tip" aria-label="Evidence info" title="Evidence info">?</button>' +
+      '</div>';
     eventDetailsContent.innerHTML =
-      '<p class="event-details-number"><span class="event-details-badge">' + (displayIndex != null ? displayIndex : "—") + "</span></p>" +
-      '<h3 class="event-details-name">' + escapeHtml(evt.name || "") + "</h3>" +
+      '<div class="event-details-header-row">' +
+        '<span class="event-details-badge">' + (displayIndex != null ? displayIndex : "—") + "</span>" +
+        '<h3 class="event-details-name">' + escapeHtml(evt.name || "") + "</h3>" +
+      "</div>" +
       dateTimeHtml +
-      '<div class="event-details-description">' + escapeHtml(evt.description || "") + "</div>" +
-      sourceHtml +
+      '<div class="event-details-description">' + escapeHtml(evt.description || "") + sourceInlineHtml + "</div>" +
       evidenceHtml;
     var detailsEvidenceCheckbox = document.getElementById("details-evidence");
     if (detailsEvidenceCheckbox) {
@@ -1168,6 +1227,13 @@
             saveTree(tree);
           }
         }
+      });
+    }
+    var detailsEvidenceTip = document.getElementById("details-evidence-tip");
+    if (detailsEvidenceTip) {
+      detailsEvidenceTip.addEventListener("click", function (e) {
+        e.preventDefault();
+        alert("If checked, this event will be used as Evidence later in the analysis process.\n\nIf not checked, the event will not proceed to the analysis process.");
       });
     }
   }
@@ -1287,20 +1353,13 @@
     });
   }
 
-  function openIndicatorsPopup(fromDetailsPanel) {
+  function openIndicatorsPopup() {
     if (!indicatorsOverlay || !indicatorsModal) return;
     resetIndicatorsForm();
     indicatorsOverlay.hidden = false;
-    if (fromDetailsPanel && panelDetails && !panelDetails.classList.contains("panel-hidden")) {
-      indicatorsOverlay.classList.add("indicators-side-by-side");
-      var panelRect = panelDetails.getBoundingClientRect();
-      indicatorsModal.style.marginLeft = (panelRect.right + 16) + "px";
-      indicatorsModal.style.marginTop = Math.max(16, panelRect.top) + "px";
-    } else {
-      indicatorsOverlay.classList.remove("indicators-side-by-side");
-      indicatorsModal.style.marginLeft = "";
-      indicatorsModal.style.marginTop = "";
-    }
+    indicatorsOverlay.classList.remove("indicators-side-by-side");
+    indicatorsModal.style.marginLeft = "";
+    indicatorsModal.style.marginTop = "";
   }
 
   function closeIndicatorsPopup() {
@@ -1540,6 +1599,30 @@
     closeAddEvidenceOverlay();
     cancelEdit();
   });
+
+  var btnTimeSkip = document.getElementById("btn-time-skip");
+  if (btnTimeSkip) {
+    btnTimeSkip.addEventListener("click", function (e) {
+      e.preventDefault();
+      if (timeInput) timeInput.value = "00:00";
+    });
+  }
+
+  var formEvidenceTip = document.getElementById("form-evidence-tip");
+  if (formEvidenceTip) {
+    formEvidenceTip.addEventListener("click", function (e) {
+      e.preventDefault();
+      alert("If checked, this event will be used as Evidence later in the analysis process.\n\nIf not checked, the event will not proceed to the analysis process.");
+    });
+  }
+
+  var indicatorsTip = document.getElementById("indicators-tip");
+  if (indicatorsTip) {
+    indicatorsTip.addEventListener("click", function (e) {
+      e.preventDefault();
+      alert("If the evidence brings to mind important Who, What, When, Where, Why, or How details, you can create hypothesis keywords here.\n\nThe keywords will be processed in the Exploration phase of the analysis process.");
+    });
+  }
 
   document.addEventListener("click", function () {
     closeAllDropdowns(timelineCallouts);
@@ -1970,108 +2053,57 @@
     return copy;
   }
 
-  function exportEventsToJson() {
-    var tree = loadTree();
-    var events = loadEvents();
-    function pad2(n) { return n < 10 ? "0" + n : String(n); }
-    var out;
-    if (tree && typeof tree === "object") {
-      var treeCopy = deepCloneTree(tree);
-      events.forEach(function (evt) { applyEventToTreeNode(treeCopy, evt); });
-      out = treeCopy;
-    } else {
-      out = {
-        id: "root-" + Date.now(),
-        name: "Timeline",
-        depth: 0,
-        evidence: "",
-        children: events.map(function (evt) {
-          var d = new Date(evt.time || 0);
-          var dateStr = Number.isNaN(d.getTime()) ? "" : (d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()));
-          var timeStr = Number.isNaN(d.getTime()) ? "" : (pad2(d.getHours()) + ":" + pad2(d.getMinutes()));
-          return {
-            id: evt.id,
-            name: evt.name || "",
-            depth: 1,
-            evidence: evt.evidence === "Yes" ? "Yes" : "",
-            children: [],
-            color: "#6c757d",
-            description: evt.description || "",
-            source: evt.source != null && evt.source !== "" ? evt.source : "",
-            date: dateStr,
-            time: timeStr
-          };
-        }),
-        color: "#e76f51",
-        description: "",
-        source: "",
-        date: "",
-        time: ""
-      };
-    }
-    var json = JSON.stringify(out, null, 2);
+  function downloadAsFile(json, filename) {
     var blob = new Blob([json], { type: "application/json" });
     var url = URL.createObjectURL(blob);
-    var now = new Date();
-    var dateTimeStr = now.getFullYear() + "-" + pad2(now.getMonth() + 1) + "-" + pad2(now.getDate()) + "_" + pad2(now.getHours()) + "-" + pad2(now.getMinutes()) + "-" + pad2(now.getSeconds());
     var a = document.createElement("a");
     a.href = url;
-    a.download = "timeline-events-" + dateTimeStr + ".json";
+    a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
+  }
+
+  function exportEventsToJson() {
+    var json = JSON.stringify(buildEvidenceTree(), null, 2);
+    function pad2(n) { return n < 10 ? "0" + n : String(n); }
+    // Try server first
+    fetch("/api/save-evidence", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: json
+    })
+      .then(function (r) {
+        if (r.ok) return; // saved to server successfully
+        return Promise.reject(new Error("server error"));
+      })
+      .catch(function () {
+        // Fallback: offer file download with date-time in filename
+        var now = new Date();
+        var dateTimeStr = now.getFullYear() + "-" + pad2(now.getMonth() + 1) + "-" + pad2(now.getDate()) + "_" + pad2(now.getHours()) + "-" + pad2(now.getMinutes()) + "-" + pad2(now.getSeconds());
+        downloadAsFile(json, "timeline-events-" + dateTimeStr + ".json");
+      });
   }
 
   function downloadJsonTemplate() {
-    var templateData = {
-      id: "n_template_root",
-      name: "Level 0",
-      depth: 0,
-      evidence: "",
-      children: [
-        {
-          id: "n_template_1",
-          name: "Level 1",
-          depth: 1,
-          evidence: "",
-          children: [
-            {
-              id: "n_template_2",
-              name: "Level 2",
-              depth: 2,
-              evidence: "",
-              children: [],
-              color: "#6c757d",
-              description: "Description of the event",
-              source: "https://example.com/source",
-              date: "2025-01-01",
-              time: "12:34"
-            }
-          ],
-          color: "#8b5a2b",
-          description: "Description",
-          source: "",
-          date: "2025-01-01",
-          time: "12:34"
-        }
-      ],
-      color: "#e76f51",
-      description: "",
-      source: "",
-      date: "",
-      time: ""
-    };
-    var json = JSON.stringify(templateData, null, 2);
-    var blob = new Blob([json], { type: "application/json" });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement("a");
-    a.href = url;
-    a.download = "timeline-template.json";
-    a.click();
-    URL.revokeObjectURL(url);
+    fetch("/data/template.json")
+      .then(function (r) {
+        if (!r.ok) return Promise.reject(new Error("not found"));
+        return r.blob();
+      })
+      .then(function (blob) {
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "template.json";
+        a.click();
+        URL.revokeObjectURL(a.href);
+      })
+      .catch(function () {
+        alert("Could not fetch data/template.json from the server. Make sure the server is running (node server.js) and the file exists.");
+      });
   }
 
   function removeAllEvents() {
-    if (!confirm("Remove all evidence? This cannot be undone.")) return;
+    if (!confirm("Remove all evidence?\n\nThis will also wipe the evidence.json file on the server. All created events will be permanently lost and cannot be recovered.\n\nIf you just want to clear the screen without affecting the saved file, use File \u2192 Clear Evidence instead.\n\nAre you sure?")) return;
     saveEvents([]);
     saveTree(null);
     editingId = null;
@@ -2098,6 +2130,31 @@
       alert(msg);
     });
   }
+  var fileUpdateFromFile = document.getElementById("file-update-from-file");
+  if (fileUpdateFromFile) {
+    fileUpdateFromFile.addEventListener("click", function () {
+      closeFileMenu();
+      fetch("/data/evidence.json")
+        .then(function (r) {
+          if (!r.ok) return Promise.reject(new Error("File not found on server"));
+          return r.json();
+        })
+        .then(function (data) {
+          if (data && data.id && Array.isArray(data.children)) {
+            saveTree(data);
+            var events = flattenTreeToEvents(data);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
+            renderTimeline();
+          } else {
+            alert("evidence.json exists but has no valid tree data.");
+          }
+        })
+        .catch(function () {
+          alert("Could not read data/evidence.json from the server. Make sure the server is running (node server.js).");
+        });
+    });
+  }
+
   if (btnSaveHeader) {
     btnSaveHeader.addEventListener("click", function () {
       exportEventsToJson();
@@ -2112,6 +2169,21 @@
   if (fileRemoveAll) {
     fileRemoveAll.addEventListener("click", function () {
       removeAllEvents();
+    });
+  }
+
+  var fileClearScreen = document.getElementById("file-clear-screen");
+  if (fileClearScreen) {
+    fileClearScreen.addEventListener("click", function () {
+      closeFileMenu();
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(TREE_STORAGE_KEY);
+      localStorage.removeItem(VIEW_RANGE_KEY);
+      localStorage.removeItem(SCALE_DATES_KEY);
+      editingId = null;
+      if (typeof cancelEdit === "function") cancelEdit();
+      hideDetailsPanel();
+      renderTimeline();
     });
   }
 
@@ -2332,6 +2404,28 @@
 
   applyToolbarHeight(loadToolbarHeight() || DEFAULT_TOOLBAR_H);
   setupToolbarResize();
-  renderTimeline();
-  applyTimelineTransform();
+
+  /* --- Startup: try server first, fall back to localStorage --- */
+  fetch("/data/evidence.json")
+    .then(function (r) {
+      if (!r.ok) return Promise.reject(new Error("not found"));
+      return r.json();
+    })
+    .then(function (data) {
+      if (data && data.id && Array.isArray(data.children)) {
+        saveTree(data);                             // writes to localStorage only (livePost inside will harmlessly echo back)
+        var events = flattenTreeToEvents(data);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(events)); // don't call saveEvents to avoid re-POST
+        renderTimeline();
+        applyTimelineTransform();
+      } else {
+        renderTimeline();
+        applyTimelineTransform();
+      }
+    })
+    .catch(function () {
+      // Server unavailable or file missing — use localStorage (already loaded by loadEvents / loadTree)
+      renderTimeline();
+      applyTimelineTransform();
+    });
 })();

@@ -32,7 +32,7 @@ A lightweight, browser-based timeline tool for **Structured Analytic Techniques 
 ### Run locally (Option 2: local server)
 Some browsers restrict certain features when opening files directly. If you run into issues, start a simple local server:
 
-- **Node** (includes `POST /api/save-indicators` to append one JSON Lines record to `02-exploration/structured-analytic-circleboarding/hypothesis_keywords.jsonl` per click, no save dialog):
+- **Node** (includes `POST /api/save-indicators` to append one JSON Lines record to `data/hypothesis_keywords.jsonl` per click, no save dialog):
   ```bash
   node server.js
   ```
@@ -81,7 +81,7 @@ Use **File** to:
 - **Remove all Events** (start from a blank timeline)
 
 ### 5) Generate Hypothesis Keywords
-Click **Generate Hypothesis Keywords** (toolbar or Evidence Details panel) to open the popup. Fill one or more of What? / Who? / When? / Where? / Why? / How? (comma-separated for multiple). Click **Generate Hypothesis Keywords** to store in the app and write one record. With `node server.js`, one JSON Lines (NDJSON) record is appended to `02-exploration/structured-analytic-circleboarding/hypothesis_keywords.jsonl` (one line per click; schema: `createdAt`, `what`, `who`, `when`, `where`, `why`, `how` as arrays). Without the server, the browser offers to download that single record as `hypothesis_keywords.jsonl`.
+Click **Generate Hypothesis Keywords** (toolbar or Evidence Details panel) to open the popup. Fill one or more of What? / Who? / When? / Where? / Why? / How? (comma-separated for multiple). Click **Generate Hypothesis Keywords** to store in the app and write one record. With `node server.js`, one JSON Lines (NDJSON) record is appended to `data/hypothesis_keywords.jsonl` (one line per click; schema: `createdAt`, `what`, `who`, `when`, `where`, `why`, `how` as arrays). Without the server, the browser offers to download that single record as `hypothesis_keywords.jsonl`.
 
 ---
 

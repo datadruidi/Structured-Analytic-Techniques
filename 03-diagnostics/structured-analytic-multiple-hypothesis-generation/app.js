@@ -98,7 +98,7 @@
     permutationDirtyIds.clear();
     buildTreeView();
     renderSourceList();
-    fetch('/api/delete-hypotheses-file', { method: 'POST' }).catch(function () {});
+    fetch('/api/clear-hypotheses', { method: 'POST' }).catch(function () {});
   }
 
   /** Copy What/Why structure from the fullest Who to others; sync all levels (add missing Whats and missing Whys per What); new IDs for all copies. */
@@ -399,35 +399,14 @@
             const whatRef = w && w.whats ? w.whats.find((p) => p.id === what.id) : null;
             const whyRef = whatRef && whatRef.whys ? whatRef.whys.find((y) => y.id === why.id) : null;
             if (whyRef) whyRef.editValue = permText;
-            let permIndex = -1;
-            let count = 0;
-            groups.forEach(function (g) {
-              (g.whats || []).forEach(function (p) {
-                (p.whys || []).forEach(function (y) {
-                  if (g.id === who.id && p.id === what.id && y.id === why.id) permIndex = count;
-                  count++;
-                });
-              });
-            });
             fetch('/api/save-hypothesis', {
               method: 'POST',
-              headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-              body: permText
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ title: permText })
             }).then(function (r) {
               if (r.ok) {
                 permutationDirtyIds.delete(why.id);
                 saveBtn.disabled = true;
-                if (permIndex >= 0 && permIndex < 5) {
-                  var achId = 'H' + (permIndex + 1);
-                  var irEl = document.getElementById('intelligence-requirement-input-generation');
-                  var payload = { id: achId, title: permText, description: '' };
-                  if (irEl && irEl.value.trim()) payload.intelligence_requirement = irEl.value.trim();
-                  fetch('/api/save-hypothesis-ach', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                  }).catch(function () {});
-                }
               }
             }).catch(function () {});
           });
@@ -576,8 +555,15 @@
     }).catch(function () {});
   }
 
+  function clearSourceList() {
+    sourceItems = [];
+    renderSourceList();
+  }
+
   function initUpdateSourceButton() {
     if (btnUpdateSource) btnUpdateSource.addEventListener('click', updateSourceFromFile);
+    var btnClearSource = document.getElementById('btn-clear-source');
+    if (btnClearSource) btnClearSource.addEventListener('click', clearSourceList);
   }
 
   function initAddSourceModal() {
@@ -624,14 +610,18 @@
       var id = card.dataset.hypothesisId;
       if (!id) return;
       var titleItems = [];
-      card.querySelectorAll('.hypothesis-card-list .ranking-list-text').forEach(function (span) {
-        titleItems.push(span.textContent);
+      var itemHypIds = [];
+      card.querySelectorAll('.hypothesis-card-list .hypothesis-card-item').forEach(function (li) {
+        var span = li.querySelector('.ranking-list-text');
+        titleItems.push(span ? span.textContent : '');
+        itemHypIds.push(li.dataset.hypothesisId || '');
       });
       var descEl = card.querySelector('.hypothesis-card-description');
       var description = descEl ? descEl.value : '';
       cards[id] = {
         collapsed: card.classList.contains('is-collapsed'),
         titleItems: titleItems,
+        itemHypIds: itemHypIds,
         description: description
       };
     });
@@ -661,9 +651,11 @@
         var listEl = card.querySelector('.hypothesis-card-list');
         if (listEl && Array.isArray(saved.titleItems)) {
           listEl.innerHTML = '';
-          saved.titleItems.forEach(function (text) {
+          var hypIds = Array.isArray(saved.itemHypIds) ? saved.itemHypIds : [];
+          saved.titleItems.forEach(function (text, idx) {
             var li = document.createElement('li');
             li.className = 'ranking-list-item hypothesis-card-item';
+            if (hypIds[idx]) li.dataset.hypothesisId = hypIds[idx];
             var textSpan = document.createElement('span');
             textSpan.className = 'ranking-list-text';
             textSpan.textContent = text;
@@ -672,7 +664,12 @@
             btnRemove.className = 'btn-ranking-remove';
             btnRemove.textContent = '\u00d7';
             btnRemove.setAttribute('aria-label', 'Remove from card');
-            btnRemove.addEventListener('click', function () { li.remove(); saveRankingState(); });
+            btnRemove.addEventListener('click', function () {
+              var card = listEl.closest('.hypothesis-card');
+              li.remove();
+              updateCardTitlePreview(card);
+              saveRankingState();
+            });
             li.appendChild(textSpan);
             li.appendChild(btnRemove);
             listEl.appendChild(li);
@@ -704,15 +701,20 @@
   function loadHypothesesFile() {
     var listEl = document.getElementById('ranking-list');
     if (!listEl) return;
-    fetch('Hypotheses.txt')
-      .then(function (r) { return r.ok ? r.text() : Promise.reject(new Error('Could not load')); })
-      .then(function (text) {
-        var lines = text.split(/\r?\n/);
-        renderRankingList(lines);
+    fetch('/api/hypothesis-ach')
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error('Could not load')); })
+      .then(function (data) {
+        var hypotheses = Array.isArray(data.hypotheses) ? data.hypotheses : [];
+        var items = hypotheses.filter(function (h) { return h && h.title; }).map(function (h) {
+          return { hypothesisId: h.id || '', title: String(h.title) };
+        });
+        renderRankingList(items);
         restoreRankingState();
+        var irEl = document.getElementById('intelligence-requirement-input-ranking');
+        if (irEl && data.intelligence_requirement != null) irEl.value = String(data.intelligence_requirement);
       })
       .catch(function () {
-        renderRankingList([]);
+        renderRankingList([], true);
         restoreRankingState();
       });
   }
@@ -752,19 +754,23 @@
     return ghost;
   }
 
-  function renderRankingList(lines) {
+  function renderRankingList(items) {
     var listEl = document.getElementById('ranking-list');
     if (!listEl) return;
     listEl.innerHTML = '';
-    lines.forEach(function (line, index) {
+    // items: array of { hypothesisId, title } or plain strings (backward compat)
+    items.forEach(function (item, index) {
+      var title = typeof item === 'string' ? item : (item.title || '');
+      var hypothesisId = typeof item === 'object' && item.hypothesisId ? item.hypothesisId : '';
       var li = document.createElement('li');
       li.className = 'ranking-list-item';
       li.dataset.lineIndex = String(index);
+      if (hypothesisId) li.dataset.hypothesisId = hypothesisId;
       li.setAttribute('draggable', 'true');
       li.setAttribute('aria-label', 'Hypothesis; drag to card on the right');
       var textSpan = document.createElement('span');
       textSpan.className = 'ranking-list-text';
-      textSpan.textContent = line;
+      textSpan.textContent = title;
       var btnEdit = document.createElement('button');
       btnEdit.type = 'button';
       btnEdit.className = 'btn-ranking-edit';
@@ -773,13 +779,13 @@
       btnEdit.addEventListener('click', function (e) {
         e.stopPropagation();
         var currentIndex = Array.prototype.indexOf.call(listEl.children, li);
-        enterEditMode(li, currentIndex >= 0 ? currentIndex : index, line);
+        enterEditMode(li, currentIndex >= 0 ? currentIndex : index, title);
       });
       li.appendChild(textSpan);
       li.appendChild(btnEdit);
       li.addEventListener('dragstart', function (e) {
         if (e.target.closest('button') || e.target.closest('input')) return;
-        var text = line;
+        var text = title;
         var span = li.querySelector('.ranking-list-text');
         if (span) text = span.textContent;
         var input = li.querySelector('.ranking-edit-input');
@@ -787,6 +793,7 @@
         e.dataTransfer.setData('text/plain', text);
         e.dataTransfer.setData('application/x-source-list', 'ranking-list');
         e.dataTransfer.setData('application/x-source-index', String(Array.prototype.indexOf.call(listEl.children, li)));
+        e.dataTransfer.setData('application/x-hypothesis-id', li.dataset.hypothesisId || '');
         e.dataTransfer.effectAllowed = 'copyMove';
         var ghost = createDragPreview(li, text);
         var rect = li.getBoundingClientRect();
@@ -999,7 +1006,6 @@
       if (btnRank) { btnRank.classList.add('is-active'); btnRank.setAttribute('aria-pressed', 'true'); }
       if (btnGen) { btnGen.classList.remove('is-active'); btnGen.setAttribute('aria-pressed', 'false'); }
       loadHypothesesFile();
-      loadHypothesisAchForRanking();
     }
   }
 
@@ -1019,6 +1025,7 @@
       wrap.classList.remove('is-drag-over');
       var text = e.dataTransfer.getData('text/plain');
       if (!text) return;
+      var droppedHypothesisId = e.dataTransfer.getData('application/x-hypothesis-id') || '';
       var sourceList = document.getElementById('ranking-list');
       var sourceListId = e.dataTransfer.getData('application/x-source-list');
       var sourceIndexStr = e.dataTransfer.getData('application/x-source-index');
@@ -1030,6 +1037,7 @@
       }
       var li = document.createElement('li');
       li.className = 'ranking-list-item hypothesis-card-item';
+      if (droppedHypothesisId) li.dataset.hypothesisId = droppedHypothesisId;
       var textSpan = document.createElement('span');
       textSpan.className = 'ranking-list-text';
       textSpan.textContent = text;
@@ -1078,13 +1086,17 @@
       if (!card) return;
       var id = card.dataset.hypothesisId || 'H1';
       var title = '';
+      var hypothesisId = '';
       var first = card.querySelector('.hypothesis-card-list .ranking-list-text');
       if (first) title = first.textContent;
+      var firstItem = card.querySelector('.hypothesis-card-list .hypothesis-card-item');
+      if (firstItem && firstItem.dataset.hypothesisId) hypothesisId = firstItem.dataset.hypothesisId;
       var descEl = card.querySelector('.hypothesis-card-description');
       var description = descEl ? descEl.value : '';
       var irEl = document.getElementById('intelligence-requirement-input-ranking');
       var intelligence_requirement = irEl ? irEl.value.trim() : '';
       var payload = { id: id, title: title, description: description };
+      if (hypothesisId) payload.hypothesisId = hypothesisId;
       if (intelligence_requirement !== '') payload.intelligence_requirement = intelligence_requirement;
       fetch('/api/save-hypothesis-ach', {
         method: 'POST',

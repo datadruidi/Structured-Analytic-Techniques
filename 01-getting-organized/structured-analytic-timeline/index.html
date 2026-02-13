@@ -93,6 +93,7 @@
       <div class="panel-drag-handle" id="panel-details-handle">
         <h2 class="panel-title">Evidence Details</h2>
         <button type="button" class="btn-indicators btn-indicators-small" id="btn-indicators-details">Generate Hypothesis Keywords</button>
+        <button type="button" class="evidence-info-tip" id="indicators-tip" aria-label="Hypothesis keywords info" title="Hypothesis keywords info">?</button>
         <button type="button" class="btn-panel-hide" id="btn-hide-details" aria-label="Hide panel">−</button>
       </div>
       <div class="panel-body event-details-body">
@@ -116,11 +117,13 @@
       </div>
     </div>
     <div class="file-dropdown overlay-dropdown" id="file-dropdown" role="menu" hidden>
+      <button type="button" class="file-menu-item" id="file-update-from-file" role="menuitem">Update Evidence from File</button>
       <div class="file-menu-row file-menu-row-with-tip">
         <button type="button" class="file-menu-item" id="file-import-events" role="menuitem">Import Evidence</button>
         <button type="button" class="file-menu-item file-menu-item-tip" id="file-import-tip" aria-label="Tip about import file location" title="Import tip">?</button>
       </div>
       <button type="button" class="file-menu-item" id="file-download-template" role="menuitem">Download JSON Template</button>
+      <button type="button" class="file-menu-item" id="file-clear-screen" role="menuitem">Clear Evidence</button>
       <button type="button" class="file-menu-item file-menu-item-danger" id="file-remove-all" role="menuitem">Remove all Evidence</button>
     </div>
     <input type="file" id="json-file-input" accept=".json,application/json" hidden>
@@ -155,15 +158,21 @@
                 <span class="error" id="error-date" aria-live="polite"></span>
               </div>
               <div class="field">
-                <label for="event-time">Time <span class="required">*</span></label>
-                <input type="time" id="event-time" name="time">
+                <label for="event-time">Time</label>
+                <div class="time-input-row">
+                  <input type="time" id="event-time" name="time">
+                  <button type="button" class="btn-time-skip" id="btn-time-skip" title="Set time to 00:00 (unknown time)">No time</button>
+                </div>
                 <span class="error" id="error-time" aria-live="polite"></span>
               </div>
             </div>
-            <label class="evidence-row">
-              <input type="checkbox" id="event-evidence" aria-describedby="event-evidence-desc">
-              <span id="event-evidence-desc">Use as Evidence?</span>
-            </label>
+            <div class="evidence-row-wrap">
+              <label class="evidence-row">
+                <input type="checkbox" id="event-evidence" aria-describedby="event-evidence-desc">
+                <span id="event-evidence-desc">Use as Evidence?</span>
+              </label>
+              <button type="button" class="evidence-info-tip" id="form-evidence-tip" aria-label="Evidence info" title="Evidence info">?</button>
+            </div>
             <div class="add-evidence-modal-actions">
               <button type="submit" class="btn-submit" id="btn-submit">Add evidence</button>
               <button type="button" class="btn-cancel" id="btn-cancel">Cancel</button>

@@ -1,6 +1,7 @@
 /**
- * Local server for causal-map. Serves the app and appends one JSONL record to
- * 02-exploration/structured-analytic-circleboarding/input/hypothesis_keywords.jsonl when requested.
+ * Local server for causal-map. Serves the app, persists the map tree to
+ * data/evidence.json (the live database), and appends hypothesis-keyword
+ * JSONL records to data/hypothesis_keywords.jsonl.
  * Run from this folder: node server.js
  * Then open http://localhost:8765 in the browser.
  */
@@ -9,7 +10,9 @@ const fs = require('fs');
 const path = require('path');
 
 const PORT = 8765;
-const JSONL_PATH = path.resolve(__dirname, '..', '..', '02-exploration', 'structured-analytic-circleboarding', 'input', 'hypothesis_keywords.jsonl');
+const DATA_DIR = path.resolve(__dirname, '..', '..', 'data');
+const EVIDENCE_PATH = path.join(DATA_DIR, 'evidence.json');
+const JSONL_PATH = path.join(DATA_DIR, 'hypothesis_keywords.jsonl');
 
 function toArray(val) {
   if (Array.isArray(val)) return val.map((v) => String(v).trim()).filter(Boolean);
@@ -45,8 +48,53 @@ function serveFile(filePath, res) {
   fs.createReadStream(filePath).pipe(res);
 }
 
+function ensureDataDir() {
+  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+
 const server = http.createServer((req, res) => {
   const urlPath = (req.url || '').split('?')[0].replace(/\/$/, '') || '/';
+
+  /* ── GET /data/evidence.json ── */
+  if (req.method === 'GET' && urlPath === '/data/evidence.json') {
+    fs.readFile(EVIDENCE_PATH, 'utf8', (err, data) => {
+      if (err) {
+        if (err.code === 'ENOENT') { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end('{}'); }
+        else { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: err.message })); }
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(data);
+    });
+    return;
+  }
+
+  /* ── POST /api/save-evidence ── */
+  if (req.method === 'POST' && urlPath === '/api/save-evidence') {
+    const chunks = [];
+    req.on('data', (chunk) => chunks.push(chunk));
+    req.on('end', () => {
+      const body = Buffer.concat(chunks).toString('utf8');
+      try { JSON.parse(body); } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: false, error: 'Invalid JSON' }));
+        return;
+      }
+      try {
+        ensureDataDir();
+        fs.writeFileSync(EVIDENCE_PATH, body, 'utf8');
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true }));
+      } catch (err) {
+        console.error('Error writing evidence.json:', err.message);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: false, error: String(err.message) }));
+      }
+    });
+    return;
+  }
+
+  /* ── POST /api/save-indicators (hypothesis keywords JSONL) ── */
   if (req.method === 'POST' && urlPath === '/api/save-indicators') {
     const chunks = [];
     req.on('data', (chunk) => chunks.push(chunk));
@@ -61,9 +109,8 @@ const server = http.createServer((req, res) => {
       }
       const record = normalizeRecord(body);
       const line = JSON.stringify(record) + '\n';
-      const dir = path.dirname(JSONL_PATH);
       try {
-        if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+        ensureDataDir();
         fs.appendFileSync(JSONL_PATH, line, 'utf8');
         console.log('Appended hypothesis keywords to:', JSONL_PATH);
         res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -97,5 +144,6 @@ const server = http.createServer((req, res) => {
 
 server.listen(PORT, () => {
   console.log('Causal map server: http://localhost:' + PORT);
-  console.log('Hypothesis keywords (JSONL) will be written to:', JSONL_PATH);
+  console.log('Evidence (live database): ' + EVIDENCE_PATH);
+  console.log('Hypothesis keywords (JSONL): ' + JSONL_PATH);
 });

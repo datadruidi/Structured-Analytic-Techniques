@@ -14,8 +14,10 @@ const path = require("path");
 
 const PORT = 8082;
 const ROOT = __dirname;
+const REPO_ROOT = path.resolve(ROOT, "..", "..");
 const CIRCLEBOARD_DATA_FILE = path.join(ROOT, "CircleboardData.txt");
-const HYPOTHESIS_DIR = path.resolve(ROOT, "..", "..", "03-diagnostics", "structured-analytic-multiple-hypothesis-generation", "input");
+const DATA_DIR = path.join(REPO_ROOT, "data");
+const HYPOTHESIS_DIR = path.resolve(REPO_ROOT, "03-diagnostics", "structured-analytic-multiple-hypothesis-generation", "input");
 const HYPOTHESIS_FILE = path.resolve(HYPOTHESIS_DIR, "Multiple_Hypothesis_Generation.txt");
 
 const MIME = {
@@ -23,6 +25,7 @@ const MIME = {
   ".css": "text/css; charset=utf-8",
   ".js": "application/javascript; charset=utf-8",
   ".json": "application/json",
+  ".jsonl": "application/x-ndjson; charset=utf-8",
   ".txt": "text/plain; charset=utf-8"
 };
 
@@ -77,6 +80,27 @@ const server = http.createServer((req, res) => {
 
   if (req.method !== "GET") {
     send(res, 405, "Method not allowed", "text/plain");
+    return;
+  }
+
+  // Serve files from repo-root /data/ folder (e.g. /data/hypothesis_keywords.jsonl)
+  if (urlPath.startsWith("/data/")) {
+    const dataFile = urlPath.slice("/data/".length).replace(/\.\./g, "");
+    const dataFilePath = path.resolve(DATA_DIR, dataFile);
+    if (!dataFilePath.startsWith(DATA_DIR)) {
+      send(res, 403, "Forbidden", "text/plain");
+      return;
+    }
+    const ext = path.extname(dataFilePath);
+    const contentType = MIME[ext] || MIME[".jsonl"] || "application/x-ndjson; charset=utf-8";
+    fs.readFile(dataFilePath, (err, data) => {
+      if (err) {
+        if (err.code === "ENOENT") send(res, 404, "Not found", "text/plain");
+        else send(res, 500, "Server error", "text/plain");
+        return;
+      }
+      send(res, 200, data, contentType);
+    });
     return;
   }
 

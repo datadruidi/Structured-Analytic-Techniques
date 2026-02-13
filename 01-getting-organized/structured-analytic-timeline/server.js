@@ -1,8 +1,9 @@
 /**
  * Optional local server for the Timeline app.
- * Serves static files and provides POST /api/save-indicators to append
- * one JSON Lines (NDJSON) record to 02-exploration/structured-analytic-circleboarding/input/hypothesis_keywords.jsonl.
- * One "Generate Hypothesis Keywords" click = one line (append-only).
+ * Serves static files and provides:
+ *   POST /api/save-indicators — append one NDJSON record to data/hypothesis_keywords.jsonl
+ *   GET  /data/evidence.json  — return the shared evidence tree
+ *   POST /api/save-evidence   — overwrite the shared evidence tree
  *
  * Run: node server.js
  * Then open http://localhost:8080
@@ -14,7 +15,13 @@ const path = require("path");
 
 const PORT = 8080;
 const ROOT = __dirname;
-const JSONL_PATH = path.resolve(ROOT, "..", "..", "02-exploration", "structured-analytic-circleboarding", "input", "hypothesis_keywords.jsonl");
+const DATA_DIR = path.resolve(ROOT, "..", "..", "data");
+const JSONL_PATH = path.join(DATA_DIR, "hypothesis_keywords.jsonl");
+const EVIDENCE_PATH = path.join(DATA_DIR, "evidence.json");
+
+function ensureDataDir() {
+  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+}
 
 function toArray(val) {
   if (Array.isArray(val)) return val.map((v) => String(v).trim()).filter(Boolean);
@@ -103,6 +110,56 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  if (req.method === "GET" && urlPath === "/data/evidence.json") {
+    fs.readFile(EVIDENCE_PATH, "utf8", (err, data) => {
+      if (err) {
+        if (err.code === "ENOENT") {
+          send(res, 404, "{}", "application/json");
+        } else {
+          send(res, 500, JSON.stringify({ error: err.message }), "application/json");
+        }
+        return;
+      }
+      send(res, 200, data, "application/json");
+    });
+    return;
+  }
+
+  if (req.method === "POST" && urlPath === "/api/save-evidence") {
+    const chunks = [];
+    req.on("data", (chunk) => chunks.push(chunk));
+    req.on("end", () => {
+      const body = Buffer.concat(chunks).toString("utf8");
+      try { JSON.parse(body); } catch (e) {
+        send(res, 400, JSON.stringify({ ok: false, error: "Invalid JSON" }), "application/json");
+        return;
+      }
+      try {
+        ensureDataDir();
+        fs.writeFileSync(EVIDENCE_PATH, body, "utf8");
+        console.log("Saved evidence.json to:", EVIDENCE_PATH);
+        send(res, 200, JSON.stringify({ ok: true }), "application/json");
+      } catch (err) {
+        console.error("Error writing evidence.json:", err.message);
+        send(res, 500, JSON.stringify({ ok: false, error: String(err.message) }), "application/json");
+      }
+    });
+    return;
+  }
+
+  if (req.method === "GET" && urlPath.startsWith("/data/")) {
+    const dataFile = urlPath.replace(/^\/data\//, "").replace(/\.\./g, "");
+    if (dataFile) {
+      const dataFilePath = path.join(DATA_DIR, dataFile);
+      if (dataFilePath.startsWith(DATA_DIR)) {
+        serveFile(dataFilePath, res);
+        return;
+      }
+    }
+    send(res, 403, "Forbidden", "text/plain");
+    return;
+  }
+
   if (req.method !== "GET") {
     send(res, 405, "Method not allowed", "text/plain");
     return;
@@ -121,4 +178,5 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, () => {
   console.log("Timeline server at http://localhost:" + PORT);
   console.log("Hypothesis keywords (JSONL) will be written to:", JSONL_PATH);
+  console.log("Evidence tree (JSON) will be written to:", EVIDENCE_PATH);
 });
