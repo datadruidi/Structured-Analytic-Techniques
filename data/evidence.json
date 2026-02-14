@@ -1,737 +1,581 @@
 {
-  "id": "n_gyf3ir7g_3glx040",
-  "name": "Ukrainan ja Venäjän sodan tilannekuva Euroopassa 2024–2026",
+  "id": "n_wiz1wx7v_ny0xso3",
+  "name": "Military activity in the Arctic region and impacts on risk, routes, insurance, and business operations",
   "depth": 0,
   "evidence": "",
   "children": [
     {
-      "id": "n_jwlwmlhb_05o8sez",
-      "name": "Politiikka ja diplomatia",
+      "id": "n_3q4qfl7w_l8ssqi9",
+      "name": "Diplomatic",
       "depth": 1,
       "evidence": "",
       "children": [
         {
-          "id": "n_5qs0py73_7shljyy",
-          "name": "EU- ja Nato-linja",
+          "id": "n_el0enjsz_36h0yz8",
+          "name": "NATO Arctic coordination and signalling",
           "depth": 2,
           "evidence": "",
           "children": [
             {
-              "id": "n_cxku1y0v_ifdrbms",
-              "name": "EU-jäsenyysprosessi",
+              "id": "n_ih062p83_571gr0g",
+              "name": "Arctic Sentry initiative",
               "depth": 3,
-              "evidence": "",
-              "children": [
-                {
-                  "id": "n_ko46c6tl_ljwpq0t",
-                  "name": "Liittymisneuvottelujen avaus",
-                  "depth": 4,
-                  "evidence": "Yes",
-                  "children": [],
-                  "color": "#6a4c93",
-                  "description": "EU avasi Ukrainan liittymisneuvottelut ensimmäisessä hallitustenvälisessä konferenssissa 25 kesäkuuta 2024 Luxemburgissa.",
-                  "source": "https://www.consilium.europa.eu/en/press/press-releases/2024/06/25/eu-opens-accession-negotiations-with-ukraine/",
-                  "date": "2024-06-25",
-                  "x": 716.3417648297119,
-                  "y": -58.50509824186957,
-                  "time": "00:00"
-                }
-              ],
-              "color": "#6c757d",
-              "description": "Ukrainan EU-jäsenyysprosessin eteneminen vaikuttaa pitkän aikavälin sitoutumiseen ja uudistuksiin.",
-              "x": 594.2647856114494,
-              "y": 86.33830117624528
+              "evidence": "Yes",
+              "children": [],
+              "color": "#3d5a80",
+              "description": "On 2026-02-11 NATO announced Arctic Sentry to bring allied Arctic and High North activities under a single operational approach led by Joint Force Command Norfolk.",
+              "source": "https://www.nato.int/en/news-and-events/articles/news/2026/02/11/nato-secretary-general-outlines-new-activity-arctic-sentry-ahead-of-defence-ministers-meeting",
+              "date": "2026-02-11",
+              "x": 802.3523872927926,
+              "y": -74.75342632539694
             },
             {
-              "id": "n_p9u6uqcc_w5822ih",
-              "name": "EU:n makrorahoitus ja budjettituki",
+              "id": "n_yons8ty7_lqyo5yx",
+              "name": "U.S. Department of Defense Arctic Strategy",
               "depth": 3,
-              "evidence": "",
-              "children": [
-                {
-                  "id": "n_wvznb6z9_ayi5lb0",
-                  "name": "Ukraine Facility -päätös 50 mrd €",
-                  "depth": 4,
-                  "evidence": "Yes",
-                  "children": [],
-                  "color": "#6a4c93",
-                  "description": "EU-johtajat sopivat 1 helmikuuta 2024 50 miljardin euron Ukraine Facility -rahoituskehyksestä vuosille 2024–2027 osana MFF-väliarviointia.",
-                  "source": "https://www.consilium.europa.eu/en/policies/ukraine-facility/",
-                  "date": "2024-02-01",
-                  "x": 805.0171422142005,
-                  "y": 314.3220470629535,
-                  "time": "00:00"
-                }
-              ],
-              "color": "#6c757d",
-              "description": "EU:n ennakoitava rahoituskehy s on keskeinen Ukrainan valtion toiminnan ja jälleenrakennuksen kannalta.",
-              "x": 641.3846930678018,
-              "y": 260.0820357718932
+              "evidence": "Yes",
+              "children": [],
+              "color": "#3d5a80",
+              "description": "The U.S. Department of Defense Arctic Strategy signed on 2024-06-21 frames the Arctic as a strategic arena shaped by strategic competition and calls for improved readiness and posture.",
+              "source": "https://media.defense.gov/2024/Jul/22/2003507743/-1/-1/0/2024-DOD-ARCTIC-STRATEGY.PDF",
+              "date": "2024-06-21",
+              "x": 1019.3575778077383,
+              "y": 44.41828945157181
+            }
+          ],
+          "color": "#3d5a80",
+          "description": "Alliance coordination and signalling in the High North can change perceived escalation risk and affect commercial planning assumptions.",
+          "x": 595.0517711789093,
+          "y": 78.40749413261979
+        },
+        {
+          "id": "n_kigy07gw_toyy3fl",
+          "name": "Arctic governance constraints",
+          "depth": 2,
+          "evidence": "",
+          "children": [
+            {
+              "id": "n_5wpc7ikx_cf9czbx",
+              "name": "Arctic Council political pause with limited technical work",
+              "depth": 3,
+              "evidence": "Yes",
+              "children": [],
+              "color": "#3d5a80",
+              "description": "A 2026 Arctic Council update states that political-level meetings have been on pause since 2022 while scientific and working-level meetings have resumed virtually.",
+              "source": "https://arctic-council.org/news/2026-arctic-council-update/",
+              "date": "2026-02-12",
+              "x": 920.3822029078656,
+              "y": 363.39386948560997
             },
             {
-              "id": "n_93urag4e_yevchrn",
-              "name": "Naton pitkäkestoinen tuki",
+              "id": "n_06nwob8d_0xy9uqq",
+              "name": "Arctic Council limited resumption excluding Russia",
               "depth": 3,
-              "evidence": "",
-              "children": [
-                {
-                  "id": "n_hxbgttio_4cjmlky",
-                  "name": "Washingtonin huippukokouksen 40 mrd € -tukipohja",
-                  "depth": 4,
-                  "evidence": "Yes",
-                  "children": [],
-                  "color": "#6a4c93",
-                  "description": "Naton Washingtonin julistuksessa 10 heinäkuuta 2024 liittolaiset sitoutuivat vähintään 40 miljardin euron perustason turvallisuusapuun seuraavan vuoden aikana.",
-                  "source": "https://www.nato.int/en/about-us/official-texts-and-resources/official-texts/2024/07/10/washington-summit-declaration",
-                  "date": "2024-07-10",
-                  "x": 658.5322131610754,
-                  "y": 505.9462512762992,
-                  "time": "00:00"
-                }
-              ],
-              "color": "#6c757d",
-              "description": "Naton yhteiset linjaukset luovat minimitason ja mekanismeja sotilaalliselle tuelle Ukrainalle.",
-              "x": 544.0385291701136,
-              "y": 378.7545678889116
+              "evidence": "Yes",
+              "children": [],
+              "color": "#3d5a80",
+              "description": "On 2022-06-08 the seven non-Russian Arctic Council states said they would resume work in projects that do not involve Russian participation.",
+              "source": "https://www.reuters.com/world/arctic-council-countries-resume-limited-work-excluding-russia-2022-06-08/",
+              "date": "2022-06-08",
+              "x": 968.2992344525434,
+              "y": 197.46548171964147
             }
           ],
-          "color": "#40916c",
-          "description": "EU:n ja Naton päätökset määrittävät Euroopan institutionaalisen tuen, turvallisuuspolitiikan ja integraatiopolun.",
-          "x": 454.67715307870736,
-          "y": 219.01957239567187
-        },
+          "color": "#3d5a80",
+          "description": "Reduced multilateral political cooperation in Arctic forums can limit cross-border coordination that supports predictable operating conditions for business.",
+          "x": 607.0804671502816,
+          "y": 214.25685143804557
+        }
+      ],
+      "color": "#8b5a2b",
+      "description": "Diplomatic decisions and alliance dynamics shape escalation risk, access conditions and coordination mechanisms relevant to Arctic maritime business.",
+      "side": "down",
+      "x": 254.17998477803027,
+      "y": 116.62447100749722
+    },
+    {
+      "id": "n_op9htdu2_715lkh6",
+      "name": "Information",
+      "depth": 1,
+      "evidence": "",
+      "children": [
         {
-          "id": "n_2hmvd8v0_x6ep62h",
-          "name": "Neuvotteluprosessit",
+          "id": "n_t1o23i7c_032ffj9",
+          "name": "Navigation and communications integrity",
           "depth": 2,
           "evidence": "",
           "children": [
             {
-              "id": "n_2giqkzl4_wfdnv3f",
-              "name": "Sveitsin rauhahuippukokous",
+              "id": "n_8jri3bfm_y5ogxdt",
+              "name": "UN agencies warning on GNSS interference",
               "depth": 3,
-              "evidence": "",
-              "children": [
-                {
-                  "id": "n_kx6c1h21_5bofi0h",
-                  "name": "Yhteisjulistus Bürgenstockissa",
-                  "depth": 4,
-                  "evidence": "Yes",
-                  "children": [],
-                  "color": "#6a4c93",
-                  "description": "Sveitsin Bürgenstockissa 15–16 kesäkuuta 2024 kokoontuneen Ukraina-kokouksen yhteisjulistus korosti Ukrainan alueellista koskemattomuutta sekä teemoja kuten ydin- ja ruokaturvaa.",
-                  "source": "https://www.reuters.com/world/europe/draft-joint-communique-ukraine-conference-switzerland-2024-06-15/",
-                  "date": "2024-06-15",
-                  "x": 266.2810397138395,
-                  "y": 771.7051812911554,
-                  "time": "00:00"
-                }
-              ],
-              "color": "#6c757d",
-              "description": "Kesäkuun 2024 Sveitsin kokous pyrki kokoamaan tukijoita periaatepohjaiselle rauhakehykselle.",
-              "x": 240.70562097925293,
-              "y": 600.6741684466863
+              "evidence": "Yes",
+              "children": [],
+              "color": "#3d5a80",
+              "description": "On 2025-03-25 IMO, ICAO and ITU urged states to protect GNSS from jamming and spoofing and to maintain conventional navigation infrastructure as contingency support.",
+              "source": "https://www.imo.org/en/mediacentre/pressbriefings/pages/joint-imo-icao-itu-statement-satellite-interference.aspx",
+              "date": "2025-03-25",
+              "x": 508.5541405483748,
+              "y": 603.8388909934695
             },
             {
-              "id": "n_5bq3zj21_0jjcqg6",
-              "name": "Neuvottelupaine ja ehdot",
+              "id": "n_1una9c2g_se8d39l",
+              "name": "DoD Arctic Strategy on jamming and unprofessional aviation",
               "depth": 3,
-              "evidence": "",
-              "children": [
-                {
-                  "id": "n_hoapzsw7_iulmyer",
-                  "name": "Donetskin tavoitteet ja rauhanpaine 2026",
-                  "depth": 4,
-                  "evidence": "Yes",
-                  "children": [],
-                  "color": "#6a4c93",
-                  "description": "Helmikuussa 2026 Reuters raportoi Venäjän pyrkivän etenemään Donetskin alueella samalla kun Yhdysvallat painosti Kiovaa rauhanneuvotteluihin ilman alueellisia myönnytyksiä.",
-                  "source": "https://www.reuters.com/world/europe/russian-forces-pressuring-pokrovsk-last-battles-rage-2026-02-09/",
-                  "date": "2026-02-09",
-                  "x": 496.7696138695269,
-                  "y": 701.8850056805716,
-                  "time": "00:00"
-                }
-              ],
-              "color": "#6c757d",
-              "description": "Suurvaltojen ja osapuolten tavoitteet vaikuttavat siihen, syntyykö keskusteluyhteys ja millä ehdoilla.",
-              "x": 393.67876675185875,
-              "y": 560.2982953456946
+              "evidence": "Yes",
+              "children": [],
+              "color": "#3d5a80",
+              "description": "The 2024 U.S. Department of Defense Arctic Strategy notes Russia’s use of GPS jamming and unprofessional military activities as part of the Arctic security environment.",
+              "source": "https://media.defense.gov/2024/Jul/22/2003507743/-1/-1/0/2024-DOD-ARCTIC-STRATEGY.PDF",
+              "date": "2024-06-21",
+              "x": 622.291924375578,
+              "y": 472.04458921311704
             }
           ],
-          "color": "#40916c",
-          "description": "Kansainväliset kokoukset ja painostuskanavat vaikuttavat mahdollisiin tulitauko- ja rauhanpolkuihin.",
-          "x": 267.8593719204592,
-          "y": 415.4330903546436
-        }
-      ],
-      "color": "#8b5a2b",
-      "description": "Keskeiset eurooppalaiset poliittiset päätökset ja neuvottelupolut muovaavat sodan jatkumisen ja ratkaisun edellytyksiä.",
-      "side": "down",
-      "x": 216.36269175327357,
-      "y": 192.69793977936092
-    },
-    {
-      "id": "n_8rwjbbfq_hgzbii1",
-      "name": "Sotilaallinen tilanne",
-      "depth": 1,
-      "evidence": "",
-      "children": [
+          "color": "#3d5a80",
+          "description": "Military competition and electronic warfare activity can degrade navigational and communications systems, increasing incident risk on Arctic routes.",
+          "x": 340.8600612580552,
+          "y": 337.4941049904976
+        },
         {
-          "id": "n_eitimi4o_8d5sr13",
-          "name": "Rintamatilanne ja operaatiot",
+          "id": "n_hj9cdxhb_9htl2ai",
+          "name": "Maritime domain transparency",
           "depth": 2,
           "evidence": "",
           "children": [
             {
-              "id": "n_wkrs3icb_7xhgatx",
-              "name": "Donetskin avainalueet",
+              "id": "n_mmfwe94o_ws6t5tw",
+              "name": "Shadow-fleet AIS and data concealment on the NSR",
+              "depth": 3,
+              "evidence": "Yes",
+              "children": [],
+              "color": "#3d5a80",
+              "description": "Bellona reported on 2025-12-25 that shadow fleet vessels operating on the Northern Sea Route frequently change flags and ownership and at times switch off AIS, complicating verification and risk assessment.",
+              "source": "https://etc.bellona.org/2025/12/25/monthly-highlights-from-the-russian-arctic-november-2025/",
+              "date": "2025-12-25",
+              "x": 158.80427410936574,
+              "y": 694.7574813822267
+            }
+          ],
+          "color": "#40916c",
+          "description": "Opacity in vessel identity and tracking can raise collision, compliance and counterparty risks for Arctic operators and insurers.",
+          "x": 96.25027514402075,
+          "y": 422.7868485076019
+        }
+      ],
+      "color": "#8b5a2b",
+      "description": "Information conditions, including GNSS reliability and vessel transparency, directly affect safety risk, routing confidence and insurability in Arctic waters.",
+      "side": "down",
+      "x": 59.608515497736676,
+      "y": 243.50686434158393
+    },
+    {
+      "id": "n_ksfysdwt_8dnyy0r",
+      "name": "Military",
+      "depth": 1,
+      "evidence": "",
+      "children": [
+        {
+          "id": "n_i5ubcw79_geuxqu5",
+          "name": "Exercise-driven sea-space restrictions",
+          "depth": 2,
+          "evidence": "",
+          "children": [
+            {
+              "id": "n_t6ot2ud0_u9cno51",
+              "name": "Cold Response 26 scale of activity in northern Norway",
               "depth": 3,
               "evidence": "",
-              "children": [
-                {
-                  "id": "n_hjdrjs4n_iqd36zd",
-                  "name": "Pokrovskin taistelut 2026",
-                  "depth": 4,
-                  "evidence": "Yes",
-                  "children": [],
-                  "color": "#6a4c93",
-                  "description": "Reutersin mukaan 9 helmikuuta 2026 Venäjän joukot painostivat Pokrovskia, joka on strateginen rautatiesolmu Itä-Ukrainassa.",
-                  "source": "https://www.reuters.com/world/europe/russian-forces-pressuring-pokrovsk-last-battles-rage-2026-02-09/",
-                  "date": "2026-02-09",
-                  "x": -170.6742732799195,
-                  "y": 862.0123603338583,
-                  "time": "00:00"
-                },
-                {
-                  "id": "n_czutflij_njeiuwh",
-                  "name": "Avdiivkan menetys 2024",
-                  "depth": 4,
-                  "evidence": "Yes",
-                  "children": [],
-                  "color": "#6a4c93",
-                  "description": "Reutersin mukaan Venäjä ilmoitti 18 helmikuuta 2024 Avdiivkan olevan hallinnassaan Ukrainan joukkojen vetäydyttyä.",
-                  "source": "https://www.reuters.com/world/europe/ukrainian-troops-withdraw-avdiivka-ammunition-shortage-bites-2024-02-17/",
-                  "date": "2024-02-18",
-                  "x": -17.307690509165806,
-                  "y": 830.6264220134818,
-                  "time": "00:00"
-                }
-              ],
+              "children": [],
               "color": "#6c757d",
-              "description": "Donetskin rautatie- ja linnoitekaupunkien hallinta vaikuttaa sodan operatiiviseen suuntaan.",
-              "x": -118.48519488675994,
-              "y": 694.2911093143795
+              "description": "A U.S. Marine Corps release dated 2026-01-21 states that Cold Response 26 in northern Norway involves over 25,000 personnel from a dozen nations and organizations.",
+              "source": "https://www.marines.mil/News/News-Display/Article/4394904/cold-response-25000-nato-allies-launch-high-north-exercise/",
+              "date": "2026-01-21",
+              "x": -233.46097464994415,
+              "y": 710.660872056466
             },
             {
-              "id": "n_absjxzlb_1aedi8p",
-              "name": "Rajanylittävät operaatiot",
+              "id": "n_20u0yfnh_c7bb2w5",
+              "name": "Barents Sea navigation ban during Northern Fleet activity",
               "depth": 3,
-              "evidence": "",
-              "children": [
-                {
-                  "id": "n_8fe44kwy_ftbd1wn",
-                  "name": "Kurskin rajahyökkäys 2024",
-                  "depth": 4,
-                  "evidence": "Yes",
-                  "children": [],
-                  "color": "#6a4c93",
-                  "description": "Reutersin aikajanan mukaan Ukrainan joukot ylittivät rajan Kurskin alueelle 6 elokuuta 2024 suurimpana ulkomaisena hyökkäyksenä Venäjälle toisen maailmansodan jälkeen.",
-                  "source": "https://www.reuters.com/world/europe/ukraines-attack-russias-fightback-kursk-2025-03-12/",
-                  "date": "2024-08-06",
-                  "x": -381.6244996733994,
-                  "y": 785.0405439588432,
-                  "time": "00:00"
-                }
-              ],
-              "color": "#6c757d",
-              "description": "Ukrainan iskut ja operaatiot Venäjän alueella vaikuttavat eskalaatiodynamiikkaan ja neuvotteluasetelmaan.",
-              "x": -283.4915033937476,
-              "y": 642.1941245197519
-            }
-          ],
-          "color": "#40916c",
-          "description": "Rintaman kehitys ja operatiiviset manööverit määrittävät konfliktin eskalaatioriskit ja resurssitarpeet.",
-          "x": -167.88590934248217,
-          "y": 495.97088908737635
-        },
-        {
-          "id": "n_sr7boz5i_2sssrbq",
-          "name": "Aseapu ja ilmapuolustus",
-          "depth": 2,
-          "evidence": "",
-          "children": [
-            {
-              "id": "n_4nfxrl18_otze8am",
-              "name": "Nato- ja UDCG-tukimekanismit",
-              "depth": 3,
-              "evidence": "",
-              "children": [
-                {
-                  "id": "n_pzt9mb4k_isgxrc0",
-                  "name": "PURL-aloitteen rahoituslupaukset 2026",
-                  "depth": 4,
-                  "evidence": "Yes",
-                  "children": [],
-                  "color": "#6a4c93",
-                  "description": "Reutersin mukaan Naton jäsenmaat lupasivat 12 helmikuuta 2026 satoja miljoonia dollareita Prioritised Ukraine Requirements List -aloitteeseen Yhdysvaltain aseiden toimittamiseksi Ukrainaan.",
-                  "source": "https://www.reuters.com/business/aerospace-defense/nato-states-pledge-hundreds-millions-ukraine-weapons-push-rutte-says-2026-02-12/",
-                  "date": "2026-02-12",
-                  "x": -719.3040161264257,
-                  "y": 407.41682782347,
-                  "time": "00:00"
-                }
-              ],
-              "color": "#6c757d",
-              "description": "Liittolaisten koordinoima tuki pyrkii paikkaamaan Ukrainan kriittisiä suorituskykyaukkoja.",
-              "x": -550.9502783549383,
-              "y": 367.10271565484834
+              "evidence": "Yes",
+              "children": [],
+              "color": "#3d5a80",
+              "description": "On 2025-04-25 The Barents Observer reported that Russia’s Northern Fleet banned navigation in a large area of the Barents Sea for several days during exercise activity.",
+              "source": "https://thebarentsobserver.com/en/security/2025/04/russias-northern-fleet-bans-navigation-large-area-barents-sea",
+              "date": "2025-04-25",
+              "x": -627.6362131089679,
+              "y": 778.5056161281858
             },
             {
-              "id": "n_oz26976b_za6as55",
-              "name": "Ilmapuolustuksen ja ammushuollon paine",
+              "id": "n_1c8s7853_cyxuen3",
+              "name": "Declared missile-firing danger area size",
               "depth": 3,
               "evidence": "",
-              "children": [
-                {
-                  "id": "n_oggp6pk9_ykoui6g",
-                  "name": "Ohjattujen pommien vaikutus Donetskissa",
-                  "depth": 4,
-                  "evidence": "Yes",
-                  "children": [],
-                  "color": "#6a4c93",
-                  "description": "Reutersin mukaan Venäjä hyödynsi helmikuussa 2026 ohjattuja pommeja ja Ukrainan heikentynyttä ilmapuolustusta hyökätessään Pokrovskin suuntaan.",
-                  "source": "https://www.reuters.com/world/europe/russian-forces-pressuring-pokrovsk-last-battles-rage-2026-02-09/",
-                  "date": "2026-02-09",
-                  "x": -607.5824028402095,
-                  "y": 629.0704659998978,
-                  "time": "00:00"
-                }
-              ],
-              "color": "#6c757d",
-              "description": "Ohjus- ja pommiuhka sekä ammuslogistiikka ohjaavat avun priorisointia.",
-              "x": -481.5951558426544,
-              "y": 508.8482570734597
+              "children": [],
+              "color": "#3d5a80",
+              "description": "On 2025-07-24 ArcticToday reported that the Northern Fleet marked about 94,000 square kilometres as dangerous for missile firings.",
+              "source": "https://www.arctictoday.com/northern-fleet-marks-94000-square-kilometers-dangerous-for-missile-firings/",
+              "date": "2025-07-24",
+              "x": -590.0468431584559,
+              "y": 514.9551507136841
             }
           ],
           "color": "#40916c",
-          "description": "Aseapu, tuotanto ja ilmapuolustuskyky ovat ratkaisevia Ukrainan puolustuskyvylle ja Euroopan pelotteelle.",
-          "x": -361.7915404264254,
-          "y": 359.710083973892
+          "description": "Large-scale exercises and weapons testing can create temporary danger or restricted areas that force rerouting and disrupt schedules.",
+          "x": -261.6542819502792,
+          "y": 450.4018196840745
+        },
+        {
+          "id": "n_l3zdkmn3_1v0d3xs",
+          "name": "Russian control measures on the Northern Sea Route",
+          "depth": 2,
+          "evidence": "",
+          "children": [
+            {
+              "id": "n_t1f52e0s_r1ciaqo",
+              "name": "Russian NSR law enabling suspension and control",
+              "depth": 3,
+              "evidence": "Yes",
+              "children": [],
+              "color": "#3d5a80",
+              "description": "A 2023 Belfer Center analysis describes a Russian NSR navigation law that requires advance permission for foreign warships and allows Russia to suspend passages for safety and security reasons.",
+              "source": "https://www.belfercenter.org/publication/new-russian-law-northern-sea-route-navigation-gathering-arctic-storm-or-tempest",
+              "date": "2023-03-09",
+              "x": -631.6833145170524,
+              "y": 350.5518177135359
+            }
+          ],
+          "color": "#40916c",
+          "description": "Russia’s security-focused regulation of the NSR can constrain routing options and introduce compliance, delay and service-dependency risks.",
+          "x": -338.8848561174065,
+          "y": 280.76442790566887
         }
       ],
       "color": "#8b5a2b",
-      "description": "Taistelutilanne ja joukkojen kyvykkyydet Euroopan lähialueilla määrittävät riskit ja avuntarpeet vuosina 2024–2026.",
+      "description": "Military activity affects Arctic sea risk primarily through exercises, exclusion areas, and state security controls that can alter route availability and incident likelihood.",
       "side": "down",
-      "x": -154.47228192079743,
-      "y": 258.66244530581264
+      "x": -167.08427010234843,
+      "y": 222.07916301242275
     },
     {
-      "id": "n_m026x2j4_pryqhmm",
-      "name": "Talous ja pakotteet",
+      "id": "n_o6frb2d8_9zfdkzs",
+      "name": "Economic",
       "depth": 1,
       "evidence": "",
       "children": [
         {
-          "id": "n_eawanuv9_8844zkc",
-          "name": "Rahoitus ja tuki",
+          "id": "n_hnakbe74_gvhehxu",
+          "name": "Route and market viability",
           "depth": 2,
           "evidence": "",
           "children": [
             {
-              "id": "n_he2vy6ki_8qp83re",
-              "name": "EU:n pitkä rahoituskehys",
+              "id": "n_ggeaztyq_db14fg6",
+              "name": "NSR regulatory uncertainty for commercial operators",
               "depth": 3,
               "evidence": "",
-              "children": [
-                {
-                  "id": "n_8lq0kesd_rq8y1qe",
-                  "name": "Ukraine Facility 2024–2027",
-                  "depth": 4,
-                  "evidence": "Yes",
-                  "children": [],
-                  "color": "#6a4c93",
-                  "description": "Euroopan komission mukaan Ukraine Facility mahdollistaa jopa 50 miljardin euron vakaan tuen Ukrainalle vuosina 2024–2027.",
-                  "source": "https://commission.europa.eu/topics/eu-solidarity-ukraine/eu-assistance-ukraine/ukraine-facility_en",
-                  "date": "2024-02-01",
-                  "x": -794.0019857035136,
-                  "y": 104.36718234451288,
-                  "time": "00:00"
-                }
-              ],
+              "children": [],
               "color": "#6c757d",
-              "description": "Pitkä rahoituskehys vähentää Ukrainan rahoituskatkoksia ja lisää ennustettavuutta.",
-              "x": -622.626243423016,
-              "y": 89.76031698559443
+              "description": "The Belfer Center’s 2023 review of Russia’s NSR navigation law highlights how security-driven controls can increase uncertainty for planning international commercial voyages.",
+              "source": "https://www.belfercenter.org/publication/new-russian-law-northern-sea-route-navigation-gathering-arctic-storm-or-tempest",
+              "date": "2023-03-09",
+              "x": -966.4553980877225,
+              "y": 53.91454491313023
+            },
+            {
+              "id": "n_cihyi3vz_iunt42d",
+              "name": "Sanctions-related operational frictions on the NSR",
+              "depth": 3,
+              "evidence": "Yes",
+              "children": [],
+              "color": "#6c757d",
+              "description": "Bellona reported on 2025-12-25 that international sanctions are affecting Russia’s Arctic shipping ecosystem and that tracking NSR shipping has become more difficult as shadow fleet activity rises.",
+              "source": "https://etc.bellona.org/2025/12/25/monthly-highlights-from-the-russian-arctic-november-2025/",
+              "date": "2025-12-25",
+              "x": -611.3568635183042,
+              "y": 183.50944600647173
             }
           ],
           "color": "#40916c",
-          "description": "Julkinen rahoitus ja tukipaketit pitävät yllä Ukrainan taloudellista toimintakykyä.",
-          "x": -435.37424378064185,
-          "y": 63.257381748099405
+          "description": "Commercial viability of Arctic routes depends on predictable access, compliance with coastal-state controls and the ability to manage delays from security activity.",
+          "x": -479.96018678956625,
+          "y": 65.95162093355844
         },
         {
-          "id": "n_htghfwrj_b32sg00",
-          "name": "Pakotteet ja kiertämisen esto",
+          "id": "n_r6ntoets_d21jm35",
+          "name": "Operational compliance baseline for Arctic business",
           "depth": 2,
           "evidence": "",
           "children": [
             {
-              "id": "n_auc5j493_sd2l4rn",
-              "name": "EU:n 14. pakotepaketti",
+              "id": "n_y7twt7gq_usa0maz",
+              "name": "Polar Code mandatory framework",
+              "depth": 3,
+              "evidence": "Yes",
+              "children": [],
+              "color": "#3d5a80",
+              "description": "IMO states that the Polar Code is mandatory under SOLAS and MARPOL and covers ship design, equipment, operations, training, search and rescue and environmental protection for polar waters.",
+              "source": "https://www.imo.org/en/ourwork/safety/pages/polar-code.aspx",
+              "x": -789.9425566703513,
+              "y": -319.1192235404357
+            },
+            {
+              "id": "n_xhjszh4n_ixl9aqg",
+              "name": "GNSS resilience and fallback navigation expectations",
               "depth": 3,
               "evidence": "",
-              "children": [
-                {
-                  "id": "n_iune0bt7_vofc0mo",
-                  "name": "14. pakotepaketin hyväksyntä",
-                  "depth": 4,
-                  "evidence": "Yes",
-                  "children": [],
-                  "color": "#6a4c93",
-                  "description": "EU-neuvosto hyväksyi 24 kesäkuuta 2024 neljännentoista pakotepaketin Venäjää vastaan ja listasi lisää henkilöitä ja yhteisöjä.",
-                  "source": "https://www.consilium.europa.eu/en/press/press-releases/2024/06/24/14th-package-of-sanctions-on-russia-s-war-of-aggression-against-ukraine-eu-lists-additional-69-individuals-and-47-entities/",
-                  "date": "2024-06-24",
-                  "x": -774.583022180328,
-                  "y": -207.3161458501357,
-                  "time": "00:00"
-                }
-              ],
+              "children": [],
               "color": "#6c757d",
-              "description": "Kesällä 2024 pakotepaketti tiukensi vientirajoitteita ja lisäsi kiertämisen vastaisia toimia.",
-              "x": -610.4150288638555,
-              "y": -155.90579578524085
+              "description": "IMO’s 2025 joint statement on satellite interference links GNSS disruption to collision and grounding risk and calls for resilience measures including conventional navigation contingency support.",
+              "source": "https://www.imo.org/en/mediacentre/pressbriefings/pages/joint-imo-icao-itu-statement-satellite-interference.aspx",
+              "date": "2025-03-25",
+              "x": -859.2077532547582,
+              "y": -201.01735151510638
             }
           ],
           "color": "#40916c",
-          "description": "Pakotteiden laajuus ja toimeenpano vaikuttavat Venäjän tuloihin ja sotateollisuuden saatavuuksiin.",
-          "x": -430.62262680357975,
-          "y": -92.66581186561343
+          "description": "Businesses can keep operating by treating polar operations as a high-compliance, high-contingency environment with specialised requirements and redundancy.",
+          "x": -468.05485375781404,
+          "y": -112.03213302457982
         }
       ],
       "color": "#8b5a2b",
-      "description": "Rahoitus, pakotteet ja talousvaikutukset vaikuttavat sekä Ukrainan kestävyyteen että Venäjän sotakykyyn.",
+      "description": "Economic impacts appear through route reliability, regulatory service dependencies, and compliance burdens that influence whether Arctic sea business is commercially viable.",
       "side": "down",
-      "x": -248.2630788960839,
-      "y": -4.700873163929958
+      "x": -278.1096309834148,
+      "y": -12.598925519109835
     },
     {
-      "id": "n_4p6ukcwb_25wsdpv",
-      "name": "Yhteiskunta ja humanitaarinen",
+      "id": "n_aos5rod1_8zs1hcd",
+      "name": "Financial",
       "depth": 1,
       "evidence": "",
       "children": [
         {
-          "id": "n_bplgmb7b_wcl9f2z",
-          "name": "Suoja ja oleskelu EU:ssa",
+          "id": "n_4bqd69iw_8geuxwv",
+          "name": "Insurance cost drivers",
           "depth": 2,
           "evidence": "",
           "children": [
             {
-              "id": "n_2zp7lj1n_vuye3i6",
-              "name": "Tilapäinen suojelu",
+              "id": "n_druiqvbe_fa88f89",
+              "name": "Joint War Committee Listed Areas benchmark",
               "depth": 3,
-              "evidence": "",
-              "children": [
-                {
-                  "id": "n_yz1gmmag_tjj0ms5",
-                  "name": "Tilapäisen suojelun jatko 2027 asti",
-                  "depth": 4,
-                  "evidence": "Yes",
-                  "children": [
-                    {
-                      "id": "n_mlkn6gnn_7f2vvsv",
-                      "name": "c",
-                      "depth": 5,
-                      "evidence": "",
-                      "children": [],
-                      "color": "#2d3142",
-                      "x": -777.6679769440543,
-                      "y": -604.1472460252445
-                    }
-                  ],
-                  "color": "#6a4c93",
-                  "description": "EU-jäsenmaat sopivat 13 kesäkuuta 2025 tilapäisen suojelun jatkamisesta Ukrainasta paenneille 4 maaliskuuta 2027 asti.",
-                  "source": "https://www.consilium.europa.eu/en/press/press-releases/2025/06/13/eu-member-states-agree-to-extend-temporary-protection-for-refugees-from-ukraine/",
-                  "date": "2025-06-13",
-                  "x": -632.8003824855177,
-                  "y": -516.5827663365017,
-                  "time": "00:00"
-                }
-              ],
+              "evidence": "Yes",
+              "children": [],
               "color": "#6c757d",
-              "description": "Tilapäisen suojelun jatkaminen ehkäisee turvapaikkajärjestelmien ylikuormittumista.",
-              "x": -492.14372481916615,
-              "y": -419.2177997021895
+              "description": "The International Underwriting Association explains that the Joint War Committee maintains Listed Areas identified as perceived enhanced risk locations for war, strikes, terrorism and related perils.",
+              "source": "https://www.iua.co.uk/war-risk/joint-war-committee-jwc-listed-areas",
+              "x": -604.7489886450181,
+              "y": -543.1169210679623
+            },
+            {
+              "id": "n_2iotoi30_h3fi209",
+              "name": "War-risks sublimits for Russian waters",
+              "depth": 3,
+              "evidence": "Yes",
+              "children": [],
+              "color": "#6c757d",
+              "description": "On 2025-01-16 Shipowners’ Club announced war-risks sublimits for vessels in Russian waters with changes effective from 2025-02-20.",
+              "source": "https://www.shipownersclub.com/latest-updates/news/war-risks-sublimits-russian-waters/",
+              "date": "2025-01-16",
+              "x": -721.0584897574105,
+              "y": -439.1917179369557
             }
           ],
           "color": "#40916c",
-          "description": "EU:n tilapäisen suojelun järjestelyt ohjaavat pakolaisten oikeusasemaa ja palveluita.",
-          "x": -336.1149662466293,
-          "y": -311.9683568602103
+          "description": "Insurance pricing can rise when voyages touch politically sensitive waters or when war-risk benchmarks and exclusions are triggered by regional military activity.",
+          "x": -360.2485643810166,
+          "y": -307.25948557629465
         },
         {
-          "id": "n_hn23sacb_uvh7zr6",
-          "name": "Pakolaisuus ja kotoutuminen",
+          "id": "n_rx0mxc20_a6ifhzy",
+          "name": "Proof of insurance and liability as an enforcement lever",
           "depth": 2,
           "evidence": "",
           "children": [
             {
-              "id": "n_rwnbl7hc_5oa7mdf",
-              "name": "Pakolaismäärät Euroopassa",
+              "id": "n_l4kvdq67_ixhfkfx",
+              "name": "EU leaders back boarding plan tied to insurance proof",
               "depth": 3,
-              "evidence": "",
-              "children": [
-                {
-                  "id": "n_f6r640xk_k9ws5o9",
-                  "name": "Ukrainalaisia tilapäisen suojelun piirissä",
-                  "depth": 4,
-                  "evidence": "Yes",
-                  "children": [
-                    {
-                      "id": "n_mlkn5san_7ujwtrt",
-                      "name": "test",
-                      "depth": 5,
-                      "evidence": "",
-                      "children": [],
-                      "color": "#2d3142",
-                      "x": -523.8717020040915,
-                      "y": -883.4929743072204
-                    }
-                  ],
-                  "color": "#6a4c93",
-                  "description": "EU:n tilapäisen suojelun piirissä on ollut yli 4 miljoonaa Ukrainasta paennutta henkilöä maaliskuusta 2022 alkaen.",
-                  "source": "https://www.consilium.europa.eu/en/press/press-releases/2025/06/13/eu-member-states-agree-to-extend-temporary-protection-for-refugees-from-ukraine/",
-                  "date": "2025-06-13",
-                  "x": -376.7876065279361,
-                  "y": -775.3321615034225,
-                  "time": "00:00"
-                }
-              ],
+              "evidence": "Yes",
+              "children": [],
               "color": "#6c757d",
-              "description": "Pakolaismäärien seuranta tukee kapasiteettisuunnittelua ja rahoitusta.",
-              "x": -299.9000005073107,
-              "y": -607.9341936696662
+              "description": "On 2024-12-17 Reuters reported that EU leaders backed a plan to board suspected shadow-fleet tankers if they refuse to show insurance.",
+              "source": "https://www.reuters.com/world/europe/eu-leaders-back-plan-board-shadow-fleet-tankers-if-refuse-show-insurance-2024-12-17/",
+              "date": "2024-12-17",
+              "x": -323.1123074622021,
+              "y": -635.2878496829668
             }
           ],
           "color": "#40916c",
-          "description": "Pakolaisten määrä ja sijoittuminen vaikuttavat vastaanottojärjestelmiin ja työmarkkinoihin.",
-          "x": -221.96183441673085,
-          "y": -422.2734331408749
+          "description": "Stronger enforcement on insurance documentation can increase compliance costs and create voyage disruption risk for non-compliant or high-risk vessels.",
+          "x": -169.14157787672514,
+          "y": -389.35962358867255
         }
       ],
       "color": "#8b5a2b",
-      "description": "Pakolaisuus, suojelujärjestelyt ja humanitaarinen tilanne Euroopassa vaikuttavat sisäiseen vakauteen ja resurssitarpeisiin.",
+      "description": "Financial impacts are driven by war-risk pricing, sanctions-linked coverage constraints and the cost of compliance, security and delay in Arctic operations.",
       "side": "down",
-      "x": -159.24988509164308,
-      "y": -215.05556044918856
+      "x": -152.49602043174937,
+      "y": -205.83372843195474
     },
     {
-      "id": "n_56g7kny8_0us9i4s",
-      "name": "Informaatio ja kyber",
+      "id": "n_3q6igv9p_2oi18an",
+      "name": "Intelligence",
       "depth": 1,
       "evidence": "",
       "children": [
         {
-          "id": "n_wq7xdail_znf03ey",
-          "name": "Vaikuttaminen ja disinformaatio",
+          "id": "n_px4y48yo_77yfmkb",
+          "name": "Official warning and reporting channels for route management",
           "depth": 2,
           "evidence": "",
           "children": [
             {
-              "id": "n_gzlzuw22_qmdrk6q",
-              "name": "EEAS FIMI-toiminta",
+              "id": "n_e43rhrau_jsilwys",
+              "name": "WWNWS web warning caveat",
               "depth": 3,
-              "evidence": "",
-              "children": [
-                {
-                  "id": "n_a869sotl_9ymoxpy",
-                  "name": "EEAS:n FIMI-toimintaraportti 2024",
-                  "depth": 4,
-                  "evidence": "Yes",
-                  "children": [],
-                  "color": "#6a4c93",
-                  "description": "EEAS julkaisi 22 elokuuta 2025 raportin vuoden 2024 toimista ulkoisen informaatiomanipulaation ja häirinnän torjumiseksi.",
-                  "source": "https://www.eeas.europa.eu/eeas/2024-report-eeas-activities-counter-foreign-information-manipulation-and-interference-fimi_en",
-                  "date": "2025-08-22",
-                  "x": 15.828543427753255,
-                  "y": -804.0838815217553,
-                  "time": "00:00"
-                }
-              ],
+              "evidence": "Yes",
+              "children": [],
               "color": "#6c757d",
-              "description": "EU:n ulkosuhdehallinto raportoi toimista ulkoisen informaatiomanipulaation torjumiseksi.",
-              "x": 16.16777207110002,
-              "y": -633.1293473030695
+              "description": "The IHO notes that navigational warnings available on the web do not replace receiving warnings via IMO/IHO approved broadcast systems because websites are not continuously updated or monitored for correctness.",
+              "source": "https://iho.int/navigation-warnings-on-the-web",
+              "date": "2025-04-09",
+              "time": "11:40",
+              "x": -127.36378775052938,
+              "y": -742.5034901164204
+            },
+            {
+              "id": "n_y24jniax_g4fyidh",
+              "name": "Joint MSI Manual practical guidance",
+              "depth": 3,
+              "evidence": "Yes",
+              "children": [],
+              "color": "#6c757d",
+              "description": "MSC.1/Circ.1310/Rev.2 dated 2024-06-24 provides practical guidance for drafting and issuing navigational and meteorological warnings under the GMDSS framework.",
+              "source": "https://puc.overheid.nl/PUC/Handlers/DownloadDocument.ashx?ValChk=1mvQPLj4m7IXFnv_RrnQqmeEkw_lGJyMkmeb1fKvw5g1&identifier=PUC_1976_14&type=pdf&versienummer=3",
+              "date": "2024-06-24",
+              "x": 147.9304198010164,
+              "y": -782.7700880576413
             }
           ],
           "color": "#40916c",
-          "description": "Ulkoiset toimijat pyrkivät vaikuttamaan Euroopan yleiseen mielipiteeseen ja vaaleihin.",
-          "x": 25.47217468109897,
-          "y": -444.2116514803443
+          "description": "Businesses can reduce disruption by using official maritime safety information channels to anticipate exercise areas, hazards and GNSS interference notices.",
+          "x": -23.46384801343882,
+          "y": -517.1882577465078
         },
         {
-          "id": "n_owbxtdro_2dg53nf",
-          "name": "Kyberuhat",
+          "id": "n_z0iv4hkc_zcxvvn5",
+          "name": "Regional warning feeds relevant to the High North",
           "depth": 2,
           "evidence": "",
           "children": [
             {
-              "id": "n_8nw9ypsg_lg611nk",
-              "name": "ENISA:n uhkakuva",
+              "id": "n_z6u4h2kk_gsi0p3r",
+              "name": "NAVAREA XIX warning distribution point",
               "depth": 3,
-              "evidence": "",
-              "children": [
-                {
-                  "id": "n_qbf00o5h_ymfd7ov",
-                  "name": "ENISA Threat Landscape 2024",
-                  "depth": 4,
-                  "evidence": "Yes",
-                  "children": [],
-                  "color": "#6a4c93",
-                  "description": "ENISA julkaisi 19 syyskuuta 2024 uhka-arvion EU:n julkishallinnon kyberuhista vuonna 2024.",
-                  "source": "https://www.enisa.europa.eu/publications/enisa-threat-landscape-2024",
-                  "date": "2024-09-19",
-                  "x": 334.8015901851687,
-                  "y": -732.8367671822675,
-                  "time": "00:00"
-                }
-              ],
+              "evidence": "Yes",
+              "children": [],
               "color": "#6c757d",
-              "description": "ENISA arvioi EU:n julkishallinnon kyberuhkia vuonna 2024 ja korosti geopoliittisesti motivoitunutta häirintää.",
-              "x": 266.2487660083555,
-              "y": -575.9127580750784
+              "description": "Norway’s NAVAREA XIX website publishes active navigational warnings for the Norwegian Sea and adjacent waters that can include hazards and restrictions relevant to Arctic approaches.",
+              "source": "https://www.navarea-xix.no/navarea_xix_warnings.html",
+              "x": 336.63545398857843,
+              "y": -649.0060834814497
             }
           ],
           "color": "#40916c",
-          "description": "Kyberhyökkäykset ja hakkerointikampanjat kohdistuvat viranomaisiin ja kriittisiin palveluihin.",
-          "x": 179.49127553049334,
-          "y": -407.9207341536401
+          "description": "Monitoring NAVAREA coordinators that cover Arctic-adjacent waters supports early detection of military exercise restrictions and access limitations.",
+          "x": 184.4065201200948,
+          "y": -394.32364425624786
         }
       ],
       "color": "#8b5a2b",
-      "description": "Vaikuttaminen ja kybertoiminta kohdistuvat Euroopan päätöksentekoon, infrastruktuuriin ja yhteiskunnalliseen resilienssiin.",
+      "description": "Intelligence collection for Arctic operations centers on continuous monitoring of official warnings, military activity indicators and sanctions enforcement signals.",
       "side": "down",
-      "x": 60.03404964784867,
-      "y": -245.11527568326315
+      "x": 58.162067476478775,
+      "y": -256.7628555913652
     },
     {
-      "id": "n_fkhxwilp_gshwzna",
-      "name": "Infrastruktuuri ja energia",
+      "id": "n_im6sv0zl_d1ee6l3",
+      "name": "Law enforcement",
       "depth": 1,
       "evidence": "",
       "children": [
         {
-          "id": "n_2oilp5ic_fam2fm5",
-          "name": "Korvaus- ja vastuu­mekanismit",
+          "id": "n_q1hvmk51_bhu6p0b",
+          "name": "Port state control and access restrictions",
           "depth": 2,
           "evidence": "",
           "children": [
             {
-              "id": "n_550o1227_5vociwr",
-              "name": "Register of Damage for Ukraine",
+              "id": "n_tep7cn0n_m7vo11s",
+              "name": "Norwegian NAVAREA warning on port access ban",
               "depth": 3,
-              "evidence": "",
-              "children": [
-                {
-                  "id": "n_o1suvvpa_744wg8m",
-                  "name": "100 000 vaateen raja 2026",
-                  "depth": 4,
-                  "evidence": "Yes",
-                  "children": [],
-                  "color": "#6a4c93",
-                  "description": "Euroopan neuvoston vahinkorekisteri ilmoitti 19 tammikuuta 2026 vastaanottaneensa 100 000 vaadetta Venäjän aggression aiheuttamista vahingoista.",
-                  "source": "https://www.rd4u.coe.int/",
-                  "date": "2026-01-19",
-                  "x": 618.5275850107189,
-                  "y": -557.0826987103718,
-                  "time": "00:00"
-                },
-                {
-                  "id": "n_mhxkae3d_oq746wz",
-                  "name": "EU:n osallistujastatus rekisterissä",
-                  "depth": 4,
-                  "evidence": "Yes",
-                  "children": [],
-                  "color": "#6a4c93",
-                  "description": "Euroopan komission mukaan EU:n neuvosto hyväksyi 22 heinäkuuta 2024 päätöksen, jolla EU:sta tuli vahinkorekisterin täysivaltainen osallistuja.",
-                  "source": "https://enlargement.ec.europa.eu/news/european-union-becomes-fully-fledged-participant-register-damage-ukraine-2024-07-22_en",
-                  "date": "2024-07-22",
-                  "x": 726.2781020293397,
-                  "y": -433.09650379100987,
-                  "time": "00:00"
-                }
-              ],
+              "evidence": "Yes",
+              "children": [],
               "color": "#6c757d",
-              "description": "Haagiin sijoitettu rekisteri vastaanottaa vahinkovaatimuksia ja dokumentoi sodan aiheuttamia menetyksiä.",
-              "x": 556.3110427596209,
-              "y": -395.4423631112699
+              "description": "A NAVAREA XIX warning dated 2025-01-30 states that Norway’s port access ban for Russian fishing vessels remains in force for Norwegian ports and territorial waters.",
+              "source": "https://www.navarea-xix.no/navarea_xix_warnings.html",
+              "date": "2025-01-30",
+              "time": "09:02",
+              "x": 535.6910790834183,
+              "y": -485.97572991612884
+            },
+            {
+              "id": "n_8b8ox7vd_hvapo46",
+              "name": "Coordinated warning on unsafe practices and documentation",
+              "depth": 3,
+              "evidence": "Yes",
+              "children": [],
+              "color": "#6c757d",
+              "description": "A coordinated warning published on 2026-01-27 urges the maritime community to address unsafe shipping practices and highlights expectations around identification, certification and insurance compliance.",
+              "source": "https://www.gov.uk/government/publications/coordinated-warning-to-the-international-maritime-community-about-unsafe-shipping-practices",
+              "date": "2026-01-27",
+              "x": 757.3129666034503,
+              "y": -377.3818410985149
             }
           ],
           "color": "#40916c",
-          "description": "Eurooppalaiset mekanismit keräävät näyttöä vahingoista ja tukevat tulevaa korvausjärjestelmää.",
-          "x": 398.3020445890338,
-          "y": -258.9078294909191
+          "description": "Regulatory and enforcement measures can restrict port access or detain vessels, shaping feasible routes and raising transactional risk for Arctic shipping.",
+          "x": 395.2798967789835,
+          "y": -276.8220986744059
         },
         {
-          "id": "n_ekdahl0u_9844y8u",
-          "name": "Energia ja logistiikka",
+          "id": "n_ilibhn47_5ah5a3r",
+          "name": "Polar safety and environmental compliance enforcement",
           "depth": 2,
           "evidence": "",
           "children": [
             {
-              "id": "n_x54hrzfo_zi1q8j6",
-              "name": "Pakotteiden energiasisältö",
+              "id": "n_j4rxi7gk_a8lm01g",
+              "name": "Polar Code as enforceable baseline in polar waters",
               "depth": 3,
-              "evidence": "",
-              "children": [
-                {
-                  "id": "n_35e9oq9k_oft132k",
-                  "name": "Pakotteet ja LNG-sektorin rajoitteet",
-                  "depth": 4,
-                  "evidence": "Yes",
-                  "children": [],
-                  "color": "#6a4c93",
-                  "description": "Euroopan komission mukaan EU:n neljästoista pakotepaketti 24 kesäkuuta 2024 sisälsi ensimmäisiä toimia Venäjän LNG-sektoria vastaan.",
-                  "source": "https://enlargement.ec.europa.eu/news/eu-adopts-14th-package-sanctions-against-russia-its-continued-illegal-war-against-ukraine-2024-06-24_en",
-                  "date": "2024-06-24",
-                  "x": 808.3793291236937,
-                  "y": -19.20623988083073,
-                  "time": "00:00"
-                }
-              ],
+              "evidence": "Yes",
+              "children": [],
               "color": "#6c757d",
-              "description": "EU laajensi pakotteita energiateollisuuteen ja kohdisti toimia myös LNG-sektoriin.",
-              "x": 612.801211048942,
-              "y": -58.66069525918698
+              "description": "IMO describes the Polar Code as a mandatory instrument under SOLAS and MARPOL that is intended to address safety and pollution prevention for polar shipping.",
+              "source": "https://www.imo.org/en/ourwork/safety/pages/polar-code.aspx",
+              "x": 873.2017410151406,
+              "y": -252.50128838605428
             }
           ],
           "color": "#40916c",
-          "description": "Pakotteet ja toimitusketjut vaikuttavat energiavirtoihin ja merikuljetusten riskeihin Euroopassa.",
-          "x": 427.28892306577734,
-          "y": -76.67062781627494
+          "description": "Arctic businesses must expect inspections focused on Polar Code compliance, crew training and pollution-prevention obligations in polar waters.",
+          "x": 580.074116470239,
+          "y": -138.45326282920703
         }
       ],
       "color": "#8b5a2b",
-      "description": "Kriittinen infrastruktuuri, energiavirrat ja korjausmekanismit muodostavat keskeisen riskikentän Euroopassa.",
+      "description": "Law enforcement and regulatory action influences Arctic maritime business through access bans, inspections, documentation demands and enforceable safety regimes.",
       "side": "down",
-      "x": 238.21413703793414,
-      "y": -103.33530871826588
-    },
-    {
-      "id": "n_mlkn6xuf_piux646",
-      "name": "lolol",
-      "depth": 1,
-      "evidence": "",
-      "children": [],
-      "color": "#2d3142",
-      "side": "down",
-      "x": 3.2937171673211996,
-      "y": 286.92859117461774
+      "x": 231.68112212961373,
+      "y": -123.43001483083665
     }
   ],
   "color": "#e76f51",
-  "description": "Tilannekuva kokoaa Eurooppaan rajatun sodan kehityksen, riskit ja päätöksenteon kannalta keskeiset ajurit vuosina 2024–2026.",
+  "description": "This tree organizes open-source factors showing how Arctic military activity influences maritime risk, route availability, insurance costs and operating practices.",
   "x": 0,
   "y": 0
 }

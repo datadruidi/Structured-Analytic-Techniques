@@ -1,24 +1,85 @@
 {
   "hypotheses": [
     {
-      "id": "hyp-1770977597019-mzvhun",
-      "title": "afdsdef",
-      "slot": "H1",
-      "description": "fdsa"
+      "id": "hyp-1771066184296-yujpdo",
+      "title": "Arctic Council risk messaging and coordination are highlighting GPS jamming impacts that increase navigational risk, drive detours, and raise insurance premiums"
     },
     {
-      "id": "hyp-1770977728949-cf2zj2",
-      "title": "Test from CLI"
+      "id": "hyp-1771066186206-ju4y8y",
+      "title": "Arctic Council coordination is surfacing ad-hoc navigation bans that reduce route predictability, extend voyages, and increase insurance costs."
     },
     {
-      "id": "hyp-1770977924787-yr66a6",
-      "title": "afdsdefa"
+      "id": "hyp-1771066368943-5kx4ri",
+      "title": "Arctic Council coordination is surfacing ad-hoc navigation bans that reduce route predictability, extend voyages, and increase insurance costs"
+    },
+    {
+      "id": "hyp-1771066369382-g3pzd4",
+      "title": "Arctic Council risk messaging and coordination are highlighting GPS jamming impacts that increase navigational risk, drive detours, and raise insurance premiums."
+    },
+    {
+      "id": "hyp-1771066369897-l7lbx1",
+      "title": "Arctic Council safety focus is emphasizing AIS-off behavior that degrades situational awareness, raises incident risk, and tightens insurance terms."
+    },
+    {
+      "id": "hyp-1771066370265-g6l0p4",
+      "title": "Arctic Council attention to maritime safety is flagging shadow-fleet activity that elevates spill/compliance risk and increases insurance and due-diligence burden."
+    },
+    {
+      "id": "hyp-1771066371850-b9yzk9",
+      "title": "Arctic Council operational guidance is reflecting sanctions-era GPS jamming risks that push rerouting, higher operating costs, and stricter insurance scrutiny."
+    },
+    {
+      "id": "hyp-1771066373408-zqxewu",
+      "title": "Arctic Council information-sharing is mapping sanctions-linked restrictions that shrink routing options and increase delay and insurance costs."
+    },
+    {
+      "id": "hyp-1771066375445-ezj67b",
+      "title": "Arctic Council safety frameworks are addressing AIS-dark shipping linked to sanctions pressures that heighten compliance and collision risk and raise premiums."
+    },
+    {
+      "id": "hyp-1771066376782-jiacz6",
+      "title": "Arctic Council discussions are reinforcing the shadow-fleet challenge under sanctions that raises reputational/compliance exposure and increases insurance pricing."
+    },
+    {
+      "id": "hyp-1771066378740-vjwpzn",
+      "title": "Arctic Council situational updates are capturing exercise-linked GPS jamming that increases local risk, drives buffer routing, and lifts premiums."
+    },
+    {
+      "id": "hyp-1771066379872-p3udqr",
+      "title": "Arctic Council coordination is tracking exercise-related closures that disrupt schedules, force reroutes, and increase insurance exposure."
+    },
+    {
+      "id": "hyp-1771066381338-dgn10s",
+      "title": "Arctic Council safety emphasis is spotlighting AIS-off activity around exercises that increases misidentification risk and pushes up insurance pricing."
+    },
+    {
+      "id": "hyp-1771066382460-l0fs79",
+      "title": "Arctic Council monitoring is noting higher traffic complexity during exercises alongside shadow-fleet movements, increasing operating risk and costs."
+    },
+    {
+      "id": "hyp-1771066384119-dqp58y",
+      "title": "Arctic Council operational planning is accounting for passage suspensions with GPS jamming that compound disruption, lengthen reroutes, and raise premiums."
+    },
+    {
+      "id": "hyp-1771066386122-csuirs",
+      "title": "Arctic Council operational planning is accounting for passage suspensions with GPS jamming that compound disruption, lengthen reroutes, and raise premiums"
+    },
+    {
+      "id": "hyp-1771066387541-3kywqv",
+      "title": "Arctic Council coordination is framing passage suspensions as a route-availability shock that increases uncertainty, transit time, and insurance cost."
+    },
+    {
+      "id": "hyp-1771066389485-wdk4ux",
+      "title": "Arctic Council risk assessments are treating passage suspensions plus AIS-dark traffic as a sharp increase in enforcement and safety risk that reduces operability and raises premiums."
+    },
+    {
+      "id": "hyp-1771066390312-9lqdww",
+      "title": "Arctic Council safety dialogue is linking passage suspensions to greater shadow-fleet reliance that increases spill/compliance risk and insurance and vetting costs.."
+    },
+    {
+      "id": "hyp-1771066392535-desmb9",
+      "title": "Arctic Council safety dialogue is linking passage suspensions to greater shadow-fleet reliance that increases spill/compliance risk and insurance and vetting costs."
     }
   ],
-  "H1": {
-    "id": "H1",
-    "title": "afdsdef",
-    "description": "fdsa",
-    "hypothesisId": "hyp-1770977597019-mzvhun"
-  }
+  "intelligence_requirement": "Analyysi"
 }

@@ -5,6 +5,8 @@
   const STORAGE_KEY_GENERATION = 'hypothesis-generation-state';
   const STORAGE_KEY_RANKING = 'hypothesis-ranking-state';
   const STORAGE_KEY_PAGE = 'hypothesis-current-page';
+  const STORAGE_KEY_TREE_COLUMNS = 'hypothesis-tree-column-widths';
+  const TREE_COLUMN_MIN = 80;
 
   /** @typedef {{ id: string, label: string, editValue?: string }} Why */
   /** @typedef {{ id: string, label: string, whys: Why[] }} What */
@@ -16,6 +18,8 @@
   let pendingGenerateLabel = null;
   const permutationDirtyIds = new Set();
   const resizeObservers = new Set();
+  /** Column widths in px: { who, what, why } — perm is 1fr */
+  let treeColumnWidths = { who: 180, what: 140, why: 200 };
 
   const $ = (sel, ctx = document) => ctx.querySelector(sel);
   const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
@@ -284,6 +288,82 @@
     renderSourceList();
   }
 
+  function loadTreeColumnWidths() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY_TREE_COLUMNS);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed.who === 'number' && typeof parsed.what === 'number' && typeof parsed.why === 'number') {
+          treeColumnWidths = {
+            who: Math.max(TREE_COLUMN_MIN, parsed.who),
+            what: Math.max(TREE_COLUMN_MIN, parsed.what),
+            why: Math.max(TREE_COLUMN_MIN, parsed.why)
+          };
+        }
+      }
+    } catch (e) {}
+  }
+
+  function saveTreeColumnWidths() {
+    try {
+      localStorage.setItem(STORAGE_KEY_TREE_COLUMNS, JSON.stringify(treeColumnWidths));
+    } catch (e) {}
+  }
+
+  function applyTreeColumnWidths(container) {
+    if (!container) return;
+    container.style.setProperty('--tree-who-width', treeColumnWidths.who + 'px');
+    container.style.setProperty('--tree-what-width', treeColumnWidths.what + 'px');
+    container.style.setProperty('--tree-why-width', treeColumnWidths.why + 'px');
+  }
+
+  function setupTreeColumnResizer(container, resizerEl, index) {
+    if (!container || !resizerEl) return;
+    let startX = 0;
+    let startWho = 0;
+    let startWhat = 0;
+    let startWhy = 0;
+
+    resizerEl.addEventListener('mousedown', function (e) {
+      e.preventDefault();
+      startX = e.clientX;
+      startWho = treeColumnWidths.who;
+      startWhat = treeColumnWidths.what;
+      startWhy = treeColumnWidths.why;
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+
+      function onMove(e) {
+        const rect = container.getBoundingClientRect();
+        const totalW = rect.width;
+        const dx = e.clientX - startX;
+        const min = TREE_COLUMN_MIN;
+        if (index === 1) {
+          const newWho = Math.min(Math.max(min, startWho + dx), totalW - min * 3);
+          treeColumnWidths.who = newWho;
+        } else if (index === 2) {
+          const newWhat = Math.min(Math.max(min, startWhat + dx), totalW - treeColumnWidths.who - min * 2);
+          treeColumnWidths.what = newWhat;
+        } else if (index === 3) {
+          const newWhy = Math.min(Math.max(min, startWhy + dx), totalW - treeColumnWidths.who - treeColumnWidths.what - min);
+          treeColumnWidths.why = newWhy;
+        }
+        applyTreeColumnWidths(container);
+      }
+
+      function onUp() {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+        saveTreeColumnWidths();
+      }
+
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+  }
+
   /**
    * Branch-scoped rendering. Each Who → Group with WhoCol + Branches.
    * Each Branch = WhatNode + WhyStack (per-What) + EditCol.
@@ -299,10 +379,47 @@
     if (treeEmptyHint) treeEmptyHint.hidden = groups.length > 0;
     if (groups.length === 0) return;
 
+    loadTreeColumnWidths();
+    applyTreeColumnWidths(container);
+
     const header = document.createElement('div');
     header.className = 'tree-header';
-    header.innerHTML = '<span class="tree-header-cell tree-header-who">Who</span><span class="tree-header-cell tree-header-what">What</span><span class="tree-header-cell tree-header-why">Why?</span><span class="tree-header-cell tree-header-perm">Permutations</span>';
+    const whoCell = document.createElement('span');
+    whoCell.className = 'tree-header-cell tree-header-who';
+    whoCell.textContent = 'Who';
+    const resizer1 = document.createElement('div');
+    resizer1.className = 'tree-resizer';
+    resizer1.setAttribute('aria-label', 'Resize Who / What boundary');
+    resizer1.style.gridColumn = '2';
+    const whatCell = document.createElement('span');
+    whatCell.className = 'tree-header-cell tree-header-what';
+    whatCell.textContent = 'What';
+    const resizer2 = document.createElement('div');
+    resizer2.className = 'tree-resizer';
+    resizer2.setAttribute('aria-label', 'Resize What / Why boundary');
+    resizer2.style.gridColumn = '4';
+    const whyCell = document.createElement('span');
+    whyCell.className = 'tree-header-cell tree-header-why';
+    whyCell.textContent = 'Why?';
+    const resizer3 = document.createElement('div');
+    resizer3.className = 'tree-resizer';
+    resizer3.setAttribute('aria-label', 'Resize Why / Permutations boundary');
+    resizer3.style.gridColumn = '6';
+    const permCell = document.createElement('span');
+    permCell.className = 'tree-header-cell tree-header-perm';
+    permCell.textContent = 'Permutations';
+    header.appendChild(whoCell);
+    header.appendChild(resizer1);
+    header.appendChild(whatCell);
+    header.appendChild(resizer2);
+    header.appendChild(whyCell);
+    header.appendChild(resizer3);
+    header.appendChild(permCell);
     container.appendChild(header);
+
+    setupTreeColumnResizer(container, resizer1, 1);
+    setupTreeColumnResizer(container, resizer2, 2);
+    setupTreeColumnResizer(container, resizer3, 3);
 
     groups.forEach((who) => {
       const group = document.createElement('div');
@@ -341,25 +458,14 @@
         const whyStack = document.createElement('div');
         whyStack.className = 'tree-why-stack';
 
-        (what.whys || []).forEach((why, whyIdx) => {
+        (what.whys || []).forEach((why) => {
           const whyWrap = document.createElement('div');
           whyWrap.className = 'tree-why-row';
           const whyNode = document.createElement('div');
           whyNode.className = 'tree-node tree-node-why';
           whyNode.textContent = why.label;
           whyNode.dataset.nodeId = why.id;
-          const btnToggle = document.createElement('button');
-          btnToggle.type = 'button';
-          btnToggle.className = 'tree-why-toggle';
-          btnToggle.setAttribute('aria-label', 'Hide permutation');
-          btnToggle.textContent = '−';
-          btnToggle.addEventListener('click', function () {
-            const col = branchContent.querySelector('.tree-edit-col');
-            const unit = col && col.children[whyIdx];
-            if (unit) unit.classList.toggle('tree-permutation-unit-hidden');
-          });
           whyWrap.appendChild(whyNode);
-          whyWrap.appendChild(btnToggle);
           whyStack.appendChild(whyWrap);
         });
 
@@ -367,7 +473,7 @@
 
         const editCol = document.createElement('div');
         editCol.className = 'tree-edit-col';
-        (what.whys || []).forEach((why) => {
+        (what.whys || []).forEach((why, whyIdx) => {
           const unit = document.createElement('div');
           unit.className = 'tree-permutation-unit';
           const editRow = document.createElement('div');
@@ -410,7 +516,19 @@
               }
             }).catch(function () {});
           });
+          const btnToggle = document.createElement('button');
+          btnToggle.type = 'button';
+          btnToggle.className = 'tree-why-toggle';
+          btnToggle.setAttribute('aria-label', 'Hide permutation');
+          btnToggle.textContent = '−';
+          btnToggle.addEventListener('click', function () {
+            unit.classList.toggle('tree-permutation-unit-hidden');
+            const isHidden = unit.classList.contains('tree-permutation-unit-hidden');
+            btnToggle.textContent = isHidden ? '+' : '−';
+            btnToggle.setAttribute('aria-label', isHidden ? 'Show permutation' : 'Hide permutation');
+          });
           unit.appendChild(editRow);
+          unit.appendChild(btnToggle);
           unit.appendChild(saveBtn);
           editCol.appendChild(unit);
         });
@@ -459,9 +577,24 @@
         branchEls.forEach((branchEl) => {
           const whatEl = branchEl.querySelector('.tree-node-what');
           const branchWhyNodes = branchEl.querySelectorAll('.tree-node-why');
+          const editCol = branchEl.querySelector('.tree-edit-col');
+          const units = editCol ? editCol.children : [];
           if (!whatEl) return;
           const whatPos = rect(whatEl);
           branchWhyNodes.forEach((whyEl) => paths.push(curve(whatPos, rect(whyEl))));
+          branchWhyNodes.forEach((whyEl, i) => {
+            const unit = units[i];
+            if (unit) {
+              const unitBox = unit.getBoundingClientRect();
+              const toPos = {
+                right: unitBox.right - box.left,
+                left: unitBox.left - box.left,
+                midY: (unitBox.top + unitBox.bottom) / 2 - box.top
+              };
+              const whyPos = rect(whyEl);
+              paths.push(curve(whyPos, toPos));
+            }
+          });
         });
         const w = Math.max(box.width, 1);
         const h = Math.max(box.height, 1);
@@ -592,6 +725,22 @@
 
   function initUpdateButton() {
     if (btnUpdateTree) btnUpdateTree.addEventListener('click', updateTreeFromReference);
+  }
+
+  function initClearHypothesisJsonButton() {
+    const btn = document.getElementById('btn-clear-hypothesis-json');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      fetch('/api/clear-hypotheses', { method: 'POST' })
+        .then(function (r) {
+          if (r.ok) {
+            const label = btn.textContent;
+            btn.textContent = 'Cleared';
+            setTimeout(function () { btn.textContent = label; }, 2000);
+          }
+        })
+        .catch(function () {});
+    });
   }
 
   function updateCardTitlePreview(card) {
@@ -1185,6 +1334,7 @@
     initGenerationScrollSave();
     initClearButton();
     initUpdateButton();
+    initClearHypothesisJsonButton();
     buildTreeView();
     try {
       var savedPage = localStorage.getItem(STORAGE_KEY_PAGE);

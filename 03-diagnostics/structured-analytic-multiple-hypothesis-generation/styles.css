@@ -903,32 +903,70 @@ body {
   border-bottom: 1px solid #e8e6e2;
   background: #faf9f7;
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 0.5rem;
   flex-wrap: wrap;
 }
 
+.tree-workspace-toolbar-left {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tree-workspace-toolbar-right {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
 .btn-clear-tree,
-.btn-update-tree {
+.btn-update-tree,
+.btn-clear-hypothesis-json {
   padding: 0.4rem 0.75rem;
   font-size: 0.9rem;
   font-family: inherit;
-  color: #1a1a1a;
-  background: #fff;
-  border: 1px solid #c5c2bd;
   border-radius: 6px;
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s;
 }
 
+.btn-clear-tree {
+  color: #fff;
+  background: #a93226;
+  border: 1px solid #922b21;
+}
+
 .btn-clear-tree:hover {
-  border-color: #a93226;
-  background: #fdf5f5;
-  color: #1a1a1a;
+  background: #922b21;
+  border-color: #7b241c;
+  color: #fff;
+}
+
+.btn-update-tree {
+  color: #fff;
+  background: #27ae60;
+  border: 1px solid #219653;
 }
 
 .btn-update-tree:hover {
-  border-color: #6b9bd1;
-  background: #f0f6fc;
+  background: #219653;
+  border-color: #1e8449;
+  color: #fff;
+}
+
+.btn-clear-hypothesis-json {
+  color: #fff;
+  background: #a93226;
+  border: 1px solid #922b21;
+}
+
+.btn-clear-hypothesis-json:hover {
+  background: #922b21;
+  border-color: #7b241c;
+  color: #fff;
 }
 
 .tree-viewport {
@@ -937,19 +975,23 @@ body {
   overflow: auto;
   position: relative;
   padding: 1rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .tree-content {
-  --tree-who-lane-width: 180px;
-  --tree-what-lane-width: 140px;
+  --tree-who-width: 180px;
+  --tree-what-width: 140px;
+  --tree-why-width: 200px;
   position: relative;
   z-index: 1;
-  min-width: max-content;
-  width: max-content;
+  width: 100%;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   padding: 0.5rem 0;
+  box-sizing: border-box;
 }
 
 .tree-arrows {
@@ -1158,31 +1200,69 @@ body {
   background: #5a8ac4;
 }
 
-/* —— Tree: header row (Who, What, Why?, Permutations) —— */
+/* —— Tree: header row (Who, What, Why?, Permutations) + resizers —— */
 .tree-header {
   display: grid;
-  grid-template-columns: var(--tree-who-lane-width) var(--tree-what-lane-width) minmax(140px, 220px) 1fr;
-  gap: 0 0.75rem;
-  align-items: center;
+  grid-template-columns: var(--tree-who-width) 6px var(--tree-what-width) 6px var(--tree-why-width) 6px 1fr;
+  gap: 0;
+  align-items: stretch;
   padding: 0 0 0.5rem;
   margin-bottom: 0.25rem;
   border-bottom: 1px solid #e0ddd8;
   font-size: 0.85rem;
   font-weight: 600;
   color: #5c5c5c;
+  min-width: 0;
 }
 
 .tree-header-cell {
   padding: 0.25rem 0;
+  min-width: 0;
 }
 
-.tree-header-who { padding-left: 1rem; }
-.tree-header-perm { padding-right: 0.5rem; }
+.tree-header-who { grid-column: 1; padding-left: 1rem; }
+.tree-header-what { grid-column: 3; }
+.tree-header-why { grid-column: 5; }
+.tree-header-perm { grid-column: 7; padding-right: 0.5rem; }
+
+.tree-resizer {
+  grid-row: 1;
+  width: 6px;
+  min-width: 6px;
+  cursor: col-resize;
+  background: transparent;
+  position: relative;
+  margin: 0 -2px;
+  z-index: 2;
+}
+
+.tree-resizer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  background: #e0ddd8;
+  border-radius: 2px;
+  transition: background 0.15s;
+}
+
+.tree-resizer:hover::after,
+.tree-resizer:active::after {
+  background: #6b9bd1;
+}
+
+.tree-resizer[aria-label] {
+  padding: 0;
+  border: none;
+}
 
 /* —— Tree: swim lane layout — Who column (centered in lane), branches expand right —— */
 .tree-group {
   display: grid;
-  grid-template-columns: var(--tree-who-lane-width) 1fr;
+  grid-template-columns: var(--tree-who-width) 1fr;
   gap: 0;
   align-items: stretch;
   min-height: 3rem;
@@ -1192,6 +1272,7 @@ body {
   background: #faf9f7;
   position: relative;
   overflow: hidden;
+  min-width: 0;
 }
 
 /* Who column: full-height lane, Who node centered vertically; fixed width scales with --tree-who-lane-width */
@@ -1216,10 +1297,11 @@ body {
 /* Branch: What column (centered in row), Why + Edit expand to the right */
 .tree-branch {
   display: grid;
-  grid-template-columns: var(--tree-what-lane-width) 1fr;
+  grid-template-columns: var(--tree-what-width) 1fr;
   gap: 0;
   align-items: stretch;
   min-height: 2.5rem;
+  min-width: 0;
 }
 
 .tree-what-col {
@@ -1230,13 +1312,14 @@ body {
   border-right: 1px solid #e0ddd8;
   background: rgba(245, 249, 232, 0.5);
   min-width: 0;
+  align-self: stretch;
 }
 
 .tree-branch-content {
   display: grid;
-  grid-template-columns: minmax(140px, 220px) minmax(120px, 1fr);
+  grid-template-columns: var(--tree-why-width) 1fr;
   gap: 0.75rem;
-  align-items: start;
+  align-items: stretch;
   padding: 0.5rem 0.75rem;
   min-width: 0;
 }
@@ -1267,6 +1350,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  align-self: stretch;
+  border-right: 1px solid #e0ddd8;
 }
 
 .tree-why-row {
@@ -1316,14 +1401,19 @@ body {
 
 .tree-edit-row {
   min-height: 2.25em;
+  width: 100%;
   min-width: 0;
+  max-width: 100%;
   padding: 0.4rem 0.5rem;
   font-size: 0.85rem;
   font-family: inherit;
   border: 1px solid #d5d2ce;
   border-radius: 6px;
   background: #fff;
+  white-space: pre-wrap;
   word-break: break-word;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
 }
 
 .tree-edit-row[contenteditable="true"] {
@@ -1343,22 +1433,29 @@ body {
 .tree-permutation-unit {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.5rem;
   min-width: 0;
 }
 
 .tree-permutation-unit .tree-edit-row {
-  flex: 1;
+  flex: 1 1 0;
   min-width: 0;
+  max-width: 100%;
 }
 
-.tree-permutation-unit-hidden {
+.tree-permutation-unit-hidden .tree-edit-row,
+.tree-permutation-unit-hidden .btn-save-hypothesis {
   display: none !important;
+}
+
+.tree-permutation-unit-hidden .tree-why-toggle {
+  align-self: center;
 }
 
 .tree-permutation-unit .btn-save-hypothesis {
   flex-shrink: 0;
+  margin-top: 0.15rem;
   padding: 0.4rem 0.9rem;
   font-size: 0.85rem;
   font-family: inherit;

@@ -758,6 +758,43 @@
     .comment-evidence-info-popover strong {
       color: #b0b4bc;
     }
+    .comment-color-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    #comment-change-color {
+      padding: 6px 12px;
+      font-size: 13px;
+      border: 1px solid #4a5060;
+      border-radius: 6px;
+      background: #252830;
+      color: #e4e6eb;
+      cursor: pointer;
+    }
+    #comment-change-color:hover { background: #404654; }
+    #comment-colors {
+      display: none;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    #comment-colors.visible {
+      display: flex;
+    }
+    #comment-colors .color-swatch {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    #comment-colors .color-swatch:hover { transform: scale(1.1); }
+    #comment-colors .color-swatch.selected { border-color: #e4e6eb; }
     #comment-btn-keywords {
       border-radius: 6px;
       cursor: pointer;
@@ -1095,6 +1132,10 @@
               <p>It is recommended to tag events that have a source, although it is not mandatory.</p>
             </div>
           </span>
+        </div>
+        <div class="comment-color-row">
+          <button type="button" id="comment-change-color">Change Color</button>
+          <div id="comment-colors"></div>
         </div>
         <div id="comment-actions-row">
           <button type="button" id="comment-btn-keywords" class="btn-keywords">Generate Keywords</button>
@@ -2007,7 +2048,9 @@
   const commentDateEl = document.getElementById('comment-date');
   const commentTimeEl = document.getElementById('comment-time');
   const commentEvidenceEl = document.getElementById('comment-evidence');
+  const commentColorsEl = document.getElementById('comment-colors');
   let commentPopupNode = null;
+  let commentChosenColor = null;
 
   function persistCommentToNode(node) {
     if (!node) return;
@@ -2021,6 +2064,7 @@
     if (dt) node.date = dt; else delete node.date;
     if (tm) node.time = tm; else delete node.time;
     node.evidence = evidence;
+    if (commentChosenColor != null) node.color = commentChosenColor;
     saveTree();
   }
 
@@ -2029,6 +2073,7 @@
       persistCommentToNode(commentPopupNode);
     }
     commentPopupNode = node;
+    commentChosenColor = node.color || NODE_COLORS[0];
     commentTitleEl.textContent = getNodeName(node) || 'Comment';
     commentDescriptionEl.value = node.description || '';
     commentSourceEl.value = node.source || '';
@@ -2037,6 +2082,21 @@
     if (commentEvidenceEl) commentEvidenceEl.checked = node.evidence === 'Yes';
     var evidencePopover = document.getElementById('comment-evidence-info-popover');
     if (evidencePopover) evidencePopover.classList.remove('visible');
+    commentColorsEl.innerHTML = '';
+    commentColorsEl.classList.remove('visible');
+    NODE_COLORS.forEach((hex) => {
+      const swatch = document.createElement('button');
+      swatch.type = 'button';
+      swatch.className = 'color-swatch' + (hex === commentChosenColor ? ' selected' : '');
+      swatch.style.background = hex;
+      swatch.dataset.color = hex;
+      swatch.addEventListener('click', () => {
+        commentColorsEl.querySelectorAll('.color-swatch').forEach((s) => s.classList.remove('selected'));
+        swatch.classList.add('selected');
+        commentChosenColor = hex;
+      });
+      commentColorsEl.appendChild(swatch);
+    });
     commentOverlay.classList.add('visible');
     commentDescriptionEl.focus();
   }
@@ -2086,6 +2146,10 @@
       }
     });
   })();
+
+  document.getElementById('comment-change-color').addEventListener('click', () => {
+    commentColorsEl.classList.toggle('visible');
+  });
 
   document.getElementById('comment-close').addEventListener('click', closeCommentPopup);
   commentOverlay.addEventListener('click', (e) => {

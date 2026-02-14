@@ -50,8 +50,13 @@
       <div class="workspace-right">
         <section class="tree-workspace" aria-label="Tree view">
           <div class="tree-workspace-toolbar">
-            <button type="button" class="btn-clear-tree" id="btn-clear-tree" aria-label="Clear tree">Clear</button>
-            <button type="button" class="btn-update-tree" id="btn-update-tree" aria-label="Add same What and Why to Who branches created later">Update</button>
+            <div class="tree-workspace-toolbar-left">
+              <button type="button" class="btn-clear-tree" id="btn-clear-tree" aria-label="Clear tree view">Clear view</button>
+              <button type="button" class="btn-update-tree" id="btn-update-tree" aria-label="Add same What and Why to Who branches created later">Update</button>
+            </div>
+            <div class="tree-workspace-toolbar-right">
+              <button type="button" class="btn-clear-hypothesis-json" id="btn-clear-hypothesis-json" aria-label="Wipe hypothesis.json (permutations and H1–H5) so you can start from a blank file">Clear Hypothesis JSON</button>
+            </div>
           </div>
           <div class="tree-viewport" id="tree-viewport">
             <div class="tree-content" id="tree-content"></div>
