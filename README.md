@@ -1,4 +1,6 @@
 # Structured Analytic Techniques
+![Analysis](assets/img/mainpage.png)  
+*Structured Analytic Techniques for Intelligence Analysis — Heuer Jr., Pherson*
 
 A collection of lightweight, analyst-focused tools for Structured Analytic Techniques (SAT). All tools run in the browser and work offline where applicable.
 
@@ -25,8 +27,6 @@ Alternatively, run **`node server.js`** from the repo root for the same result.
 
 These tools support practical SAT workflows: they make assumptions, relationships, and timelines explicit and help reduce cognitive bias. They are aimed at exploratory analysis in complex, uncertain settings without heavy infrastructure.
 
-![Analysis](assets/img/mainpage.png)  
-*Structured Analytic Techniques for Intelligence Analysis — Richards J. Heuer Jr., Randolph H. Pherson*
 
 ## Tools
 
